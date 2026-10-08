@@ -213,6 +213,18 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("bowlNettleTea", "bucketMilk", "bowlNettleTeaMilky", 1, 1, 1, "Cooking", 1, 0, returns: ["bucketEmpty"])); 
             toAdd.Add(new("cupNettleTea", "bucketMilk", "cupNettleTeaMilky", 1, 1, 1, "Cooking", 1, 0, returns: ["bucketEmpty"])); 
             toAdd.Add(new("bowlNettleTea", "cupEmpty", "cupNettleTea", 1, 1, 1, "Cooking", 1, 0, returns: ["bucketEmpty"]));   
+
+            
+            toAdd.Add(new("teapotClayEmpty", "teaLeaves", "teapotClayLeaves", 1, 1, 1, "Cooking", 20, 0 )); 
+            toAdd.Add(new("teapotPorcelainEmpty", "teaLeaves", "teapotPorcelainLeaves", 1, 1, 1, "Cooking", 20, 0 )); 
+            toAdd.Add(new("teapotAntiqueEmpty", "teaLeaves", "teapotAntiqueLeaves", 1, 1, 1, "Cooking", 20, 0 ));
+            toAdd.Add(new("teapotClayLeaves", "kettleHot", "teapotClayTea", 1, 1, 1, "Cooking", 20, 52, returns: ["kettleEmpty"] )); 
+            toAdd.Add(new("teapotPorcelainLeaves", "kettleHot", "teapotPorcelainTea", 1, 1, 1, "Cooking", 20, 52, returns: ["kettleEmpty"] )); 
+            toAdd.Add(new("teapotAntiqueLeaves", "kettleHot", "teapotAntiqueTea", 1, 1, 1, "Cooking", 20, 52, returns: ["kettleEmpty"] )); 
+            
+            toAdd.Add(new("cupClayTea", "bucketMilk", "cupClayTeaMilk", returns: ["bucketEmpty"] )); 
+            toAdd.Add(new("cupPorcelainTea", "bucketMilk", "cupPorcelainTeaMilk", returns: ["bucketEmpty"] )); 
+            toAdd.Add(new("cupAntiqueTea", "bucketMilk", "cupAntiqueTeaMilk", returns: ["bucketEmpty"] )); 
             
             toAdd.Add(new("bowlEmpty", "onion", "bowlOnions", 1, 1, 1, "Cooking", 1, 0, tool: "knife")); 
             toAdd.Add(new("bowlEmpty", "garlic", "bowlGarlic", 1, 1, 1, "Cooking", 1, 0, tool: "knife"));

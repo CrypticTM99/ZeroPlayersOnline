@@ -19,6 +19,7 @@ namespace ZeroPlayersOnline.Managers {
         public static string CraftingSubtype = "";
         public static List<CraftRecipe> ActiveRecipes = new();
         public static int CraftingListTop = 0;
+        public static int CraftingMaxLevel = 99;
 
         public static Window Guide;
         public static string GuideTab = "Introduction";
@@ -110,6 +111,18 @@ namespace ZeroPlayersOnline.Managers {
          
         public static Window CatMenu;
 
+        public static Window HouseMenu;
+        public static bool HouseTeleport = false;
+        public static bool HouseTablet = false;
+
+        public static Window Compass;
+        public static string CompassFilterSaved = "";
+        public static string CompassFilterActive = "";
+        public static string CompassTyping = "";
+        public static int CompassScrollTop = 0;
+        public static List<string> CompassRoute = new();
+        public static List<Location> CompassFiltered = new();
+
         public static bool AnyVisible(string except = "") {
             if (CollectionLog.IsVisible && except != "Collection")
                 return true;
@@ -143,6 +156,10 @@ namespace ZeroPlayersOnline.Managers {
                 return true;
             if (CatMenu.IsVisible && except != "Cat Menu")
                 return true;
+            if (HouseMenu.IsVisible && except != "House Menu")
+                return true;
+            if (Compass.IsVisible && except != "Compass")
+                return true;
             
             return false;
         }
@@ -164,6 +181,8 @@ namespace ZeroPlayersOnline.Managers {
             LampMenu.IsVisible = false;
             GrandExchange.IsVisible = false;
             CatMenu.IsVisible = false;
+            HouseMenu.IsVisible = false;
+            Compass.IsVisible = false;
         }
 
         public static void SetupWindows() {
@@ -183,6 +202,9 @@ namespace ZeroPlayersOnline.Managers {
             LampMenu = new(50, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Lamp".Align(HorizontalAlignment.Center, 48)};
             GrandExchange = new(100, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Grand Exchange".Align(HorizontalAlignment.Center, 98)};
             CatMenu = new(20, 7) { CanDrag = true, Position = new Point(25, 10), Title = "Cat Menu".Align(HorizontalAlignment.Center, 18)};
+            HouseMenu = new(50, 30) { CanDrag = true, Position = new Point(25, 10), Title = "House Menu".Align(HorizontalAlignment.Center, 48)};
+            
+            Compass = new(50, 30) { CanDrag = true, Position = new Point(25, 10), Title = "Compass".Align(HorizontalAlignment.Center, 48)};
         }
 
         public static void GuideDraw() {
@@ -285,7 +307,7 @@ namespace ZeroPlayersOnline.Managers {
                 Debug.Print(22, 2, "             Items: " + GameLoop.ZPO.ItemLibrary.Count);
                 Debug.Print(22, 3, "       Use Recipes: " + GameLoop.ZPO.UseRecipes.Count);
                 Debug.Print(22, 4, "     Craft Recipes: " + GameLoop.ZPO.CraftLib.Values.Sum(o => o.Count));
-                Debug.Print(22, 5, "Processing Recipes: " + (GameLoop.ZPO.ProcessingStations.Values.Sum(o => o.Recipes.Count) - GameLoop.ZPO.ProcessingStations["Fire"].Recipes.Count));
+                Debug.Print(22, 5, "Processing Recipes: " + (GameLoop.ZPO.ProcessingStations.Values.Where(o => !o.DontIncludeInCounts).Sum(o => o.Recipes.Count)));
                 Debug.Print(22, 6, "              NPCs: " + GameLoop.ZPO.NPCLibrary.Count);
                 Debug.Print(22, 7, "          Monsters: " + GameLoop.ZPO.MonsterLibrary.Count);
 
@@ -3094,7 +3116,7 @@ namespace ZeroPlayersOnline.Managers {
                     + item[1].Align(HorizontalAlignment.Right, 5) + " " + 179.AsString() + " "
                     + GameLoop.ZPO.ResolveItemName(rec.ExtraTool);
 
-                if (GameLoop.ZPO.player.CanCraft(rec)) { 
+                if (GameLoop.ZPO.player.CanCraft(rec) && rec.Level <= CraftingMaxLevel) { 
                     CraftingMenu.PrintClickable(27, 3 + printY++, new ColoredString(line, Color.White, Color.Black), () => { GameLoop.ZPO.player.TryCraft(rec); });
                 } else { 
                     CraftingMenu.PrintClickable(27, 3 + printY++, new ColoredString(line, Color.Crimson, Color.Black), () => {
@@ -3116,6 +3138,10 @@ namespace ZeroPlayersOnline.Managers {
                             foreach (var kv in rec.Reqs) { 
                                 GameLoop.ZPO.Log.AddMessage("Also: " + kv.GetSummary(), kv.CheckRequirement(GameLoop.ZPO.player, false, true) ? Color.Lime : Color.Crimson);
                             } 
+                        } 
+
+                        if (rec.Level > CraftingMaxLevel) {
+                            GameLoop.ZPO.Log.AddMessage("And a station or tool capable of level " + rec.Level + " crafts.",  Color.Crimson);
                         }
                     });
                 }
@@ -3954,14 +3980,14 @@ namespace ZeroPlayersOnline.Managers {
                     GameLoop.ZPO.Log.AddMessage("You pet your cat for a bit. It purrs contentedly.", Color.Yellow);
                 });
 
-                CatMenu.Print(11, 1, pet.MiscInt2.ToString().Align(HorizontalAlignment.Right, 7));
+                CatMenu.Print(11, 1, (pet.MiscInt2 / 60).ToString().Align(HorizontalAlignment.Right, 7));
 
                 CatMenu.PrintClickable(2, 2, "Play", () => {
                     pet.MiscInt2 = 0;
                     GameLoop.ZPO.Log.AddMessage("You play with your cat for a bit. It meows happily.", Color.Yellow);
                 });
                 
-                CatMenu.Print(11, 2, pet.MiscInt2.ToString().Align(HorizontalAlignment.Right, 7));
+                CatMenu.Print(11, 2, (pet.MiscInt2 / 60).ToString().Align(HorizontalAlignment.Right, 7));
 
                 bool hasMilk = GameLoop.ZPO.player.HasAllItems(["bucketMilk,1"]);
                 CatMenu.PrintClickable(2, 3, new ColoredString("Give Milk", hasMilk ? Color.White : Color.DarkSlateGray, Color.Black), () => {
@@ -3974,7 +4000,7 @@ namespace ZeroPlayersOnline.Managers {
                     }
                 });
                 
-                CatMenu.Print(11, 3, pet.MiscInt.ToString().Align(HorizontalAlignment.Right, 7));
+                CatMenu.Print(11, 3, (pet.MiscInt / 60).ToString().Align(HorizontalAlignment.Right, 7));
 
                 string firstFishID = "";
                 foreach (var kv in GameLoop.ZPO.player.Inventory) {
@@ -3993,7 +4019,7 @@ namespace ZeroPlayersOnline.Managers {
                     }
                 });
                 
-                CatMenu.Print(11, 4, pet.MiscInt.ToString().Align(HorizontalAlignment.Right, 7));
+                CatMenu.Print(11, 4, (pet.MiscInt / 60).ToString().Align(HorizontalAlignment.Right, 7));
                 
                 if (firstFishID != "") {
                     CatMenu.Print(2, 5, "(" + GameLoop.ZPO.ResolveItemName(firstFishID) + ")", Color.DarkSlateGray);
@@ -4003,7 +4029,144 @@ namespace ZeroPlayersOnline.Managers {
             CatMenu.PrintClickable(19, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { CatMenu.IsVisible = false; });
         }
     
-        
-        
+        public static void HouseDraw() {
+            Player p = GameLoop.ZPO.player;
+            HouseMenu.Clear();
+            Helper.DrawBox(HouseMenu, 0, 0, 48, 28);
+            HouseMenu.Print(2, 0, HouseTeleport ? "[House Teleport]" : "[Home Management]");
+
+            int active = p.Homes.Where(o => o.Value.Active).ToList().Count;
+            int max = p.GetSkillTier("Construction");
+
+            HouseMenu.Print(2, 1, "Active Houses: " + active + " / " + max);
+            HouseMenu.DrawLine(new Point(1, 2), new Point(48, 2), 196, Color.White);
+
+            int printY = 3;
+
+            // TODO: when more than like 25 houses are available to buy this needs to be updated to be scrollable, maybe sort them by location display name and put active ones at the top too.
+            foreach (var kv in p.Homes) {
+                HouseMenu.PrintClickable(2, printY++, new ColoredString(GameLoop.ZPO.ResolveLocationName(kv.Value.ID), kv.Value.Active ? Color.White : Color.DarkSlateGray, Color.Black), () => {
+                    if (HouseTeleport) {
+                        if (kv.Value.Active) {
+                            if (kv.Value.HasTeleportFocus()) { 
+                                if (GameLoop.ZPO.SpellLibrary.TryGetValue("teleHome", out Spell? tele)) {
+                                    string cast = p.CanCast(tele);
+                                    if (cast == "" || HouseTablet) { 
+                                        if (GameLoop.ZPO.Atlas.TryGetValue(kv.Value.ID, out Location? homeLoc)) { 
+                                            if (HouseTablet) {
+                                                p.ConsumeItems(["tabteleHome,1"]);
+                                            } else {
+                                                tele.Cast(p, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
+                                            }
+                                            p.NavLoc = kv.Value.ID;
+
+                                            HouseMenu.IsVisible = false;
+                                            HouseTeleport = false;
+                                            HouseTablet = false;
+
+                                            GameLoop.ZPO.Log.AddMessage(new ColoredString("You teleport to your " + homeLoc.DisplayName + ".", Color.MediumPurple, Color.Black));
+                                        }
+                                    }  else {
+                                        GameLoop.ZPO.Log.AddMessage(new ColoredString("Cannot cast spell: " + cast, Color.Crimson, Color.Black));
+                                    }
+                                }
+                            } else { 
+                                GameLoop.ZPO.Log.AddMessage("House must have a teleportation focus currently built to teleport to it.", Color.Crimson);
+                            }
+                        } else {
+                            GameLoop.ZPO.Log.AddMessage("Can only teleport to active houses.", Color.Crimson);
+                        }
+                    } else {
+                        if (kv.Value.Active) {
+                            kv.Value.Active = false;
+                        } else if (active < max) {
+                            kv.Value.Active = true;
+                        }
+                    }
+                });
+            }
+
+
+            HouseMenu.PrintClickable(49, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { HouseMenu.IsVisible = false; });
+        }
+
+        public static void CompassDraw() {
+            Compass.Clear();
+            Helper.DrawBox(Compass, 0, 0, 48, 28);
+            Compass.Print(2, 0, "[Compass - Where To?]");
+            Compass.PrintStringField(2, 1, "Search: ", ref CompassFilterActive, ref CompassTyping, "compassFilter");
+
+            if (CompassFilterSaved != CompassFilterActive) {
+                CompassFilterSaved = CompassFilterActive;
+                CompassUpdate();
+            }
+
+            Compass.DrawLine(new Point(1, 2), new Point(48, 2), 196, Color.White);
+
+            int max = 26;
+
+            if (CompassFiltered.Count > max) {
+                if (Helper.ScrolledDown()) { Helper.QuantitySelector(CompassScrollTop, CompassFiltered.Count - max); }
+                if (Helper.ScrolledUp()) { Helper.QuantitySelector(CompassScrollTop, CompassFiltered.Count - max, true); }
+            } else {
+                CompassScrollTop = 0;
+            }
+            for (int i = CompassScrollTop; i < CompassFiltered.Count && i < CompassScrollTop + max; i++) {
+                Compass.PrintClickable(2, 3 + (i - CompassScrollTop), CompassFiltered[i].DisplayName, () => {
+                    CompassFindRoute(CompassFiltered[i].ID);
+                });
+            }
+             
+            Compass.PrintClickable(49, 0, new ColoredString("X", Color.Crimson, Color.Black), () => { Compass.IsVisible = false; });
+        }
+
+        public static void CompassUpdate() {
+            CompassFiltered.Clear();
+
+            CompassFiltered = GameLoop.ZPO.Atlas.Values.Where(o => (o.ID.ToLower().Contains(CompassFilterSaved.ToLower()) || o.DisplayName.ToLower().Contains(CompassFilterSaved.ToLower()) )).ToList();
+        }
+
+
+        public static Dictionary<string, int> AllFoundLocations = new();
+        public static List<string> CompassCurrentShortest = new();
+        public static void CompassFindRoute(string destID) {
+            CompassRoute.Clear();
+            AllFoundLocations.Clear(); 
+
+            if (GameLoop.ZPO.Atlas.TryGetValue(GameLoop.ZPO.player.NavLoc, out Location? curr)) {
+                foreach (var conn in curr.ConnectedLocations) {
+                    if (conn.CanTraverse(GameLoop.ZPO.player)) {
+                        CompassTryPath(new() { conn.Destination }, conn.Destination, destID, 0);
+                    }
+                }
+            }
+
+            CompassRoute = CompassCurrentShortest;
+
+            if (CompassRoute.Count == 0) { // Should only happen if no route was found within 20 steps, so tell the player
+                GameLoop.ZPO.Log.AddMessage("Destination not found within 20 map connections.", Color.Crimson);
+            } else { 
+                GameLoop.ZPO.Log.AddMessage("Destination found in " + CompassRoute.Count + " steps. Follow blue locations to reach it.", Color.Turquoise);
+            }
+        } 
+
+        public static void CompassTryPath(List<string> path, string id, string target, int depth) {
+            if ((!AllFoundLocations.ContainsKey(id) || AllFoundLocations[id] > depth) && depth < 20 && (CompassCurrentShortest.Count == 0 || depth < CompassCurrentShortest.Count)) { 
+                AllFoundLocations.TryAdd(id, depth);
+                AllFoundLocations[id] = depth; 
+
+                if (id == target) {
+                    CompassCurrentShortest = path;
+                } 
+
+                if (GameLoop.ZPO.Atlas.TryGetValue(id, out Location? curr)) {
+                    foreach (var conn in curr.ConnectedLocations) {
+                        if (conn.CanTraverse(GameLoop.ZPO.player)) {
+                            CompassTryPath(path.Append(conn.Destination).ToList(), conn.Destination, target, depth + 1);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

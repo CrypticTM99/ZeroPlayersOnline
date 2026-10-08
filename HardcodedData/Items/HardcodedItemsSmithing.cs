@@ -211,7 +211,10 @@ namespace ZeroPlayersOnline.Hardcodes {
 
                 itemsToAdd.Add(new Item(Metals[i].Name + " crossbow limbs", "Can be combined with a crossbow stock to make an unstrung crossbow.", "limbs" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult));
 
-                if (tempName == "Bronze" || tempName == "Bronze" || tempName == "Iron" || tempName == "Steel" || tempName == "Black" || tempName == "Mithril" || tempName == "Adamant") {
+                if (tempName != "Black" && tempName != "Tutorial" && tempName != "Dragon")
+                    itemsToAdd.Add(new Item(Metals[i].Name + " nails", "Nails made of " + Metals[i].Name.ToLower() + ".", "nails" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult / 15, true));
+
+                if (tempName == "Bronze" || tempName == "Iron" || tempName == "Steel" || tempName == "Black" || tempName == "Mithril" || tempName == "Adamant") {
                     // Trimmed
                     Item helmT = new Item(Metals[i].Name + " helmet", "Provides " + Metals[i].Descriptor + " melee protection for the head. Trimmed.", "helm" + tempName + "T", Metals[i].R, Metals[i].G, Metals[i].B, fullMult * 4) {
                         CosmeticNote = "t", EquipSlot = "Head",  EquipTier = Metals[i].Tier, EquipSkill = "Defense", EquipLevel = Metals[i].Level, MiscString = "DefenseMelee"

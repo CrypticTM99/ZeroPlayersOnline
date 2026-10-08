@@ -16,6 +16,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             tiles.Add(new GatheringTile("plantGrain", "Wheat", "Pick", 100, 100, 5, "Farming", 1, 0, 0, items: new() { new("grain", 1) })); 
             tiles.Add(new GatheringTile("plantGuam", "Guam Bush", "Pick", 100, 100, 10, "Farming", 1, 5, 0, items: new() { new("herbGrimyGuam", 1) }));
             tiles.Add(new GatheringTile("plantCadava", "Cadava Bush", "Pick", 100, 100, 30, "Farming", 1, 0, 0, items: new() { new("cadava", 1) }));
+            tiles.Add(new GatheringTile("plantRedberry", "Redberry Bush", "Pick", 100, 100, 30, "Farming", 1, 0, 0, items: new() { new("redberries", 1) }));
             tiles.Add(new GatheringTile("plantDoogle", "Doogle Bush", "Pick", 100, 100, 5, "Farming", 1, 0, 0, items: new() { new("doogle", 1) }));
             tiles.Add(new GatheringTile("plantNettles", "Nettles", "Pick", 100, 100, 1, "Farming", 1, 0, 0, items: new() { new("nettles", 1) }, req: new("AnyEquipInSlot", 0, "Hands")));
 
@@ -69,6 +70,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             tiles.Add(new GatheringTile("clueDrawers", "Drawers", "Search", 100, 100, 5));
             tiles.Add(new GatheringTile("clueBarrel", "Barrel", "Search", 100, 100, 5));
             tiles.Add(new GatheringTile("clueChest", "Chest", "Search", 100, 100, 5));
+            tiles.Add(new GatheringTile("clueWardrobe", "Wardrobe", "Search", 100, 100, 5));
             tiles.Add(new GatheringTile("bookshelfWizard", "Bookshelves", "Search", 100, 100, 0));
             tiles.Add(new GatheringTile("altar", "Altar", "Pray at", 100, 100, 0, action: new("TempSkillBoost", "Prayer", "", 5)));
             
@@ -79,8 +81,11 @@ namespace ZeroPlayersOnline.Hardcodes {
             tiles.Add(new GatheringTile("mistLumWinch", "Winch", "Operate", 100, 100, 0, req: new("QuestAt", 50, "MI_BloodPact", summ: "You should deal with the wizard before trying to do that."), action: new("Data", "CatacombsWinch", "set", 1)));
             tiles.Add(new GatheringTile("mistLumIlona", "Ilona", "Untie", 100, 100, 0, req: new("QuestAt", 80, "MI_BloodPact", summ: "to deal with the final cultist"), action: new("Quest", "MI_BloodPact", "", 90)));
 
-            tiles.Add(new GatheringTile("lumbridgeFlag", "Lumbridge Flag", "Raise", 100, 100, 0)); // TODO: Make this tie into the task/achievement diary system, it's a Lumbridge task
-             
+            tiles.Add(new GatheringTile("lumbridgeFlag", "Lumbridge Flag", "Raise", 100, 100, 0)); // TODO: Make this tie into the task/achievement diary system, it's a Lumbridge task 
+            tiles.Add(new GatheringTile("dummyAttack", "Attack Dummy", "Strike", 100, 100, 1, items: [ new("_Attack", 1, "Attack", 1, 5)], req: new("NotSkill", 8, "Attack", summ: "Must not be above level 8 Attack."))); 
+            tiles.Add(new GatheringTile("dummyStrength", "Strength Dummy", "Strike", 100, 100, 1, items: [ new("_Strength", 1, "Strength", 1, 5)], req: new("NotSkill", 8, "Strength", summ: "Must not be above level 8 Strength."))); 
+            tiles.Add(new GatheringTile("cupboardMorgan", "Cupboard", "Search", 100, 100, 1, items: [ new("garlic", 1)])); 
+
             tiles.Add(new GatheringTile("bookshelfArrav", "Bookshelves", "Search", 100, 100, 0, items: [ new("bookArrav", 1) ], req: new("ItemNotOwned", 1, "bookArrav", false, "", "Must not already have the Shield of Arrav book in your bank or inventory."))); // Used for Shield of Arrav
             tiles.Add(new GatheringTile("arravChest", "Chest", "Search", 100, 100, 0, items: new() { new("arravShieldLeft", 1, reqs: new() { new("ItemNotOwned", 1, "arravShieldLeft", summ: "You've already got the shield half you need from here.") }) })); // Used for Shield of Arrav
             tiles.Add(new GatheringTile("arravCupboard", "Cupboard", "Search", 100, 100, 0, items: new() { new("arravShieldRight", 1, reqs: new() { new("ItemNotOwned", 1, "arravShieldRight", summ: "You've already got the shield half you need from here.") }) })); // Used for Shield of Arrav

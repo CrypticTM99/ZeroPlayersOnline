@@ -1,4 +1,5 @@
 ﻿using ZeroPlayersOnline.Managers;
+using ZeroPlayersOnline.UI;
 
 namespace ZeroPlayersOnline.DataTypes {
     public class Connection { 
@@ -170,8 +171,29 @@ namespace ZeroPlayersOnline.DataTypes {
             if (ExpTo != "")
                 p.TryGrantExp(ExpTo, ExpGranted, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills, false); 
             p.NavLoc = Destination;
-            GameLoop.ZPO.AttackingBoss = false;
-            GameLoop.ZPO.AttackingMonster = null;
+
+            if (GameLoop.SoundManager.MusicEnabled && p.MusicMode == "Auto") {
+                if (GameLoop.ZPO.Atlas.TryGetValue(Destination, out Location? dest)) {
+                    if (dest.UPCsong != "" && GameLoop.SoundManager.CurrentSong != dest.UPCsong) {
+                        GameLoop.SoundManager.CurrentSong = "";
+                        GameLoop.SoundManager.music.StopAllSounds();
+                        GameLoop.SoundManager.PickMusic(dest.UPCsong);
+                    }
+                }
+            }
+
+            if (ExtraWindows.CompassRoute.Count > 0 && ExtraWindows.CompassRoute[0] == Destination) {
+                ExtraWindows.CompassRoute.RemoveAt(0);
+
+                if (ExtraWindows.CompassRoute.Count == 0) {
+                    GameLoop.ZPO.Log.AddMessage("You have arrived at your destination. Set a new one at any time.", Color.Lime);
+                }
+            }
+
+            MinigameManager.POH_ViewingRoom = 0;
+
+            UI_LocCombat.AttackingBoss = false;
+            UI_LocCombat.AttackingMonster = null;
         }
     }
 }

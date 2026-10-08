@@ -62,6 +62,51 @@ namespace ZeroPlayersOnline.Hardcodes {
                 } 
             });
 
+            toAdd.Add(new("Estate Agent", "estateAgent", new() { 
+                { 0, new("Salutations! In the market for a house, or perhaps some work?", new() { 
+                    new DialogueChoice("I'd like to buy a house.", 100, [ new("Region", 0, "Misthalin")]), // Go to Misthalin house buying menu
+                    new DialogueChoice("What kind of work did you have in mind?", 1), // Go to Mahogany Homes menu
+                    new DialogueChoice("Can you tell me about your cape?", 25), 
+                    new DialogueChoice("I want to manage my homes.", 50, [ new("AnyPOH") ]),
+                    byeThen 
+                }) },
+                // Mahogany Homes explanation
+                { 1, new("Why, Mahogany Homes, of course!", new() { new("What's Mahogany Homes?", 2), new("Give me a contract!", 7), new("What was my contract again?", 8), new("Could I have a contract scroll?", 9), byeThen }) },
+                { 2, new("Quite simple, my friend! People's homes need repairs, and you could do it for them!", new() { new("Is there any kind of reward?", 3), new("What do I need?", 10), new("How do I do it?", 13), new("(BACK)", 1), byeThen }) },
+                { 3, new("Is the satisfaction of a job well done not reward enough?", new() { new("You know what, you're right!", 4), new("...No.", 5), byeThen }) },
+                { 4, new("That's the spirit!", new() { new("(BACK)", 1), byeThen }) },
+                { 5, new("Well, you'll also get some Construction experience and points to spend in the rewards shop. Enticed yet?", new() { new("(BACK)", 1), new("...No.", 6), byeThen }) },
+                { 6, new("Suit yourself. I'll be here if you change your mind.", new() { byeThen }) },
+                { 7, new("Coming right up!", new() { byeThen }, acts: [ new("Minigame", "GetMahoganyContract", "", 0) ]) },
+                { 8, new("You know, if you had a contract scroll you wouldn't need to ask! Now let me see...", new() { byeThen }, acts: [ new("Minigame", "ViewMahoganyContract", "", 0) ]) },
+                { 9, new("Here you go, if you need another don't hestitate to ask!", new() { byeThen }, items: [ "mahoganyHomesContract" ]) },
+                { 10, new("You'll need a lot of planks and nails, the higher your Construction level the better materials you can use. Sometimes you'll also need metal bars, candles, or bolts of cloth. Also you'll always need a hammer and saw to do repairs. Can't very well fix a chair with your bare hands!", new() { new("Where can I get all that?", 11), new("(BACK)", 2), byeThen }) },
+                { 11, new("Planks, metal bars, and nails you can make yourself through Fletching or Smithing respectively, or you can make planks faster at a sawmill.", new() { new("(NEXT)", 12), byeThen }) },
+                { 12, new("Bolts of cloth you can spin from balls of sheep wool, or possibly buy from shops. Candles, hammer, and saw you'll usually need to get from shops as well.", new() { new("(BACK)", 2), byeThen }) },
+                { 13, new("Take a contract, get an inventory full of materials plus your hammer and saw, then go to the customer's residence.", new() { new("(NEXT)", 14), byeThen }) },
+                { 14, new("Open your minigame menu on the right (the * tab). You can set your materials used with the arrows at the top of the menu.", new() { new("(NEXT)", 15), byeThen }) },
+                { 15, new("Things that need repairing will have a red x, and you can click the question mark to get a list of materials needed to repair that spot.", new() { new("(NEXT)", 16), byeThen }) },
+                { 16, new("If you have everything to repair a spot, the name will be green. Otherwise it will be red, or if it's already repaired then white.", new() { new("(NEXT)", 17), byeThen }) },
+                { 17, new("Simply click the green spots and the items to repair them will be taken, repairing it. Once all spots are repaired the contract will automatically complete.", new() { new("(BACK)", 2), byeThen }) },
+                // Skillcape purchases
+                { 25, new("Certainly! Skillcapes are a symbol of achievement. Only people who have mastered a skill and reached level 99 can get their hands on them and gain the benefits they carry.", new() { new DialogueChoice("(NEXT)", 26),byeThen }) },
+                { 26, new("The Cape of Construction allows you to teleport to Estate Agents like myself, plus cast House Teleport for free.", new() { new DialogueChoice("I'd like to buy one!", 27, [ new("Item", 99000, "Gold", true), new("Skill", 99, "Construction")], true), byeThen }) },
+                { 27, new("Excellent! Wear that cape with pride, my friend.", new() { byeThen }, items: [ "capeSkillConstruction" ]) },
+                // Open the POH management menu
+                { 50, new("You got it. Let me know if you need anything.", new() { new("(BACK)", 0), byeThen }, acts: [ new("OpenUI", "ManagePOH", "", 0)]) },
+                // Misthalin house purchases
+                { 100, new("Where did you have in mind for your new home?", new() {
+                    new("Varrock (2500 gp)", 101, [ new("Item", 2500, "Gold", true), new("POHNotOwned", 0, "MIST_VarrockSouthEast")], true),
+                    //new("Edgeville (2500 gp)", 102, [ new("Item", 2500, "Gold", true), new("POHNotOwned", 0, "MIST_Edgeville")], true),
+                    new("Draynor (2500 gp)", 103, [ new("Item", 2500, "Gold", true), new("POHNotOwned", 0, "MIST_DraynorVillage")], true),
+                    new("Lumbridge (2500 gp)", 104, [ new("Item", 2500, "Gold", true), new("POHNotOwned", 0, "MIST_Lumbridge")], true) // Is there even a point to this one? It's one click away from an existing teleport. I guess the relative proximity to some extra crafting stations is nice regardless
+                }) },
+                { 101, new("Great, here are the keys. The townhouse is in Southeast Varrock, near Aubury's Rune Shop.", new() { new("(BACK)", 0), byeThen }, acts: [ new("BoughtHouse", "MIST_VarrockSouthEast", "MIST_VarrockPOH", 0)]) },
+                { 102, new("Great, here are the keys. House is in Edgeville. Can't miss it.", new() { new("(BACK)", 0), byeThen }, acts: [ new("BoughtHouse", "MIST_Edgeville", "MIST_EdgevillePOH", 0)]) },
+                { 103, new("Great, here are the keys. The gothic is in Draynor Village, near Aggie and Ned's houses.", new() { new("(BACK)", 0), byeThen }, acts: [ new("BoughtHouse", "MIST_DraynorVillage", "MIST_DraynorPOH", 0)]) },
+                { 104, new("Great, here are the keys. The cottage is in Lumbridge, just south of the Castle near the graveyard.", new() { new("(BACK)", 0), byeThen }, acts: [ new("BoughtHouse", "MIST_Lumbridge", "MIST_LumbridgePOH", 0)]) }
+            }));
+
             // Misthalin 
             { 
                 // Wizards' Tower
@@ -69,7 +114,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     toAdd.Add(new("Wizard Traiborn", "mistWizTraiborn", new() { 
                          { 0, new("Ello young thingummywut.", new() { new DialogueChoice("What's a thingummywut?", 1), new DialogueChoice("Teach me to be a mighty wizard.", 9), byeThen }) }, 
                          { 1, new("A thingummywut? Where? Where?!", new() { new DialogueChoice("(NEXT)", 2),  byeThen }) }, 
-                         { 2, new("Those pesky thingummywuts. They get everywhere. THey leave a terrible mess too.", new() { new DialogueChoice("You just called me a thingummywut.", 3), new DialogueChoice("Tell me what they look like and I'll mash 'em.", 7), byeThen }) },
+                         { 2, new("Those pesky thingummywuts. They get everywhere. They leave a terrible mess too.", new() { new DialogueChoice("You just called me a thingummywut.", 3), new DialogueChoice("Tell me what they look like and I'll mash 'em.", 7), byeThen }) },
                          { 3, new("You're a thingummywut? I've never seen one up close before. They said I was mad!", new() { new DialogueChoice("(NEXT)", 4),  byeThen }) }, 
                          { 4, new("Now you are my proof! There ARE thingummywuts in this tower! Now where can I find a cage big enough to keep you?", new() { new DialogueChoice("I'd better be off...", 5), new DialogueChoice("They're right, you are mad.", 6),  byeThen }) },  
                          { 5, new("Oh, okay, have a good time, and watch out for sheep! They're more cunning than they look.", new() { byeThen }) }, 

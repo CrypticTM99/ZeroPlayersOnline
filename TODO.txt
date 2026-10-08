@@ -16,18 +16,18 @@ Misthalin Mania
 - (DONE) Quest: Shield of Arrav
 - (DONE) Quest: The Ides of Milk
 - (DONE) Quest: Gertrude's Cat
-- Quest: A Porcine of Interest
-- Quest: Sleeping Giants (unlocks Giants' Foundry)
-- Quest: Demon Slayer (needs varrock) 
-- Quest: Romeo & Juliet (needs varrock) 
-- Quest: Ernest the Chicken (needs draynor but christ)
-- Quest: Vampire Slayer (needs varrock) 
+- x Quest: A Porcine of Interest
+- x Quest: Sleeping Giants (unlocks Giants' Foundry)
+- x Quest: Demon Slayer (needs varrock) 
+- x Quest: Romeo & Juliet (needs varrock) 
+- x Quest: Ernest the Chicken (needs draynor but christ)
+- x Quest: Vampire Slayer (needs varrock) 
 - Quest: Misthalin Mystery (just lumbridge i think but this one might be spicy to do right)
 - Quest: Priest in Peril (needs varrock / silvarea)
 - Quest: A Soul's Bane (needs varrock)
 - Quest: All Fired Up (needs varrock / silvarea)
 - Quest: Lost City (needs port sarim / entrana and god that's gonna suck)
-- Quest: Prince Ali Rescue (needs varrock, al kharid, and draynor)
+- x Quest: Prince Ali Rescue (needs varrock, al kharid, and draynor)
 - Quest: One Piercing Note (al kharid - citharede abbey)
 - Quest: The Dig Site (varrock)
 - Quest: Tears of Guthix
@@ -51,13 +51,56 @@ Other to finish Misthalin demo (which will end with Dragon Slayer being possible
 - Ice Mountain
 - Construction skill and player-owned houses
 - Artisan skill?, plop some guilds or workshops or something down to go do them at
-- Mahogany Homes
 - Task diaries, should be able to do at least some of Lumbridge/Draynor and Varrock
 
 
+Misthalin Demo v6 Goals
+- Quests: Romeo and Juliet, Demon Slayer, A Porcine of Interest, Vampire Slayer, Ernest the Chicken, Prince Ali Rescue, Sleeping Giants
+- Minigames: Sorceress' Garden (but make it suck less), Giant's Foundry, Emir's Arena finally?
+- Task Diaries: Lumbridge/Draynor Easy is all possible now, Varrock easy should all be possible
+- Old Areas: Finish Varrock, Draynor, Al Kharid, and Lumbridge of simple areas (eg not the Dorgeshuun mines yet probably but at least the normal houses and such)
+- New Areas: Everything south of Falador at least (Rimmington and Port Sarim)
+- New Skill(s): Construction, Artisan?
+- Random Events
+
+
+POH basic structure
+- Buy house from Estate Agent, only options available are ones in region they're in (one agent per region)
+- - Misthalin house spots: (DONE) Varrock Southeast, Edgeville, (DONE) Draynor Village, (DONE)Lumbridge
+- - Asgarnia house spots: Falador, Ice Mountain?, Port Sarim, Rimmington, Taverly, Burthorpe?
+- - Desert house spots: Al Kharid, Nardah, Pollnivneach, Menaphos, Bandit Camp?
+- - Morytania house spots: Canifis, Port Phasmatys (need Ghosts Ahoy), Mort'ton / Burgh de Rott (need idk), Darkmeyer (need access to darkmeyer i don't remember what quest that is)
+- - Kandarin house spots: Seer's village, Catherby, Ardougne, Yanille, Tree Gnome Stronghold (needs some gnome quest, maybe just Tree Gnome Stronghold)
+- - Fremennik house spots: Relekka (need Fremennik Trials), Miscellania (need Managing Miscellania), Lunar Isle (need Lunar Diplomacy), maybe Neitiznot/Jatizso or something
+- - Wilderness house spots??? Interesting idea but not sure where yet
+- - Karamja house spots: Brimhaven, Tai Bwo Wannai village (need Tai Bwo Wannai Trio), Shilo Village (need Shilo Village)
+- (DONE) Start with one room, up to Construction Tier rooms total
+- (DONE) Each room has a set number of build spots which can be various things
+- (DONE) - Decorative items raise comfort rating of house, resting in a bed in a house restores you to max HP and has a chance to give a well rested buff (only once per hour of playtime, lasts 30 minutes maybe)
+- (DONE) - - Well rested buff: Maybe when a positive potion effect is applied, slightly increase it based on some metric (1, +1 per 50 comfort or something, see what the max possible comfort ends up being)
+- (DONE) - Stations are processing stations (Range, Spinning Wheel, Anvil, etc) that facilitate skilling
+- (DONE) - Gathers allow you to create specific gathering spots in your house (usually in gardens) for skilling and item gain 
+- (DONE) Decent experience from building individual spots, big exp drop for filling out all spots in a room (max of Construction Tier per house, but only once per room)
+
+POH - Making it actually work
+- (DONE) Purchase house from the Estate Agent, also give them an option to manage purchased houses (enable and disable them up to your limit)
+- (DONE) Build and manage house through the minigame menu. Separate build and view modes (view mode lets you activate and examine built objects to use them)
+- (DONE) Allow buying and deleting rooms if you have extra capacity available, give big warning if deleting a room with stuff built in it
+- (DONE) While in a location marked as tied to a house ID, intercept the description and name to show a constructed description/name for the room you're currently viewing (reset to 0 when entering a house location)
+- (DONE) If viewing a player house, redirect the listings for (done) gathering tiles and (done) processing stations and farm patches to the lists from the currently viewed room
+- (DONE) Show all rooms as connected locations for eachother, and also the exit back out to the map the house is connected to
+- (DONE) Objects that provide infinite of an item (for example Larders giving infinite of specific cooking materials) can add them as shop items with a 0x price multiplier, add a safety so you can't sell for 0 gp
+- (DONE) Write a Construction Guide book item explaining how to build up a POH
+- (DONE) - How buying a house works
+- (DONE) - How building in a house works
+- (DONE) - The benefits of comfort and finishing rooms
+- (DONE) - How teleporting to houses works
+- (DONE) - Description of each buildable room and some of the benefits of having such a room in your home
+- (DONE) Test to make sure the whole tea making process in the kitchen works
+- (DONE) Finish all the rooms and buildable objects that can currently be implemented
+- (DONE) Make the teleport to house menu work
+
 - Can nearly begin adding task diaries
-- Implement lodestone network, make it so you have to reach and enable lodestones to teleport to them, maybe have a selective cooldown based on if you've charged it with law runes?
-- Grand Exchange is reachable now, time to implement that. Need a new window for it probably.
 - Lock ruby necklace -> digsite pendant behind the museum cleaning thing
 - Make Shantay drop the scrumpled paper rarely on talk
 
@@ -67,8 +110,16 @@ Other to finish Misthalin demo (which will end with Dragon Slayer being possible
 - - Allow players to block songs so that they don't get autoplayed or shuffled to
  
 
-Weapon poison, maybe a poison equipment slot that applies to any melee or ranged attack?
+Random Ideas
+- Companions? Help with combat, possibly hold some items, maybe recurring costs to keep them around or upgrade them. If necro/taming added then those are free but require the skill
+- Player Owned Restaurant minigame. buy the restaurant somewhere, renovate it, then the gameplay is basically plateup (NPCs appear and order something, serve them, clean up table, etc)
+- - Initially just a cook (maybe at the Jolly Boar, quest to make the existing cook leave), but with decent cooking level and big money you can buy the place to renovate/change/upgrade it
+- - Can set menu, must find an array that satisfies your current clientele
+- - Have to manage restaurant inventory, but it can only hold so many total things before needing to be upgraded
 
+Soon but not Urgent
+- Weapon poison, maybe a poison equipment slot that applies to any melee or ranged attack?
+- Keep an eye out for bugs involving max level a station/tool can craft
 
 
 Immediately important stuff to get working: 
@@ -77,13 +128,11 @@ Immediately important stuff to get working:
 
 
 Less immediate but still important:
-- Compass mechanic? Select destination somehow, tell player if it's within 10 maps of them and lead them to it if so
 - Emote clues will not be possible in item rando as it stands, and you won't know what the items are even if they can be worn. Maybe make their items static?
 - Dungeoneering areas that are actual random layout dungeons, reset layout somehow (on reload, if player is in a dungeon then reset their loc to the entrance, or if they reach the end crystal tp back to start and give set exp) 
 - Bank preset options somehow
 - Achievement Diaries / tasks for areas, split into difficulties, reward item for completing it, reward item only if it doesn't exist anywhere in the world, your bank, inventory, or equipment
 - Random Events
-- Skill pets, tiny chance when gaining exp in the skill if pet is not already owned
 
 
 
@@ -180,6 +229,13 @@ Clue Step Notes
 - Master up to 99, may require up to grandmaster quests
 
 - - Music Steps? Play a specific music track while talking to an NPC, maybe on higher clue step difficulties require that you be on auto and manage to keep the song playing from its trigger location (so you have to puzzle out a route to get from the trigger spot to the NPC without it changing)
+- - House Steps: Must buy a house, build a specific type of furniture/hotspot, then activate it. Gated by level by having the hotspots be in higher tier rooms, or requiring a set minimum level to build (ex, beginner could require searching a bookshelf in a parlor)
+- - - Beginner: Bookcase (Parlor, min lv 1)
+- - - Easy: Bed (Bedroom, min lv 20)
+- - - Medium: Lectern (Study, min lv 40)
+- - - Hard: Throne (Throne room, min lv 60)
+- - - Elite: Spellbook altar (Achievement gallery, min lv 80)
+- - - Master: Ornate jewellery box (Achievement gallery, min lv 91)
 
 
 Next quests to implement and things they need 

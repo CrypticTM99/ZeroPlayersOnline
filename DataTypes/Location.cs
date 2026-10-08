@@ -46,6 +46,10 @@ namespace ZeroPlayersOnline.DataTypes {
         public List<string> HunterSpots = new();
         public List<HunterCreature> CreaturesHere = new();
 
+        public string MahoganyTown = "";
+        public List<string> MahoganyHomesHotspots = new();
+        public string PlayerHomeHere = "";
+
         public string UPCsong = "";
         public string JGXsong = "";
 

@@ -625,6 +625,8 @@ namespace ZeroPlayersOnline {
                 || (ExtraWindows.LampMenu.IsVisible && instance != ExtraWindows.LampMenu)
                 || (ExtraWindows.GrandExchange.IsVisible && instance != ExtraWindows.GrandExchange)
                 || (ExtraWindows.CatMenu.IsVisible && instance != ExtraWindows.CatMenu)
+                || (ExtraWindows.HouseMenu.IsVisible && instance != ExtraWindows.HouseMenu)
+                || (ExtraWindows.Compass.IsVisible && instance != ExtraWindows.Compass)
                 || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
                 return;
             }
@@ -857,6 +859,8 @@ namespace ZeroPlayersOnline {
                 || (ExtraWindows.LampMenu.IsVisible && instance != ExtraWindows.LampMenu)
                 || (ExtraWindows.GrandExchange.IsVisible && instance != ExtraWindows.GrandExchange)
                 || (ExtraWindows.CatMenu.IsVisible && instance != ExtraWindows.CatMenu)
+                || (ExtraWindows.HouseMenu.IsVisible && instance != ExtraWindows.HouseMenu)
+                || (ExtraWindows.Compass.IsVisible && instance != ExtraWindows.Compass)
                 || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
                 return y;
             }
@@ -1017,6 +1021,8 @@ namespace ZeroPlayersOnline {
                 || (ExtraWindows.LampMenu.IsVisible && instance != ExtraWindows.LampMenu)
                 || (ExtraWindows.GrandExchange.IsVisible && instance != ExtraWindows.GrandExchange)
                 || (ExtraWindows.CatMenu.IsVisible && instance != ExtraWindows.CatMenu)
+                || (ExtraWindows.HouseMenu.IsVisible && instance != ExtraWindows.HouseMenu)
+                || (ExtraWindows.Compass.IsVisible && instance != ExtraWindows.Compass)
                 || (ExtraWindows.Map.IsVisible && instance != ExtraWindows.Map && (mousePos.X < 55 || mousePos.X > 108))) {
                 return y;
             }
@@ -1291,6 +1297,19 @@ namespace ZeroPlayersOnline {
         public static bool Requirement(string type, int miscint, string misc1, string misc2 = "", bool consume = false, bool notes = false, bool equipped = true) {
             Requirement req = new(type, miscint, misc1, consume, misc2);
             return req.CheckRequirement(GameLoop.ZPO.player, notes, equipped);
+        }
+
+        public static int QuantitySelector(int curr, int max, bool negative = false, bool allowAlt = false, bool allowSpace = false) {
+            int qty = negative ? -1 : 1;
+
+            if (EitherShift()) { qty *= 5; }
+            if (EitherControl()) { qty *= 10; }
+            if (allowSpace && KeyDown(Keys.Space)) { qty *= 1000; }
+            if (allowAlt && EitherAlt()) { qty = negative ? 0 : max; } 
+
+            qty = Math.Clamp(curr + qty, 0, max);
+
+            return qty;
         }
     }
 

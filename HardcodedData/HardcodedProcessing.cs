@@ -5,7 +5,7 @@ namespace ZeroPlayersOnline.Hardcodes {
         public static void InitProcessors(Dictionary<string, ProcessingStation> Stations) {
             List<ProcessingStation> toAdd = new();
 
-            toAdd.Add(new("Furnace") {
+            ProcessingStation Furnace = new("Furnace") {
                 Recipes = new() {
                     new ProcessingRecipe("bucketSand", "glassMolten", "Crafting", 1, 20, secondaryIn: "ashSoda", secondaryOut: "bucketEmpty"),
                     new ProcessingRecipe("oreMixBronze", "barBronze", "Smithing", 1, 7),
@@ -33,7 +33,20 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new ProcessingRecipe("oreMixGold", "barGold", "Smithing", 20, 23),
                     new ProcessingRecipe("oreGold", "barGold", "Smithing", 20, 23, tertiaryIn: "ringForging")
                 }
-            });
+            }; 
+            toAdd.Add(Furnace);
+
+            // Creates the copies for the POH workshop
+            List<string> MetalNames = ["Bronze", "Iron", "Steel", "Mithril", "Adamant", "Rune", "Orichalcum", "Necronium", "Bane", "Elder Rune" ];
+            for (int i = 0; i < 10; i++) {
+                int adjLevel = i;
+                if (adjLevel == 0) { adjLevel = 1; }
+                else { adjLevel *= 10; }
+
+                ProcessingStation furnaceCopy = Furnace.Clone();
+                furnaceCopy.Name = MetalNames[i] + " Furnace"; furnaceCopy.DontIncludeInCounts = true; furnaceCopy.MaxLevel = adjLevel;
+                toAdd.Add(furnaceCopy);
+            } 
 
             toAdd.Add(new("Casting") { OpensUI = true });
 
@@ -42,6 +55,21 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new ProcessingRecipe("bucketMilk", "cream", "Cooking", 21, 18, secondaryOut: "bucketEmpty"),
                     new ProcessingRecipe("cream", "butter", "Cooking", 38, 23),
                     new ProcessingRecipe("butter", "cheese", "Cooking", 48, 24)
+                }
+            });
+
+            toAdd.Add(new("Sawmill") {
+                Recipes = new() {
+                    new ProcessingRecipe("logPine", "plankPine", "Construction", 1, secondaryIn: "Gold,20", outQty: 4, noteOut: true),
+                    new ProcessingRecipe("logOak", "plankOak", "Construction", 10, secondaryIn: "Gold,40", outQty: 4, noteOut: true),
+                    new ProcessingRecipe("logWillow", "plankWillow", "Construction", 20, secondaryIn: "Gold,80", outQty: 4, noteOut: true),
+                    new ProcessingRecipe("logTeak", "plankTeak", "Construction", 30, secondaryIn: "Gold,120", outQty: 4, noteOut: true),
+                    new ProcessingRecipe("logMaple", "plankMaple", "Construction", 40, secondaryIn: "Gold,160", outQty: 4, noteOut: true),
+                    new ProcessingRecipe("logAcadia", "plankAcadia", "Construction", 50, secondaryIn: "Gold,200", outQty: 4, noteOut: true),
+                    new ProcessingRecipe("logMahogany", "plankMahogany", "Construction", 60, secondaryIn: "Gold,240", outQty: 4, noteOut: true),
+                    new ProcessingRecipe("logYew", "plankYew", "Construction", 70, secondaryIn: "Gold,480", outQty: 4, noteOut: true),
+                    new ProcessingRecipe("logMagic", "plankMagic", "Construction", 80, secondaryIn: "Gold,720", outQty: 4, noteOut: true),
+                    new ProcessingRecipe("logElder", "plankElder", "Construction", 90, secondaryIn: "Gold,960", outQty: 4, noteOut: true)
                 }
             });
 
@@ -57,7 +85,19 @@ namespace ZeroPlayersOnline.Hardcodes {
                 }
             });
 
-            toAdd.Add(new("Anvil") { OpensUI = true });
+            toAdd.Add(new("Anvil") { OpensUI = true });  
+            toAdd.Add(new("Bronze Anvil", true, true, 1, "Anvil"));
+            toAdd.Add(new("Iron Anvil", true, true, 10, "Anvil"));
+            toAdd.Add(new("Steel Anvil", true, true, 20, "Anvil"));
+            toAdd.Add(new("Mithril Anvil", true, true, 30, "Anvil"));
+            toAdd.Add(new("Adamant Anvil", true, true, 40, "Anvil"));
+            toAdd.Add(new("Rune Anvil", true, true, 50, "Anvil"));
+            toAdd.Add(new("Orichalcum Anvil", true, true, 60, "Anvil"));
+            toAdd.Add(new("Necronium Anvil", true, true, 70, "Anvil"));
+            toAdd.Add(new("Bane Anvil", true, true, 80, "Anvil"));
+            toAdd.Add(new("Elder Rune Anvil", true, true, 90, "Anvil"));
+
+
             toAdd.Add(new("Grand Exchange") { OpensUI = true });
             toAdd.Add(new("GE Bank") { OpensUI = true });
 
@@ -112,12 +152,14 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new ProcessingRecipe("stewUncooked", "stew", "Cooking", 25, 117, failOutput: "burntBowl", failStop: 58),
                     new ProcessingRecipe("curryUncooked", "curry", "Cooking", 60, 280, failOutput: "burntBowl", failStop: 74),
                     new ProcessingRecipe("bowlOnions", "onionsFried", "Cooking", 42, 60, failOutput: "burntBowl", failStop: 77),
-                    new ProcessingRecipe("bowlMushrooms", "mushroomsFried", "Cooking", 46, 60, failOutput: "burntBowl", failStop: 90)
+                    new ProcessingRecipe("bowlMushrooms", "mushroomsFried", "Cooking", 46, 60, failOutput: "burntBowl", failStop: 90),
+                    new("kettleFull", "kettleHot")
                 }
             };
 
             ProcessingStation Fire = Range.Clone();
             Fire.Name = "Fire";
+            Fire.DontIncludeInCounts = true;
 
             foreach (var rec in Fire.Recipes) {
                 if (rec.StopFailingLevel > 0) {
@@ -148,12 +190,14 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new ProcessingRecipe("vialEmpty", "vialWater"), 
                     new ProcessingRecipe("bowlEmpty", "bowlWater"), 
                     new ProcessingRecipe("jugEmpty", "jugWater"), 
-                    new ProcessingRecipe("potFlour", "doughBread", secondaryOut: "potEmpty")
+                    new ProcessingRecipe("potFlour", "doughBread", secondaryOut: "potEmpty"),
+                    new ("kettleEmpty", "kettleFull")
                 }
             };
 
             ProcessingStation fountain = Helper.Clone(sink);
             fountain.Name = "Fountain";
+            fountain.DontIncludeInCounts = true;
 
             toAdd.Add(sink);
             toAdd.Add(fountain);
@@ -287,7 +331,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                 Recipes = new() {
                     new ProcessingRecipe("flax", "bowstring", "Crafting", 1, 5),
                     new ProcessingRecipe("sinew", "crossbowString", "Crafting", 1, 5),
-                    new ProcessingRecipe("woolRaw", "woolBall", "Crafting", 1, 3)
+                    new ProcessingRecipe("woolRaw", "woolBall", "Crafting", 1, 3),
+                    new ProcessingRecipe("woolBall,4", "clothBolt", "Crafting", 1, 10)
                 }
             });
 
@@ -298,7 +343,13 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             toAdd.Add(new("Dairy Cow") { Recipes = new() { new ProcessingRecipe("bucketEmpty", "bucketMilk") } });
+
             toAdd.Add(new("Beer Keg") { Recipes = new() { new ProcessingRecipe("beerGlass", "beer") } });
+            toAdd.Add(new("Cider Keg") { Recipes = new() { new ProcessingRecipe("beerGlass", "cider") } });
+            toAdd.Add(new("Asgarnian Ale Keg") { Recipes = new() { new ProcessingRecipe("beerGlass", "aleAsgarnian") } });
+            toAdd.Add(new("Greenman's Ale Keg") { Recipes = new() { new ProcessingRecipe("beerGlass", "aleGreenman") } });
+            toAdd.Add(new("Dragon Bitter Keg") { Recipes = new() { new ProcessingRecipe("beerGlass", "dragonBitter") } });
+            toAdd.Add(new("Chef's Delight Keg") { Recipes = new() { new ProcessingRecipe("beerGlass", "chefsDelight") } });
 
             toAdd.Add(new("Level 1 Enchanter") {
                 Recipes = new() { 
@@ -395,6 +446,101 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new ProcessingRecipe("braceletOnyx", "braceletRegen")
                 }
             });
+
+            toAdd.Add(new("Repair Bench") {
+                Recipes = new() {
+                    new ProcessingRecipe("arrowsBroken", "*Arrow", "Fletching", 1, 8),
+                    new ProcessingRecipe("staffBroken", "*Staff", "Crafting", 1, 15)
+                }
+            });
+
+            toAdd.Add(new("Whetstone") {
+                Recipes = new() {
+                    new ProcessingRecipe("arrowsBroken", "*Arrow", "Fletching", 1, 8),
+                    new ProcessingRecipe("staffBroken", "*Staff", "Crafting", 1, 15),
+                    new("swordRusty", "*Sword", "Smithing", 1, 25)
+                }
+            });
+
+            toAdd.Add(new("Herblore Workbench") { // Converts herbs directly into unfinished potions, probably only ever available as a buildable in the POH
+                Recipes = new() {
+                    new("herbCleanGuam", "potionUnfGuam", "Herblore", 1),
+                    new("herbCleanTarromin", "potionUnfTarromin", "Herblore", 5),
+                    new("herbCleanMarrentill", "potionUnfMarrentill", "Herblore", 9),
+                    new("herbCleanHarralander", "potionUnfHarralander", "Herblore", 18),
+                    new("herbCleanRanarr", "potionUnfRanarr", "Herblore", 25),
+                    new("herbCleanToadflax", "potionUnfToadflax", "Herblore", 30),
+                    new("herbCleanSpiritweed", "potionUnfSpiritweed", "Herblore", 35),
+                    new("herbCleanIrit", "potionUnfIrit", "Herblore", 40),
+                    new("herbCleanWergali", "potionUnfWergali", "Herblore", 41),
+                    new("herbCleanAvantoe", "potionUnfAvantoe", "Herblore", 48),
+                    new("herbCleanKwuarm", "potionUnfKwuarm", "Herblore", 54),
+                    new("herbCleanBloodweed", "potionUnfBloodweed", "Herblore", 57),
+                    new("herbCleanSnapdragon", "potionUnfSnapdragon", "Herblore", 63),
+                    new("herbCleanCadantine", "potionUnfCadantine", "Herblore", 65),
+                    new("herbCleanLantadyme", "potionUnfLantadyme", "Herblore", 67),
+                    new("herbCleanDwarfweed", "potionUnfDwarfweed", "Herblore", 70),
+                    new("herbCleanTorstol", "potionUnfTorstol", "Herblore", 75),
+                    new("herbCleanArbuck", "potionUnfArbuck", "Herblore", 77),
+                    new("herbCleanFellstalk", "potionUnfFellstalk", "Herblore", 91),
+                }
+            }); 
+
+            toAdd.Add(new("Crystal Ball", false, true) {
+                Recipes = new() {
+                    new ProcessingRecipe("staffAir", "staffWater"),
+                    new ProcessingRecipe("staffWater", "staffEarth"),
+                    new ProcessingRecipe("staffEarth", "staffFire"),
+                    new ProcessingRecipe("staffFire", "staffAir")
+                }
+            });
+
+            toAdd.Add(new("Elemental Sphere", false, true) {
+                Recipes = new() {
+                    new ProcessingRecipe("staffAir", "staffWater"),
+                    new ProcessingRecipe("staffWater", "staffEarth"),
+                    new ProcessingRecipe("staffEarth", "staffFire"),
+                    new ProcessingRecipe("staffFire", "staffAir"),
+                    
+                    new ProcessingRecipe("battlestaffAir", "battlestaffWater", secondaryIn: "runeAir,100"),
+                    new ProcessingRecipe("battlestaffWater", "battlestaffEarth", secondaryIn: "runeAir,100"),
+                    new ProcessingRecipe("battlestaffEarth", "battlestaffFire", secondaryIn: "runeAir,100"),
+                    new ProcessingRecipe("battlestaffFire", "battlestaffAir", secondaryIn: "runeAir,100")
+                }
+            });
+
+            toAdd.Add(new("Crystal of Power") {
+                Recipes = new() {
+                    new ProcessingRecipe("staffAir", "staffWater"),
+                    new ProcessingRecipe("staffWater", "staffEarth"),
+                    new ProcessingRecipe("staffEarth", "staffFire"),
+                    new ProcessingRecipe("staffFire", "staffAir"),
+                    
+                    new ProcessingRecipe("battlestaffAir", "battlestaffWater", secondaryIn: "runeAir,100"),
+                    new ProcessingRecipe("battlestaffWater", "battlestaffEarth", secondaryIn: "runeAir,100"),
+                    new ProcessingRecipe("battlestaffEarth", "battlestaffFire", secondaryIn: "runeAir,100"),
+                    new ProcessingRecipe("battlestaffFire", "battlestaffAir", secondaryIn: "runeAir,100"),
+                    
+                    new ProcessingRecipe("staffMysticAir", "staffMysticWater", secondaryIn: "runeAir,1000"),
+                    new ProcessingRecipe("staffMysticWater", "staffMysticEarth", secondaryIn: "runeAir,1000"),
+                    new ProcessingRecipe("staffMysticEarth", "staffMysticFire", secondaryIn: "runeAir,1000"),
+                    new ProcessingRecipe("staffMysticFire", "staffMysticAir", secondaryIn: "runeAir,1000")
+                }
+            });
+
+
+            toAdd.Add(new("Lectern") { OpensUI = true });  
+            toAdd.Add(new("Pine Lectern", true, true, 10, "Lectern"));
+            toAdd.Add(new("Oak Lectern", true, true, 20, "Lectern"));
+            toAdd.Add(new("Willow Lectern", true, true, 30, "Lectern"));
+            toAdd.Add(new("Teak Lectern", true, true, 40, "Lectern"));
+            toAdd.Add(new("Maple Lectern", true, true, 50, "Lectern"));
+            toAdd.Add(new("Acadia Lectern", true, true, 60, "Lectern"));
+            toAdd.Add(new("Mahogany Lectern", true, true, 70, "Lectern"));
+            toAdd.Add(new("Yew Lectern", true, true, 80, "Lectern"));
+            toAdd.Add(new("Magic Lectern", true, true, 90, "Lectern"));
+            toAdd.Add(new("Elder Lectern", true, true, 99, "Lectern"));
+
 
             toAdd.Add(new("Orb Depository") { Recipes = new() { new ProcessingRecipe("mtaOrb", "", "Magic", 1, 20, minigameAct: "mtaOrb") } });
             toAdd.Add(new("Fruit Chute") { Recipes = new() { new ProcessingRecipe("fruitBanana", "", minigameAct: "mtaFruit"), new ProcessingRecipe("fruitPeach", "", minigameAct: "mtaFruit") } });

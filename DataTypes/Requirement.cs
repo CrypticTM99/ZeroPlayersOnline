@@ -29,17 +29,37 @@
                 return "Need level " + MiscInt + " " + MiscString;
             }
 
+            if (RequirementType == "NotSkill") {
+                if (MiscString == "All") { 
+                    return "Need below level " + MiscInt + " in all skills";
+                }
+                return "Need below level " + MiscInt + " " + MiscString;
+            }
+
             if (RequirementType == "QuestAt") {
                 if (GameLoop.ZPO.QuestLibrary.TryGetValue(MiscString, out Quest? req)) {
                     if (req != null) {
                         if (req.CompleteStage == MiscInt)
                             return "Completed Quest: " + req.Name;
                         else
-                            return "Quest: " + req.Name + " [" + MiscInt + "]";
+                            return "Quest: " + req.Name + " [stage " + MiscInt + "]";
                     }
                 }
 
-                return "Completed " + MiscString;
+                return "Progessed " + MiscString + " to a point";
+            }
+
+            if (RequirementType == "QuestNot") {
+                if (GameLoop.ZPO.QuestLibrary.TryGetValue(MiscString, out Quest? req)) {
+                    if (req != null) {
+                        if (req.CompleteStage == MiscInt)
+                            return "Not completed Quest: " + req.Name;
+                        else
+                            return "Quest: " + req.Name + " [not stage " + MiscInt + "]";
+                    }
+                }
+
+                return "Not at this stage of " + MiscString;
             }
 
             if (RequirementType == "QuestBelow") {
@@ -169,6 +189,13 @@
             if (RequirementType == "SlayerNotExtended") { return "Current slayer task must not already be extended."; }
             if (RequirementType == "SlayerExtended") { return "Current slayer task must already be extended."; }
 
+            if (RequirementType == "Region") { return "Must be in " + MiscString + "."; }
+
+            if (RequirementType == "POHNotOwned") { return "Must not already own the house in " + GameLoop.ZPO.ResolveLocationName(MiscString) + "."; }
+            if (RequirementType == "POHOwned") { return "Must own the house in " + GameLoop.ZPO.ResolveLocationName(MiscString) + "."; }
+            if (RequirementType == "AnyPOH") { return "Must own a home anywhere."; }
+            if (RequirementType == "POHActive") { return "Must own this home, and have it currently active (set at any Estate Agent)."; }
+
             return "";
         }
 
@@ -218,6 +245,20 @@
                         return true;
                     } else {
                         return false;
+                    }
+                }
+            }
+
+            if (RequirementType == "QuestNot") {
+                if (p.QuestLog.TryGetValue(MiscString, out QuestStatus? quest)) {
+                    if (quest.CurrentStage != MiscInt) {
+                        return true;
+                    }
+                } else {
+                    if (MiscInt == -1) {
+                        return false;
+                    } else {
+                        return true;
                     }
                 }
             }
@@ -413,7 +454,12 @@
             if (RequirementType == "SlayerExtended") { if (p.SlayerTaskExtended) { return true; }}
             if (RequirementType == "SlayerNotExtended") { if (!p.SlayerTaskExtended) { return true; }}
 
+            if (RequirementType == "Region") { if (p.GetRegion() == MiscString) { return true; }}
 
+            if (RequirementType == "POHNotOwned") { if (!p.Homes.ContainsKey(MiscString)) { return true; }}
+            if (RequirementType == "POHOwned") { if (p.Homes.ContainsKey(MiscString)) { return true; }}
+            if (RequirementType == "AnyPOH") { if (p.Homes.Count > 0) { return true; }}
+            if (RequirementType == "POHActive") { if (p.Homes.TryGetValue(MiscString, out PlayerOwnedHome? home) && home != null && home.Active) { return true; }}
 
             return false;
         }

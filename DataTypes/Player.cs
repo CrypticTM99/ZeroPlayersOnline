@@ -136,6 +136,24 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public List<GETransaction> ActiveGE = new();
 
+        public List<M_MahoganyHomesHotspot> MahoganyContractSpots = new(); // The contract spots
+        public string MahoganyDestID = ""; // The map they have to go to
+        public int MahoganyConstructionTotal = 0; // For resolving exp reward after a contract
+        public int MahoganyPoints = 0; // For reward shop
+
+        public Dictionary<string, PlayerOwnedHome> Homes = new();
+
+        public int TimeLastRested = 0;
+        public int CurrentRestedBuff = 0;
+
+        public int TimeLastStar = 0;
+        public string CurrentStarLoc = "";
+        public int CurrentStarTier = 0;
+        public bool MiningStar = false;
+
+        public int LeftIncense = 0;
+        public int RightIncense = 0;
+
         [JsonIgnore]
         public List<HunterCreature> SpawnedCreatures = new();
 
@@ -505,7 +523,7 @@ namespace ZeroPlayersOnline.DataTypes {
                                         sellValue *= Inventory[i].Charges;
                                     } 
 
-                                    if (curr.ShopPriceMultiplier != 1.0) {
+                                    if (curr.ShopPriceMultiplier < 1.0) {
                                         sellValue = (int) (sellValue * curr.ShopPriceMultiplier);
                                     }
                                         
@@ -584,6 +602,17 @@ namespace ZeroPlayersOnline.DataTypes {
 
                     if (which == "Constitution" && oldLevel != Skills[which].Level) {
                         CurrentHP += (Skills[which].Level - oldLevel);
+                    }
+                    
+                    if (!WorldState.ContainsKey("SkillPet" + which)) {
+                        if (GameLoop.rand.Next(50000000) < amount * ExpMultiplier) { 
+                            if (GameLoop.ZPO.ResolveItem("petSkill" + which) is Item skillPet) {
+                                TryPickup(skillPet, 1);
+                                GameLoop.ZPO.Log.AddMessage("You get the funny feeling you're being followed...", Color.Yellow);
+                                GameLoop.ZPO.Log.AddMessage("You found the " + which + " skilling pet, " + skillPet.Name + "!", Color.Lime);
+                                WorldState.Add("SkillPet" + which, 1);
+                            }  
+                        }
                     }
                 }
             } 
@@ -824,6 +853,13 @@ namespace ZeroPlayersOnline.DataTypes {
                     item = split[0];
                 }
 
+                if (item == "Gold") {
+                    if (GoldTotal() < qty) {
+                        return false;
+                    }
+                    continue;
+                }
+
                 if (!ONLYequipped) {
                     // Check for items that count as the item but aren't the item (for example, elemental staves)
                     for (int i = 0; i < Inventory.Count; i++) {
@@ -944,6 +980,11 @@ namespace ZeroPlayersOnline.DataTypes {
                 }
 
                 countNeeded = qty;
+
+                if (item == "Gold") {
+                    TakeGold(qty);
+                    continue;
+                }
 
                 CountsLeft.Add(item, countNeeded);
             } 
@@ -1424,7 +1465,7 @@ namespace ZeroPlayersOnline.DataTypes {
             if (spell.Level > Skills["Magic"].Level)
                 return false;
 
-            if (!HasAllItems(spell.Runes, false, true))
+            if (!HasAllItems(spell.Runes, false, true) && !HasAllItems(["tab" + CastingSpell]))
                 return false;
 
             return true;
@@ -1437,7 +1478,7 @@ namespace ZeroPlayersOnline.DataTypes {
                 return "Incorrect spellbook active.";
             if (spell.Level > Skills["Magic"].Level)
                 return "Need " + spell.Level + " Magic to cast that spell, only have " + Skills["Magic"].Level + ".";
-            if (!HasAllItems(spell.Runes, false, true)) {
+            if (!HasAllItems(spell.Runes, false, true) && !HasAllItems(["tab" + spell.ID])) {
                 string items = "";
 
                 for (int i = 0; i < spell.Runes.Count; i++) {
@@ -1534,10 +1575,6 @@ namespace ZeroPlayersOnline.DataTypes {
                     }
                 }
             }
-        }
-
-        public bool HasMinigameItem() { // TODO: Placeholder, Implement this when there are things you carry around that need to display minigame info, like construction contracts
-            return false;
         }
 
         public void TakeGold(int amount) {
@@ -1709,6 +1746,26 @@ namespace ZeroPlayersOnline.DataTypes {
             }
 
             return total ? totalPossibleQP : questPoints;
+        }
+
+        public string GetRegion() {
+            if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr) && curr != null) {
+                return curr.Region;
+            }
+
+            return "ERROR";
+        }
+
+        public int GetSkillTier(string skill, bool effective = false) {
+            if (effective) {
+                int eff = GetEffectiveSkillLevel(skill);
+
+                return (int) (Math.Floor(eff / 10.0) + 1);
+            } else if (Skills.ContainsKey(skill)) {
+                return (int) (Math.Floor(Skills[skill].Level / 10.0) + 1);
+            }
+
+            return 1;
         }
     }
 }

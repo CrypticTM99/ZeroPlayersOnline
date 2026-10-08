@@ -391,10 +391,12 @@ namespace ZeroPlayersOnline.Managers {
                                                         GameLoop.ZPO.Log.AddMessage(new ColoredString("The blessing of the cornucopia preserves your charge.", Color.Goldenrod, Color.Black));
                                                     } else { 
                                                         player.Inventory[i].Charges--; 
-                                                        if (player.Inventory[i].Charges <= 0 && inv.ShattersAtZeroCharges && inv.ItemReturned == "") { 
+                                                        if (player.Inventory[i].Charges <= 0 && inv.ShattersAtZeroCharges) { 
                                                             flagForDeletion = true;
-                                                            GameLoop.ZPO.Log.AddMessage("Your " + inv.Name + " runs out of uses and shatters.", Color.MediumPurple);
-                                                        } else if (player.Inventory[i].Charges <= 0 && inv.ItemReturned != "") { 
+                                                            if (inv.ItemReturned == "") {
+                                                                GameLoop.ZPO.Log.AddMessage("Your " + inv.Name + " runs out of uses and shatters.", Color.MediumPurple);
+                                                            }
+                                                        } else if (player.Inventory[i].Charges <= 0 && !inv.ShattersAtZeroCharges) {  
                                                             GameLoop.ZPO.Log.AddMessage("Your " + inv.Name + " runs out of charges.", Color.MediumPurple);
                                                         }
                                                     }
@@ -1033,96 +1035,19 @@ namespace ZeroPlayersOnline.Managers {
                                 }
 
                                 if (MagicTab == "Tele") {
-                                    if (curr.Region == "Tutorial Island") {
-                                        player.ConsumeItems(spells[i].Runes);
-                                        player.NavLoc = "TI_Main";
-                                        spells[i].TimeLastCast = Helper.Time();
-                                        GameLoop.ZPO.Log.AddMessage("The pull of the island distorts your magic and you appear in the center of Tutorial Island.", Color.MediumPurple);
-                                    } else {
-                                        if (GameLoop.ZPO.Atlas.TryGetValue(spells[i].MiscString, out Location? dest)) {
-                                            spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
-                                            GameLoop.ZPO.Log.AddMessage("You teleport to " + dest.DisplayName + ".", Color.MediumPurple);
-                                        } else {
-                                            GameLoop.ZPO.Log.AddMessage("Teleport destination does not exist.", Color.Crimson);
-                                        } 
+                                    if (spells[i].ID != "teleHome") {
+                                        spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
+                                    }
+
+                                    foreach (var act in spells[i].CastActions) {
+                                        act.Execute();
                                     }
                                 }
 
                                 if (MagicTab == "Utility") {
-                                    if (spells[i].ID == "utilBonesBananas") {
-                                        bool anyBones = false;
-                                        int extras = 0;
-                                        foreach (var kv in player.Inventory) {
-                                            if (new List<string>() { "bonesRegular", "bonesWolf", "bonesBat", "bonesBig", "bonesBleached", "bonesBurnt", "bonesJogre", "bonesMonkey", "mtaBone1", "mtaBone2", "mtaBone3", "mtaBone4", "bonesAlan" }.Contains(kv.ID) && !kv.Noted) {
-                                                if (kv.ID.Contains("mtaBone")) {
-                                                    int qty = 0;
-                                                    if (MinigameManager.MTA_Bones[1] == kv.ID) { qty = 1; }
-                                                    if (MinigameManager.MTA_Bones[2] == kv.ID) { qty = 2; }
-                                                    if (MinigameManager.MTA_Bones[3] == kv.ID) { qty = 3; }
-                                                    
-                                                    extras += qty;
-                                                }
-                                                kv.ID = "fruitBanana";
-                                                anyBones = true; 
-                                            }
-                                        }
-
-                                        if (extras > 0) {
-                                            if (GameLoop.ZPO.ItemLibrary.TryGetValue("fruitBanana", out Item? banan) && banan != null) {
-                                                player.TryPickup(new Item(banan), extras);
-                                            }
-                                        }
-
-                                        if (anyBones) {
-                                            spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
-                                            GameLoop.ZPO.Log.AddMessage("You cast Bones to Bananas and all your bones become bananas.", Color.MediumPurple);
-                                        } else {
-                                            GameLoop.ZPO.Log.AddMessage("You have no applicable bones to transmute.", Color.Crimson);
-                                        }
-                                    }
-
-                                    if (spells[i].ID == "utilBonesPeaches") {
-                                        bool anyBones = false;
-                                        int extras = 0;
-                                        foreach (var kv in player.Inventory) {
-                                            if (new List<string>() { "bonesRegular", "bonesWolf", "bonesBat", "bonesBig", "bonesBleached", "bonesBurnt", "bonesJogre", "bonesMonkey", "mtaBone1", "mtaBone2", "mtaBone3", "mtaBone4", "bonesAlan" }.Contains(kv.ID) && !kv.Noted) {
-                                                if (kv.ID.Contains("mtaBone")) {
-                                                    int qty = 0;
-                                                    if (MinigameManager.MTA_Bones[1] == kv.ID) { qty = 1; }
-                                                    if (MinigameManager.MTA_Bones[2] == kv.ID) { qty = 2; }
-                                                    if (MinigameManager.MTA_Bones[3] == kv.ID) { qty = 3; }
-                                                     
-                                                    extras += qty;
-                                                }
-
-                                                kv.ID = "fruitPeach";
-                                                anyBones = true;
-                                            }
-                                        }
-
-                                        if (extras > 0) {
-                                            if (GameLoop.ZPO.ItemLibrary.TryGetValue("fruitPeach", out Item? peach) && peach != null) {
-                                                player.TryPickup(new Item(peach), extras);
-                                            }
-                                        }
-
-                                        if (anyBones) {
-                                            spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
-                                            GameLoop.ZPO.Log.AddMessage("You cast Bones to Peaches and all your bones become peaches.", Color.MediumPurple);
-                                        } else {
-                                            GameLoop.ZPO.Log.AddMessage("You have no applicable bones to transmute.", Color.Crimson);
-                                        }
-                                    }
-
-                                    if (spells[i].ID == "utilSuperheat") { 
-                                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Furnace", out ProcessingStation? furnace) && furnace != null) {
-                                            furnace.LastWorked = "";
-                                            if (furnace.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, RecentlyTrainedSkills)) {
-                                                spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
-                                                GameLoop.ZPO.Log.AddMessage("You cast Superheat Item and smelt an ore mix into a bar.", Color.MediumPurple);
-                                            } else {
-                                                GameLoop.ZPO.Log.AddMessage("You have no ore mixes you have the smithing level to be able to smelt.", Color.Crimson);
-                                            }
+                                    if (spells[i].ID == "utilBonesBananas" || spells[i].ID == "utilBonesPeaches" || spells[i].ID == "utilSuperheat" || spells[i].ID.Contains("utilEnchant")) {
+                                        foreach (var act in spells[i].CastActions) {
+                                            act.Execute();
                                         } 
                                     }
 
@@ -1132,78 +1057,6 @@ namespace ZeroPlayersOnline.Managers {
 
                                     if (spells[i].ID == "utilAlchemyHigh") {   
                                         GameLoop.ZPO.Log.AddMessage("Cast this by clicking the " + 247.AsString() + " icon on an item line in your inventory.", Color.Crimson); 
-                                    }
-
-                                    if (spells[i].ID == "utilEnchant1") { 
-                                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Level 1 Enchanter", out ProcessingStation? enchant) && enchant != null) {
-                                            enchant.LastWorked = "";
-                                            if (enchant.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, RecentlyTrainedSkills)) {
-                                                spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
-                                                GameLoop.ZPO.Log.AddMessage("You enchant a piece of sapphire/opal jewellery.", Color.MediumPurple);
-                                            } else {
-                                                GameLoop.ZPO.Log.AddMessage("You have no unenchanted sapphire/opal jewellery to enchant.", Color.Crimson);
-                                            }
-                                        } 
-                                    }
-
-                                    if (spells[i].ID == "utilEnchant2") { 
-                                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Level 2 Enchanter", out ProcessingStation? enchant) && enchant != null) {
-                                            enchant.LastWorked = "";
-                                            if (enchant.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, RecentlyTrainedSkills)) {
-                                                spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
-                                                GameLoop.ZPO.Log.AddMessage("You enchant a piece of emerald/jade jewellery.", Color.MediumPurple);
-                                            } else {
-                                                GameLoop.ZPO.Log.AddMessage("You have no unenchanted emerald/jade jewellery to enchant.", Color.Crimson);
-                                            }
-                                        } 
-                                    }
-
-                                    if (spells[i].ID == "utilEnchant3") { 
-                                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Level 3 Enchanter", out ProcessingStation? enchant) && enchant != null) {
-                                            enchant.LastWorked = "";
-                                            if (enchant.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, RecentlyTrainedSkills)) {
-                                                spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
-                                                GameLoop.ZPO.Log.AddMessage("You enchant a piece of ruby/red topaz jewellery.", Color.MediumPurple);
-                                            } else {
-                                                GameLoop.ZPO.Log.AddMessage("You have no unenchanted ruby/red topaz jewellery to enchant.", Color.Crimson);
-                                            }
-                                        } 
-                                    }
-
-                                    if (spells[i].ID == "utilEnchant4") { 
-                                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Level 4 Enchanter", out ProcessingStation? enchant) && enchant != null) {
-                                            enchant.LastWorked = "";
-                                            if (enchant.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, RecentlyTrainedSkills)) {
-                                                spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
-                                                GameLoop.ZPO.Log.AddMessage("You enchant a piece of diamond topaz jewellery.", Color.MediumPurple);
-                                            } else {
-                                                GameLoop.ZPO.Log.AddMessage("You have no unenchanted diamond topaz jewellery to enchant.", Color.Crimson);
-                                            }
-                                        } 
-                                    }
-
-                                    if (spells[i].ID == "utilEnchant5") { 
-                                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Level 5 Enchanter", out ProcessingStation? enchant) && enchant != null) {
-                                            enchant.LastWorked = "";
-                                            if (enchant.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, RecentlyTrainedSkills)) {
-                                                spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
-                                                GameLoop.ZPO.Log.AddMessage("You enchant a piece of dragonstone jewellery.", Color.MediumPurple);
-                                            } else {
-                                                GameLoop.ZPO.Log.AddMessage("You have no unenchanted dragonstone jewellery to enchant.", Color.Crimson);
-                                            }
-                                        } 
-                                    }
-
-                                    if (spells[i].ID == "utilEnchant6") { 
-                                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Level 6 Enchanter", out ProcessingStation? enchant) && enchant != null) {
-                                            enchant.LastWorked = "";
-                                            if (enchant.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, RecentlyTrainedSkills)) {
-                                                spells[i].Cast(player, GameLoop.ZPO.Log, RecentlyTrainedSkills);
-                                                GameLoop.ZPO.Log.AddMessage("You enchant a piece of onyx jewellery.", Color.MediumPurple);
-                                            } else {
-                                                GameLoop.ZPO.Log.AddMessage("You have no unenchanted onyx jewellery to enchant.", Color.Crimson);
-                                            }
-                                        } 
                                     }
                                 }
                             } else {
@@ -1332,10 +1185,12 @@ namespace ZeroPlayersOnline.Managers {
                     for (int i = SidebarScrollTop; i < songs.Count && i < SidebarScrollTop + songListLength; i++) {
                         bool songUnlocked = player.UnlockedSongs.Contains(songs[i].Key) || player.AllSongsUnlocked;
                         mini.Con.PrintClickable(1, 17 + (i - SidebarScrollTop), new ColoredString(songs[i].Key, GameLoop.SoundManager.CurrentSong == songs[i].Key ? Color.Green : songUnlocked ? Color.White : Color.DarkSlateGray, Color.Black), () => {
-                            player.MusicMode = "Shuffle UPC";
-                            GameLoop.SoundManager.CurrentSong = "";
-                            GameLoop.SoundManager.music.StopAllSounds();
-                            GameLoop.SoundManager.PickMusic(songs[i].Key);
+                            if (songUnlocked) {
+                                player.MusicMode = "Shuffle UPC";
+                                GameLoop.SoundManager.CurrentSong = "";
+                                GameLoop.SoundManager.music.StopAllSounds();
+                                GameLoop.SoundManager.PickMusic(songs[i].Key);
+                            }
                         });
                     }
                 }

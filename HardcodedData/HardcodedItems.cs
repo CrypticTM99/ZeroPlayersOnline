@@ -1,20 +1,38 @@
 ﻿using GoRogue.GameFramework;
 using ZeroPlayersOnline.DataTypes;
 using ZeroPlayersOnline.HardcodedData;
+using ZeroPlayersOnline.Managers;
 
 namespace ZeroPlayersOnline.Hardcodes {
     public static class HardcodedItems {
-        public static void InitItems(Dictionary<string, Item> ItemLibrary) {
+        public static Dictionary<string, int> RuneCosts = new();
+        public static void InitItems(Dictionary<string, Item> ItemLibrary, Dictionary<string, Spell> SpellLib) {
+            RuneCosts.Add("runeAir", 4);
+            RuneCosts.Add("runeEarth", 4);
+            RuneCosts.Add("runeFire", 4);
+            RuneCosts.Add("runeWater", 4);
+            RuneCosts.Add("runeMind", 3);
+            RuneCosts.Add("runeBody", 3); 
+            RuneCosts.Add("runeNature", 180);
+            RuneCosts.Add("runeChaos", 90);
+            RuneCosts.Add("runeLaw", 240);
+            RuneCosts.Add("runeDeath", 180);
+            RuneCosts.Add("runeBlood", 400);
+            RuneCosts.Add("runeCosmic", 50);
+            RuneCosts.Add("runeSoul", 300);
+            RuneCosts.Add("runeAstral", 50);
+            RuneCosts.Add("runeWrath", 500);  
+
             List<Item> itemsToAdd = new();
-            itemsToAdd.Add(new Item("Pine log", "A bundle of pine logs.", "logPine", ColorLib.Pine, 4));
+            itemsToAdd.Add(new Item("Pine log", "A bundle of pine logs.", "logPine", ColorLib.Pine, 10));
             itemsToAdd.Add(new Item("Oak log", "A bundle of oak logs.", "logOak", ColorLib.Oak, 20));
             itemsToAdd.Add(new Item("Willow log", "A bundle of willow logs.", "logWillow", ColorLib.Willow, 40));
-            itemsToAdd.Add(new Item("Teak log", "A bundle of teak logs.", "logTeak", ColorLib.Teak, 30));
+            itemsToAdd.Add(new Item("Teak log", "A bundle of teak logs.", "logTeak", ColorLib.Teak, 60));
             itemsToAdd.Add(new Item("Maple log", "A bundle of maple logs.", "logMaple", ColorLib.Maple, 80));
-            itemsToAdd.Add(new Item("Acadia log", "A bundle of acadia logs.", "logAcadia",ColorLib.Acadia, 85));
-            itemsToAdd.Add(new Item("Mahogany log", "A bundle of mahogany logs.", "logMahogany", ColorLib.Mahogany, 50));
-            itemsToAdd.Add(new Item("Yew log", "A bundle of yew logs.", "logYew", ColorLib.Yew, 160));
-            itemsToAdd.Add(new Item("Magic log", "A bundle of magic logs.", "logMagic", ColorLib.Magic, 320));
+            itemsToAdd.Add(new Item("Acadia log", "A bundle of acadia logs.", "logAcadia",ColorLib.Acadia, 100));
+            itemsToAdd.Add(new Item("Mahogany log", "A bundle of mahogany logs.", "logMahogany", ColorLib.Mahogany, 120));
+            itemsToAdd.Add(new Item("Yew log", "A bundle of yew logs.", "logYew", ColorLib.Yew, 240));
+            itemsToAdd.Add(new Item("Magic log", "A bundle of magic logs.", "logMagic", ColorLib.Magic, 360));
             itemsToAdd.Add(new Item("Elder log", "A bundle of elder logs.", "logElder", ColorLib.Elder, 480));
              
             itemsToAdd.Add(new Item("Pine wood spirit", "When chopping pine logs, this is consumed and you will receive an extra log.", "spiritWoodPine", ColorLib.Pine, 20, true) { MiscString = "Spirit", UseString2 = "logPine" });
@@ -27,13 +45,18 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Yew wood spirit", "When chopping yew logs, this is consumed and you will receive an extra log.", "spiritWoodYew", ColorLib.Yew, 20, true) { MiscString = "Spirit", UseString2 = "logYew" });
             itemsToAdd.Add(new Item("Magic wood spirit", "When chopping magic logs, this is consumed and you will receive an extra log.", "spiritWoodMagic", ColorLib.Magic, 20, true) { MiscString = "Spirit", UseString2 = "logMagic" });
             itemsToAdd.Add(new Item("Elder wood spirit", "When chopping elder logs, this is consumed and you will receive an extra log.", "spiritWoodElder", ColorLib.Elder, 20, true) { MiscString = "Spirit", UseString2 = "logElder" });
-
-
-
+               
+            itemsToAdd.Add(new Item("Limestone brick", "A well carved limestone block.", "blockLimestone", Color.DarkGray, 20));
+            itemsToAdd.Add(new Item("Clockwork", "A clockwork mechanism.", "clockwork", Color.DarkGray, 500));
+            itemsToAdd.Add(new Item("Marble block", "A beautifully carved marble block.", "blockMarble", Color.White, 250_000));
+            itemsToAdd.Add(new Item("Gold leaf", "A very delicate sheet of gold.", "goldLeaf", Color.Gold, 100_000));
+            itemsToAdd.Add(new Item("Magic stone", "A magic stone to make high-level furniture.", "stoneMagic", Color.Gray, 750_000));
+            itemsToAdd.Add(new Item("Condensed gold", "The gold standard of gold.", "goldCondensed", Color.Gold, 8_000_000));
 
             itemsToAdd.Add(new Item("Tinderbox", "An arsonist's best friend.", "tinderbox", 255, 255, 255, 1));
             itemsToAdd.Add(new Item("Ashes", "A pile of wood ash.", "ashes", 200, 200, 200, 2));
             itemsToAdd.Add(new Item("Hammer", "Good for hitting things!", "hammer", 150, 150, 150, 1));
+            itemsToAdd.Add(new Item("Saw", "Good for cutting wood.", "saw", 150, 150, 150, 10));
             itemsToAdd.Add(new Item("Knife", "Good for chopping or whittling, not so much for stabbing.", "knife", 150, 150, 150, 1) { UseString = "Knife", ConsumedOnUse = false});
             itemsToAdd.Add(new Item("Needle", "Now to get a camel through eye of this thing...", "needle", 200, 200, 200, 1) { UseString = "Needle", ConsumedOnUse = false});
             itemsToAdd.Add(new Item("Glassblowing pipe", "Used to form molten glass into useful items.", "glassblowingPipe", ColorLib.Steel, 2) { UseString = "Glassblowing Pipe", ConsumedOnUse = false});
@@ -47,7 +70,14 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Waterskin (3)", "A nearly full waterskin with three portions of water.", "waterskin3", Color.Khaki, 27));
             itemsToAdd.Add(new Item("Waterskin (4)", "A full waterskin with four portions of water.", "waterskin4", Color.Khaki, 30));
             itemsToAdd.Add(new Item("Rope", "A coil of rope.", "rope", Color.SaddleBrown, 18));
+            itemsToAdd.Add(new Item("Mahogany Homes contract", "A note detailing your current active Mahogany Homes contract, if any. Activate to check.", "mahoganyHomesContract", Color.Beige, 1) { UseString = "MahoganyHomes", ConsumedOnUse = false});
+            itemsToAdd.Add(new Item("Compass", "Points to any map within 20 connections. Only considers usable primary connection destinations. May not result in fastest possible route.", "compass", ColorLib.Steel, 1) { UseString = "CompassMenu", ConsumedOnUse = false });
              
+            
+            itemsToAdd.Add(new Item("Broken arrows", "This must have been shot at high speed.", "arrowsBroken", Color.SaddleBrown, 1, true, false));
+            itemsToAdd.Add(new Item("Broken staff", "I pity the poor person beaten with this!", "staffBroken", Color.SaddleBrown, 1, false, false));
+            itemsToAdd.Add(new Item("Rusty sword", "A decent-enough weapon gone rusty.", "swordRusty", Color.Orange, 1, false, false));
+
             itemsToAdd.Add(new Item("Mithril grapple (unf)", "An unfinished mithril grapple. Needs a rope to be useful.", "grappleUnf", ColorLib.Mithril, 1000)); 
             itemsToAdd.Add(new Item("Mithril grapple", "A mithril grapple with a rope. Useful for some shortcuts.", "grapple", ColorLib.Mithril, 1500)); 
             
@@ -75,15 +105,15 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             // Fletching Factory
             List<MaterialDef> Woods = new() {
-                new("Pine", ColorLib.Pine, 1, 1, 5, "bronze"),
+                new("Pine", ColorLib.Pine, 1, 1, 10, "bronze"),
                 new("Oak", ColorLib.Oak, 2, 10, 20, "iron"),
                 new("Willow", ColorLib.Willow, 3, 20, 40, "steel"),
-                new("Teak", ColorLib.Teak, 4, 30, 30, "mithril"),
+                new("Teak", ColorLib.Teak, 4, 30, 60, "mithril"),
                 new("Maple", ColorLib.Maple, 5, 40, 80, "adamant"),
-                new("Acadia", ColorLib.Acadia, 6, 50, 85, "rune"),
-                new("Mahogany", ColorLib.Mahogany, 7, 60, 50, "orichalcum"),
-                new("Yew", ColorLib.Yew, 8, 70, 160, "necrite"),
-                new("Magic", ColorLib.Magic, 9, 80, 320, "banite"),
+                new("Acadia", ColorLib.Acadia, 6, 50, 100, "rune"),
+                new("Mahogany", ColorLib.Mahogany, 7, 60, 120, "orichalcum"),
+                new("Yew", ColorLib.Yew, 8, 70, 240, "necrite"),
+                new("Magic", ColorLib.Magic, 9, 80, 360, "banite"),
                 new("Elder", ColorLib.Elder, 10, 90, 480, "elder rune")
             };
 
@@ -134,6 +164,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                     EquipAmmo = "RangedHeavy",
                     AttackSpeed = 1
                 });
+
+                itemsToAdd.Add(new Item(mat.Name + " plank", "A plank carved from a" + (Helper.VowelStart(mat.Name.ToLower()) ? "n " : " ") + mat.Name.ToLower() + " log.", "plank" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier * 2));
+                
             }   
 
             itemsToAdd.Add(new Item("Shovel", "Could be used to dig for buried treasure.", "shovel", 200, 200, 200, 3) { UseString = "Dig", ConsumedOnUse = false });
@@ -158,6 +191,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Cooking skillcape", "The cape worn by masters of the art of Cooking.", "capeSkillCooking", Color.Purple, 0, trade: false) { EquipSlot = "Cape", EquipTier = 2, MiscString = "OmniBoost" });
             itemsToAdd.Add(new Item("Farming skillcape", "The cape worn by masters of the art of Farming.", "capeSkillFarming", Color.ForestGreen, 0, trade: false) { EquipSlot = "Cape", EquipTier = 2, MiscString = "OmniBoost" });
             itemsToAdd.Add(new Item("Runecrafting skillcape", "The cape worn by masters of the art of Runecrafting.", "capeSkillRunecrafting", Color.Yellow, 0, trade: false) { EquipSlot = "Cape", EquipTier = 2, MiscString = "OmniBoost" });
+            itemsToAdd.Add(new Item("Construction skillcape", "The cape worn by masters of the art of Construction.", "capeSkillConstruction", Color.AntiqueWhite, 0, trade: false) { EquipSlot = "Cape", EquipTier = 2, MiscString = "OmniBoost" });
 
             {
                 // ordinary wizard
@@ -308,6 +342,68 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Lava rune", "A combined Earth and Fire Rune.", "runeLava", Color.LightGray, 20, true) { CountsAsIDs = ["runeEarth", "runeFire"] });
 
 
+            foreach (var kv in SpellLib) {
+                if (kv.Value.Runes.Count > 0) { 
+                    int totalCost = 0;
+
+                    foreach (string mats in kv.Value.Runes) {
+                        string[] split = mats.Split(",");
+                        
+                        int runeCost = 0;
+
+                        if (RuneCosts.ContainsKey(split[0])) {
+                            runeCost = RuneCosts[split[0]];
+
+                            if (split.Length > 1) {
+                                int.TryParse(split[1], out int qty);
+
+                                if (qty != 0) {
+                                    runeCost *= qty;
+                                }
+                            } 
+                        }
+
+                        totalCost += runeCost;
+                    }
+
+                    totalCost = (int) Math.Ceiling(totalCost * 1.5);
+
+                    string name = kv.Value.Name.ToLower();
+                    if (name.Contains("enchant")) {
+                        name = name.Substring(0, 12);
+                    }
+
+                    Item newTab = new Item("Spell tab (" + name + ")", "A tablet that can replace the runes when casting " + kv.Value.Name + ".", "tab" + kv.Value.ID, Color.MediumPurple, totalCost, true);
+
+                    if (kv.Value.Category == "Tele") {
+                        if (kv.Value.ID == "teleHome") { 
+                            newTab.UseString = "HouseTele";
+                            newTab.ConsumedOnUse = false;
+                        } else {
+                            newTab.UseString = "Teleport";
+                            newTab.UseString2 = kv.Value.MiscString;
+                        }
+                    } else if (kv.Value.ID.Contains("utilEnchant")) {
+                        newTab.UseString = "SpellTab";
+                        newTab.UseString2 = "Enchant";
+                        newTab.UseString3 = kv.Value.ID[^1].ToString(); 
+                    } else if (kv.Value.ID == "utilBonesBananas") {
+                        newTab.UseString = "SpellTab";
+                        newTab.UseString2 = "BonesBananas";
+                    } else if (kv.Value.ID == "utilBonesPeaches") {
+                        newTab.UseString = "SpellTab";
+                        newTab.UseString2 = "BonesPeaches";
+                    } else if (kv.Value.ID == "utilSuperheat") {
+                        newTab.UseString = "SpellTab";
+                        newTab.UseString2 = "Superheat";
+                    }
+
+                    itemsToAdd.Add(newTab);
+                }
+            }
+
+
+
             itemsToAdd.Add(new Item("Staff of air", "A magical staff. Provides unlimited air runes.", "staffAir", 255, 255, 255, 1500) {
                 EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush", CountsAsIDs = [ "runeAir" ], UseInt4 = -1, MustBeEquipped = true
             });
@@ -332,6 +428,11 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Water battlestaff", "A magical staff. Provides unlimited water runes.", "battlestaffWater", 30, 144, 255, 15500) { EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Magic", EquipLevel = 30, EquipDamageType = "Crush", CountsAsIDs = [ "runeWater" ],  UseInt4 = -1, MustBeEquipped = true }); 
             itemsToAdd.Add(new Item("Earth battlestaff", "A magical staff. Provides unlimited earth runes.", "battlestaffEarth", 165, 42, 42, 15500) { EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Magic", EquipLevel = 30, EquipDamageType = "Crush", CountsAsIDs = [ "runeEarth" ],  UseInt4 = -1, MustBeEquipped = true }); 
             itemsToAdd.Add(new Item("Fire battlestaff", "A magical staff. Provides unlimited fire runes.", "battlestaffFire", 220, 20, 60, 15500) { EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Magic", EquipLevel = 30, EquipDamageType = "Crush", CountsAsIDs = [ "runeFire" ],  UseInt4 = -1, MustBeEquipped = true });
+
+            itemsToAdd.Add(new Item("Mystic air staff", "A magical staff. Provides unlimited air runes.", "staffMysticAir", 255, 255, 255, 42500) { EquipSlot = "Weapon",  EquipTier = 7, EquipSkill = "Magic", EquipLevel = 60, EquipDamageType = "Crush", CountsAsIDs = [ "runeAir" ], UseInt4 = -1, MustBeEquipped = true });
+            itemsToAdd.Add(new Item("Mystic water staff", "A magical staff. Provides unlimited water runes.", "staffMysticWater", 30, 144, 255, 42500) { EquipSlot = "Weapon",  EquipTier = 7, EquipSkill = "Magic", EquipLevel = 60, EquipDamageType = "Crush", CountsAsIDs = [ "runeWater" ],  UseInt4 = -1, MustBeEquipped = true }); 
+            itemsToAdd.Add(new Item("Mystic earth staff", "A magical staff. Provides unlimited earth runes.", "staffMysticEarth", 165, 42, 42, 42500) { EquipSlot = "Weapon",  EquipTier = 7, EquipSkill = "Magic", EquipLevel = 60, EquipDamageType = "Crush", CountsAsIDs = [ "runeEarth" ],  UseInt4 = -1, MustBeEquipped = true }); 
+            itemsToAdd.Add(new Item("Mystic fire staff", "A magical staff. Provides unlimited fire runes.", "staffMysticFire", 220, 20, 60, 42500) { EquipSlot = "Weapon",  EquipTier = 7, EquipSkill = "Magic", EquipLevel = 60, EquipDamageType = "Crush", CountsAsIDs = [ "runeFire" ],  UseInt4 = -1, MustBeEquipped = true });
 
 
             // Pickpocket Loot
@@ -434,10 +535,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 EquipSlot = "Weapon",  EquipTier = 3, EquipSkill = "Attack", EquipLevel = 10, EquipDamageType = "Crush", AttackSpeed = 1.5
             });itemsToAdd.Add(new Item("Huger club", "Where did that zombie even get such a large bone? You can barely move this thing.", "clubHuger", 255, 255, 255, 5000) {
                 EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Attack", EquipLevel = 10, EquipDamageType = "Crush", AttackSpeed = 3
-            });  
-            itemsToAdd.Add(new Item("Baby zombie plush", "Despite being a zombie, kinda cute? It even has a little chicken that it's riding on.", "petBabyZombie", 34, 140, 34, 1000, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "The baby zombie gurgles a bit.", "The zombie's chicken clucks loudly.", "The baby zombie runs in a small circle quickly.", "CHICKEN JOCKEY!"}
-            });  
+            });
             itemsToAdd.Add(new Item("Rotten flesh", "This doesn't really seem edible...", "fleshRotten", 150, 100, 50, 4) { UseString = "Heal", UseInt = 2, Potion = new() { new("Attack", -3) } });
             
             
@@ -518,100 +616,9 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Mooleta", "A defensive weapon.", "mooleta", Color.DarkGray, 1, trade: false) {
                 EquipSlot = "Offhand",  EquipTier = 2, EquipSkill = "Defense", EquipLevel =1, MiscString = "Defender"
             });
-            itemsToAdd.Add(new Item("Beef", "Commonly referred to as Sir Loin.", "petBeef", Color.DimGray, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Beef lets out a little moo.", "Beef lets out a loud moo.", "Beef struts his stuff.", "Beef eats a bit of grass."},
-                UseString = "BeefEmote", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Kitten (black)", "A friendly little pet.", "kittenBlack", Color.DimGray, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your kitten purrs.", "Your kitten meows.", "Your kitten rolls around on the ground.", "Your kitten stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Kitten (gray)", "A friendly little pet.", "kittenGray", Color.DarkGray, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your kitten purrs.", "Your kitten meows.", "Your kitten rolls around on the ground.", "Your kitten stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Kitten (white)", "A friendly little pet.", "kittenWhite", Color.White, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your kitten purrs.", "Your kitten meows.", "Your kitten rolls around on the ground.", "Your kitten stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Kitten (orange)", "A friendly little pet.", "kittenOrange", Color.Orange, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your kitten purrs.", "Your kitten meows.", "Your kitten rolls around on the ground.", "Your kitten stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Kitten (brown)", "A friendly little pet.", "kittenBrown", Color.SaddleBrown, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your kitten purrs.", "Your kitten meows.", "Your kitten rolls around on the ground.", "Your kitten stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Kitten", "A friendly little pet.", "kittenCalico", Color.White, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your kitten purrs.", "Your kitten meows.", "Your kitten rolls around on the ground.", "Your kitten stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Cat (black)", "A fully grown feline.", "catBlack", Color.DimGray, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your cat purrs.", "Your cat meows.", "Your cat rolls around on the ground.", "Your cat stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Cat (gray)", "A fully grown feline.", "catGray", Color.DarkGray, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your cat purrs.", "Your cat meows.", "Your cat rolls around on the ground.", "Your cat stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Cat (white)", "A fully grown feline.", "catWhite", Color.White, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your cat purrs.", "Your cat meows.", "Your cat rolls around on the ground.", "Your cat stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Cat (orange)", "A fully grown feline.", "catOrange", Color.Orange, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your cat purrs.", "Your cat meows.", "Your cat rolls around on the ground.", "Your cat stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Cat (brown)", "A fully grown feline.", "catBrown", Color.SaddleBrown, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your cat purrs.", "Your cat meows.", "Your cat rolls around on the ground.", "Your cat stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Cat", "A fully grown feline.", "catCalico", Color.White, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your cat purrs.", "Your cat meows.", "Your cat rolls around on the ground.", "Your cat stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            });
-
-            itemsToAdd.Add(new Item("Overgrown cat (black)", "A friendly not-so little pet.", "catBlackOvergrown", Color.DimGray, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your overgrown cat purrs.", "Your overgrown cat meows.", "Your overgrown cat rolls around on the ground.", "Your overgrown cat stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Overgrown cat (gray)", "A friendly not-so little pet.", "catGrayOvergrown", Color.DarkGray, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your overgrown cat purrs.", "Your overgrown cat meows.", "Your overgrown cat rolls around on the ground.", "Your overgrown cat stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Overgrown cat (white)", "A friendly not-so little pet.", "catWhiteOvergrown", Color.White, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your overgrown cat purrs.", "Your overgrown cat meows.", "Your overgrown cat rolls around on the ground.", "Your overgrown cat stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Overgrown cat (orange)", "A friendly not-so little pet.", "catOrangeOvergrown", Color.Orange, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your overgrown cat purrs.", "Your overgrown cat meows.", "Your overgrown cat rolls around on the ground.", "Your overgrown cat stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Overgrown cat (brown)", "A friendly not-so little pet.", "catBrownOvergrown", Color.SaddleBrown, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your overgrown cat purrs.", "Your overgrown cat meows.", "Your overgrown cat rolls around on the ground.", "Your overgrown cat stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            }); 
-
-            itemsToAdd.Add(new Item("Overgrown cat", "A friendly not-so little pet.", "catCalicoOvergrown", Color.White, 0, trade: false) {
-                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Your overgrown cat purrs.", "Your overgrown cat meows.", "Your overgrown cat rolls around on the ground.", "Your overgrown cat stares at a point in space intently."},
-                UseString = "CatMenu", ConsumedOnUse = false
-            });
+            
+            itemsToAdd.Add(new Item("Construction guidebook", "Curious about home ownership? Read this!", "bookConstructionGuide", Color.SaddleBrown, 1) { ConsumedOnUse = false, UseString = "Book", UseString2 = "bookConstructionGuide" });
+            
 
             for (int i = 0; i < itemsToAdd.Count; i++) {
                 ItemLibrary.Add(itemsToAdd[i].ID, itemsToAdd[i]);

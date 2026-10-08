@@ -22,7 +22,7 @@ namespace ZeroPlayersOnline.Managers {
 
                     if (item.Potion != null) {
                         for (int i = 0; i < item.Potion.Count; i++) {
-                            player.TryAddPotionEffect(item.Potion[i].Stat, item.Potion[i].Change);
+                            player.TryAddPotionEffect(item.Potion[i].Stat, item.Potion[i].Change + (item.Potion[i].Change > 0 ? player.CurrentRestedBuff : 0));
                         } 
                     }
                 }  else if (item.UseString == "Hurt") {
@@ -31,7 +31,7 @@ namespace ZeroPlayersOnline.Managers {
 
                     if (item.Potion != null) {
                         for (int i = 0; i < item.Potion.Count; i++) {
-                            player.TryAddPotionEffect(item.Potion[i].Stat, item.Potion[i].Change);
+                            player.TryAddPotionEffect(item.Potion[i].Stat, item.Potion[i].Change + (item.Potion[i].Change > 0 ? player.CurrentRestedBuff : 0));
                         } 
                     }
                 } else if (item.UseString == "Kebab") {
@@ -303,15 +303,19 @@ namespace ZeroPlayersOnline.Managers {
                     }
                 } else if (item.UseString == "Needle") {
                     ExtraWindows.CraftingMenu.IsVisible = true;
+                    ExtraWindows.CraftingMaxLevel = 99;
                     ExtraWindows.CraftingType = "Needle";
                 } else if (item.UseString == "Knife") {
                     ExtraWindows.CraftingMenu.IsVisible = true;
+                    ExtraWindows.CraftingMaxLevel = 99;
                     ExtraWindows.CraftingType = "Knife";
                 }  else if (item.UseString == "Baking") {
                     ExtraWindows.CraftingMenu.IsVisible = true;
+                    ExtraWindows.CraftingMaxLevel = 99;
                     ExtraWindows.CraftingType = "Baking";
                 } else if (item.UseString == "Glassblowing Pipe") {
                     ExtraWindows.CraftingMenu.IsVisible = true;
+                    ExtraWindows.CraftingMaxLevel = 99;
                     ExtraWindows.CraftingType = "Glassblowing Pipe";
                 } else if (item.UseString == "Map") {
                     ExtraWindows.Map.IsVisible = true;
@@ -372,27 +376,26 @@ namespace ZeroPlayersOnline.Managers {
                             } else if (item.Potion[i].Stat == "Restore") {  
                                 foreach (var pot in player.ActivePotions) {
                                     if (pot.Change < 0) {
-                                        pot.Change = Math.Clamp(pot.Change + item.Potion[i].Change, pot.Change, 0);
+                                        pot.Change = Math.Clamp(pot.Change + item.Potion[i].Change + (item.Potion[i].Change > 0 ? player.CurrentRestedBuff : 0), pot.Change, 0);
                                     }
                                 }
                             } else {
                                 bool found = false;
                                 for (int j = 0; j < player.ActivePotions.Count; j++) {
                                     if (player.ActivePotions[j].Stat == item.Potion[i].Stat) {
+                                        found = true;
                                         if (player.ActivePotions[j].Change < 0) {
-                                            player.ActivePotions[j].Change += item.Potion[i].Change;
-                                            found = true;
+                                            player.ActivePotions[j].Change += item.Potion[i].Change; 
                                         } else {
-                                            if (player.ActivePotions[j].Change < item.Potion[i].Change) {
-                                                player.ActivePotions[j].Change = item.Potion[i].Change;
-                                                found = true;
-                                            }
+                                            if (player.ActivePotions[j].Change < item.Potion[i].Change + player.CurrentRestedBuff) {
+                                                player.ActivePotions[j].Change = item.Potion[i].Change + player.CurrentRestedBuff; 
+                                            } 
                                         }
                                     }
                                 }
 
                                 if (!found)
-                                    player.ActivePotions.Add(new(item.Potion[i].Stat, item.Potion[i].Change)); 
+                                    player.ActivePotions.Add(new(item.Potion[i].Stat, item.Potion[i].Change + (item.Potion[i].Change > 0 ? player.CurrentRestedBuff : 0))); 
 
                                 if (item.Potion[i].Stat == "Antipoison" && player.PoisonStatus > 0) {
                                     player.PoisonStatus = 0;
@@ -546,6 +549,138 @@ namespace ZeroPlayersOnline.Managers {
                     return false;
                 } else if (item.UseString == "CatMenu") {
                     ExtraWindows.CatMenu.IsVisible = true;
+                } else if (item.UseString == "MahoganyHomes") {
+                    if (player.MahoganyDestID != "") {
+                        if (GameLoop.ZPO.Atlas.TryGetValue(player.MahoganyDestID, out Location? mhDest) && mhDest != null) {
+                            string build = "";
+                            foreach (var kv in player.MahoganyContractSpots) {
+                                if (!kv.Repaired) {
+                                    if (build != "") {
+                                        build += ", ";
+                                    }
+
+                                    build += kv.Name;
+                                }
+                            }
+
+                            build += ".";
+
+                            GameLoop.ZPO.Log.AddMessage("Your current contract is " + mhDest.DisplayName + " in " + mhDest.MahoganyTown + ". Remaining: " + build, Color.SandyBrown);
+                        } else { 
+                            GameLoop.ZPO.Log.AddMessage("Malformed Mahogany Homes destination ID: " + player.MahoganyDestID + ". Report this, contract cleared for now.", Color.Crimson);
+                            GameLoop.ZPO.player.MahoganyDestID = "";
+                            GameLoop.ZPO.player.MahoganyContractSpots.Clear();
+                        }
+                    } else {
+                        GameLoop.ZPO.Log.AddMessage("You do not currently have a Mahogany Homes contract. Get one at an Estate Agent if desired.", Color.Crimson);
+                    }
+                    return false;
+                } else if (item.UseString == "Teapot") {
+                    foreach (var kv in player.Inventory) {
+                        if (kv.ID == "cupClayEmpty" && !kv.Noted) { kv.ID = "cupClayTea"; kv.Charges = 1; return true; }
+                        if (kv.ID == "cupPorcelainEmpty" && !kv.Noted) { kv.ID = "cupPorcelainTea"; kv.Charges = 1; return true; }
+                        if (kv.ID == "cupAntiqueEmpty" && !kv.Noted) { kv.ID = "cupAntiqueTea"; kv.Charges = 1; return true; }
+                    }
+                    
+                    GameLoop.ZPO.Log.AddMessage("You don't have a cup to pour the tea out into.", Color.Crimson);
+                    return false;
+                } else if (item.UseString == "CompassMenu") {
+                    ExtraWindows.Compass.IsVisible = true;
+                    return false;
+                } else if (item.UseString == "SpellTab") {
+                    if (item.UseString2 == "Enchant") {
+                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Level " + item.UseString3 + " Enchanter", out ProcessingStation? enchant) && enchant != null) {
+                            enchant.LastWorked = "";
+                            if (enchant.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, SidebarManager.RecentlyTrainedSkills)) {
+                                GameLoop.ZPO.Log.AddMessage("You break a spell tablet and enchant a piece of jewellery.", Color.MediumPurple);
+                            } else {
+                                GameLoop.ZPO.Log.AddMessage("You have no unenchanted jewellery to enchant.", Color.Crimson);
+                                return false;
+                            }
+                        }
+                    } else if (item.UseString2 == "Tele") {
+                        if (GameLoop.ZPO.Atlas.TryGetValue(item.UseString2, out Location? dest) & dest != null) { 
+                            GameLoop.ZPO.Log.AddMessage("You break a spell tablet and teleport to " + dest.DisplayName + ".", Color.MediumPurple);
+                        } else {
+                            GameLoop.ZPO.Log.AddMessage("Teleport destination does not exist.", Color.Crimson);
+                            return false;
+                        } 
+                    } else if (item.UseString2 == "BonesBananas") {
+                        bool anyBones = false;
+                        int extras = 0;
+                        foreach (var kv in player.Inventory) {
+                            if (new List<string>() { "bonesRegular", "bonesWolf", "bonesBat", "bonesBig", "bonesBleached", "bonesBurnt", "bonesJogre", "bonesMonkey", "mtaBone1", "mtaBone2", "mtaBone3", "mtaBone4", "bonesAlan" }.Contains(kv.ID) && !kv.Noted) {
+                                if (kv.ID.Contains("mtaBone")) {
+                                    int qty = 0;
+                                    if (MinigameManager.MTA_Bones[1] == kv.ID) { qty = 1; }
+                                    if (MinigameManager.MTA_Bones[2] == kv.ID) { qty = 2; }
+                                    if (MinigameManager.MTA_Bones[3] == kv.ID) { qty = 3; }
+                                                    
+                                    extras += qty;
+                                }
+                                kv.ID = "fruitBanana";
+                                anyBones = true; 
+                            }
+                        }
+
+                        if (extras > 0) {
+                            if (GameLoop.ZPO.ItemLibrary.TryGetValue("fruitBanana", out Item? banan) && banan != null) {
+                                player.TryPickup(new Item(banan), extras);
+                            }
+                        }
+
+                        if (anyBones) { 
+                            GameLoop.ZPO.Log.AddMessage("You break a Bones to Bananas tablet and all your bones become bananas.", Color.MediumPurple);
+                        } else {
+                            GameLoop.ZPO.Log.AddMessage("You have no applicable bones to transmute.", Color.Crimson);
+                            return false;
+                        }
+                    } else if (item.UseString2 == "BonesPeaches") {
+                        bool anyBones = false;
+                        int extras = 0;
+                        foreach (var kv in player.Inventory) {
+                            if (new List<string>() { "bonesRegular", "bonesWolf", "bonesBat", "bonesBig", "bonesBleached", "bonesBurnt", "bonesJogre", "bonesMonkey", "mtaBone1", "mtaBone2", "mtaBone3", "mtaBone4", "bonesAlan" }.Contains(kv.ID) && !kv.Noted) {
+                                if (kv.ID.Contains("mtaBone")) {
+                                    int qty = 0;
+                                    if (MinigameManager.MTA_Bones[1] == kv.ID) { qty = 1; }
+                                    if (MinigameManager.MTA_Bones[2] == kv.ID) { qty = 2; }
+                                    if (MinigameManager.MTA_Bones[3] == kv.ID) { qty = 3; }
+                                                     
+                                    extras += qty;
+                                }
+
+                                kv.ID = "fruitPeach";
+                                anyBones = true;
+                            }
+                        }
+
+                        if (extras > 0) {
+                            if (GameLoop.ZPO.ItemLibrary.TryGetValue("fruitPeach", out Item? peach) && peach != null) {
+                                player.TryPickup(new Item(peach), extras);
+                            }
+                        }
+
+                        if (anyBones) { 
+                            GameLoop.ZPO.Log.AddMessage("You break a Bones to Peaches tablet and all your bones become peaches.", Color.MediumPurple);
+                        } else {
+                            GameLoop.ZPO.Log.AddMessage("You have no applicable bones to transmute.", Color.Crimson);
+                            return false;
+                        }
+                    } else if (item.UseString2 == "Superheat") {
+                        if (GameLoop.ZPO.ProcessingStations.TryGetValue("Furnace", out ProcessingStation? furnace) && furnace != null) {
+                            furnace.LastWorked = "";
+                            if (furnace.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, SidebarManager.RecentlyTrainedSkills)) { 
+                                GameLoop.ZPO.Log.AddMessage("You break a Superheat Item tablet and smelt an ore mix into a bar.", Color.MediumPurple);
+                            } else {
+                                GameLoop.ZPO.Log.AddMessage("You have no ore mixes you have the smithing level to be able to smelt.", Color.Crimson);
+                                return false;
+                            }
+                        }
+                    }
+                } else if (item.UseString == "HouseTele") { 
+                    ExtraWindows.HouseMenu.IsVisible = true;
+                    ExtraWindows.HouseTeleport = true;
+                    ExtraWindows.HouseTablet = true;
                 }
 
                 return true;

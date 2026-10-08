@@ -93,7 +93,7 @@ namespace ZeroPlayersOnline.Managers {
                     }
                 } else { 
                     while (NewSong == CurrentSong && unlocked.Count > 1 && forced == "" && !(Looping || GameLoop.ZPO.player.MusicMode == "Auto")) {
-                        NewSong = unlocked[GameLoop.rand.Next(Songs.Keys.Count)].Key;
+                        NewSong = unlocked[GameLoop.rand.Next(unlocked.Count)].Key;
                     }
                 }
 

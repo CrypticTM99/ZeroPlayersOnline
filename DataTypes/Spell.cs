@@ -14,6 +14,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public int Tier = 1;
         public string MiscString = "";
+        public string MiscString2 = "";
 
 
         public double CooldownInMS = 0; 
@@ -22,12 +23,14 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public List<Requirement> ToCast = new();
 
+        public List<RunAction> CastActions = new();
+
         
         [JsonIgnore]
         public double TimeLastCast = 0;
 
 
-        public Spell(string id, string name, string book, int level, int exp, List<string> runes, string desc = "", string cat = "", int tier = 1, string misc = "", double cd = 0, List<Requirement>? reqs = null) {
+        public Spell(string id, string name, string book, int level, int exp, List<string> runes, string desc = "", string cat = "", int tier = 1, string misc = "", string misc2 = "", double cd = 0, List<Requirement>? reqs = null, List<RunAction>? acts = null) {
             ID = id;
             Name = name;
             Book = book;
@@ -37,19 +40,25 @@ namespace ZeroPlayersOnline.DataTypes {
             Category = cat;
             Tier = tier;
             MiscString = misc;
+            MiscString2 = misc2;
             Description = desc;
 
             CooldownInMS = cd;
 
             if (reqs != null)
                 ToCast = reqs;
+
+            if (acts != null)
+                CastActions = acts;
         }
 
         public void Cast(Player p, MessageLog Log, List<Skill> RecentlyTrained) {
-            p.ConsumeItems(Runes);
-            if (Category == "Tele" && MiscString != "" && GameLoop.ZPO.Atlas.ContainsKey(MiscString)) { 
-                p.NavLoc = MiscString; // TODO: Check to make sure the player is allowed in that region
+            if (p.HasAllItems(["tab" + ID])) {
+                p.ConsumeItems(["tab" + ID]);
+            } else {
+                p.ConsumeItems(Runes);
             } 
+
             TimeLastCast = Helper.Time();
             p.TryGrantExp("Magic", ExpOnCast, Log, RecentlyTrained);
         }

@@ -256,12 +256,9 @@ namespace ZeroPlayersOnline.DataTypes {
                     sellValue *= charges;
                 }
 
-                if (GameLoop.ZPO.Atlas.TryGetValue(GameLoop.ZPO.player.NavLoc, out Location? curr)) {
-                    if (curr.ShopPriceMultiplier != 1.0) {
-                        sellValue = (int) (sellValue * curr.ShopPriceMultiplier);
-                    }
+                if (GameLoop.ZPO.Atlas.TryGetValue(GameLoop.ZPO.player.NavLoc, out Location? curr) && curr != null && curr.ShopPriceMultiplier < 1.0) {
+                    sellValue = (int) (sellValue * curr.ShopPriceMultiplier);
                 }
-
                                         
                 if (!GameLoop.ZPO.player.ShopsAlwaysFullPrice && shop == 1) {
                     sellValue = (int) (Math.Floor(sellValue / 2.0));
@@ -302,6 +299,10 @@ namespace ZeroPlayersOnline.DataTypes {
 
                 if (charges != 0 && UseString == "Potion") {
                     sellValue *= charges;
+                }
+
+                if (GameLoop.ZPO.Atlas.TryGetValue(GameLoop.ZPO.player.NavLoc, out Location? curr) && curr != null && curr.ShopPriceMultiplier < 1.0) {
+                    sellValue = (int) (sellValue * curr.ShopPriceMultiplier);
                 }
                                         
                 if (!GameLoop.ZPO.player.ShopsAlwaysFullPrice && shop == 1) {

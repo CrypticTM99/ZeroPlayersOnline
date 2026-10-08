@@ -8,6 +8,9 @@ namespace ZeroPlayersOnline.DataTypes {
         public List<ProcessingRecipe> Recipes = new();
 
         public bool OpensUI = false;
+        public bool DontIncludeInCounts = false;
+        public int MaxLevel = 99; // Basically only going to be used to gate POH stations so that you can't do everything for very little investment in Construction
+        public string AltUI = "";
 
         [JsonIgnore]
         public int TimeLeft = -1;
@@ -21,9 +24,12 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public string LastWorked = "";
 
-        public ProcessingStation(string n, bool ui = false) {
+        public ProcessingStation(string n, bool ui = false, bool dont = false, int maxLevel = 99, string alt = "") {
             Name = n;  
             OpensUI = ui;
+            DontIncludeInCounts = dont;
+            MaxLevel = maxLevel;
+            AltUI = alt;
         }
 
         public bool TryProcessItem(Player p, MessageLog log, Dictionary<string, Item> ItemLibrary, List<Skill> RecentSkills) { 
@@ -37,6 +43,11 @@ namespace ZeroPlayersOnline.DataTypes {
                                 continue;
                             } 
                         } 
+
+                        if (Recipes[j].SkillLevel > MaxLevel) {
+                            log.AddMessage(new ColoredString(Name + " can only handle recipes up to level " + Recipes[j].SkillLevel + " " + Recipes[j].SkillUsed + ".", Color.Crimson, Color.Black));
+                            continue;
+                        }
 
                         if (Recipes[j].SecondaryIn != "" && !p.HasAllItems([Recipes[j].SecondaryIn + ",1" ])) {
                             continue;
@@ -186,7 +197,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
                             int invCount = p.Inventory.Count;
                             if (Recipes[j].SecondaryIn != "") {
-                                p.ConsumeItems([Recipes[j].SecondaryIn+",1"]);
+                                p.ConsumeItems([Recipes[j].SecondaryIn]);
                             }
                             if (invCount != p.Inventory.Count) {
                                 changedInv = true;
@@ -203,6 +214,8 @@ namespace ZeroPlayersOnline.DataTypes {
                                 if (failRoll <= skillForRoll || (p.Equipment.TryGetValue("Cape", out ItemWrapper? cape) && cape != null && cape.ID == "capeSkillCooking")) {
                                     if (ItemLibrary.ContainsKey(Recipes[j].OutputID)) {
                                         Item item = new(ItemLibrary[Recipes[j].OutputID]);
+                                        item.Quantity = Recipes[j].OutputQtyBase;
+                                        if (Recipes[j].NoteOutput) { item.Noted = true; }
 
                                         if (Recipes[j].HighSkillExtraOutputs) {
                                             int skillDiff = p.Skills[Recipes[j].SkillUsed].Level - Recipes[j].SkillLevel;
@@ -210,13 +223,15 @@ namespace ZeroPlayersOnline.DataTypes {
                                             item.Quantity += extra;
                                         }
 
-                                        p.TryPickup(item, item.Quantity);
+                                        p.TryPickup(item, item.Quantity, item.Noted);
                                     }
                                 
                                     p.TryGrantExp(Recipes[j].SkillUsed, Recipes[j].SkillEXP * (1 + extra), log, RecentSkills);
                                 } else {
                                     if (ItemLibrary.ContainsKey(Recipes[j].FailOutput)) {
                                         Item item = new(ItemLibrary[Recipes[j].FailOutput]);
+                                        item.Quantity = Recipes[j].OutputQtyBase;
+                                        if (Recipes[j].NoteOutput) { item.Noted = true; }
 
                                         if (Recipes[j].HighSkillExtraOutputs) {
                                             int skillDiff = p.Skills[Recipes[j].SkillUsed].Level - Recipes[j].SkillLevel;
@@ -224,7 +239,7 @@ namespace ZeroPlayersOnline.DataTypes {
                                             item.Quantity += extra;
                                         }
 
-                                        p.TryPickup(item, item.Quantity);
+                                        p.TryPickup(item, item.Quantity, item.Noted);
                                     }
                                 
                                     p.TryGrantExp(Recipes[j].SkillUsed, 1 * (1 + extra), log, RecentSkills);
@@ -232,6 +247,9 @@ namespace ZeroPlayersOnline.DataTypes {
                             } else { 
                                 if (ItemLibrary.ContainsKey(Recipes[j].OutputID)) {
                                     Item item = new(ItemLibrary[Recipes[j].OutputID]);
+                                    item.Quantity = Recipes[j].OutputQtyBase;
+
+                                    if (Recipes[j].NoteOutput) { item.Noted = true; }
 
                                     if (Recipes[j].HighSkillExtraOutputs) {
                                         int skillDiff = p.Skills[Recipes[j].SkillUsed].Level - Recipes[j].SkillLevel;
@@ -239,10 +257,42 @@ namespace ZeroPlayersOnline.DataTypes {
                                         item.Quantity += extra;
                                     }
 
-                                    p.TryPickup(item, item.Quantity);
+                                    p.TryPickup(item, item.Quantity, item.Noted);
                                 }
                                 
                                 p.TryGrantExp(Recipes[j].SkillUsed, Recipes[j].SkillEXP * (1 + extra), log, RecentSkills);
+                            }
+
+                            if (Recipes[j].OutputID[0] == '*') { // Aka shorthand for random output, mostly for POH repair benches
+                                if (Recipes[j].OutputID == "*Arrow") {
+                                    if (GameLoop.rand.Next(100) < 70 + (p.GetEffectiveSkillLevel("Fletching") / 4)) {
+                                        if (GameLoop.rand.Next(25) == 0) { if (GameLoop.ZPO.ResolveItem("arrowsMithril") is Item arrow) { p.TryPickup(arrow, 1); } }
+                                        else if (GameLoop.rand.Next(20) == 0) { if (GameLoop.ZPO.ResolveItem("headlessShaft") is Item arrow) { p.TryPickup(arrow, 1); } }
+                                        else if (GameLoop.rand.Next(10) == 0) { if (GameLoop.ZPO.ResolveItem("arrowsSteel") is Item arrow) { p.TryPickup(arrow, 1); } }
+                                        else if (GameLoop.rand.Next(4) == 0) { if (GameLoop.ZPO.ResolveItem("arrowsBronze") is Item arrow) { p.TryPickup(arrow, 1); } }
+                                        else { if (GameLoop.ZPO.ResolveItem("arrowsIron") is Item arrow) { p.TryPickup(arrow, 1); } }
+                                    }
+                                } 
+                                else if (Recipes[j].OutputID == "*Staff") {
+                                    if (GameLoop.rand.Next(100) < 60 + (p.GetEffectiveSkillLevel("Crafting") / 3)) {
+                                        if (GameLoop.rand.Next(25) == 0) { if (GameLoop.ZPO.ResolveItem("staffFire") is Item staff) { p.TryPickup(staff, 1); } }
+                                        else if (GameLoop.rand.Next(25) == 0) { if (GameLoop.ZPO.ResolveItem("staffEarth") is Item staff) { p.TryPickup(staff, 1); } }
+                                        else if (GameLoop.rand.Next(25) == 0) { if (GameLoop.ZPO.ResolveItem("staffAir") is Item staff) { p.TryPickup(staff, 1); } }
+                                        else if (GameLoop.rand.Next(20) == 0) { if (GameLoop.ZPO.ResolveItem("staffWater") is Item staff) { p.TryPickup(staff, 1); } }
+                                        else if (GameLoop.rand.Next(4) == 0) { if (GameLoop.ZPO.ResolveItem("staffMagic") is Item staff) { p.TryPickup(staff, 1); } }
+                                        else { if (GameLoop.ZPO.ResolveItem("staff") is Item staff) { p.TryPickup(staff, 1); } }
+                                    }
+                                }
+                                else if (Recipes[j].OutputID == "*Sword") {
+                                    if (GameLoop.rand.Next(100) < 40 + (p.GetEffectiveSkillLevel("Smithing") / 2)) {
+                                        if (GameLoop.rand.Next(50) == 0) { if (GameLoop.ZPO.ResolveItem("swordBlack") is Item sword) { p.TryPickup(sword, 1); } }
+                                        else if (GameLoop.rand.Next(25) == 0) { if (GameLoop.ZPO.ResolveItem("swordMithril") is Item sword) { p.TryPickup(sword, 1); } }
+                                        else if (GameLoop.rand.Next(17) == 0) { if (GameLoop.ZPO.ResolveItem("swordSteel") is Item sword) { p.TryPickup(sword, 1); } }
+                                        else if (GameLoop.rand.Next(6) == 0) { if (GameLoop.ZPO.ResolveItem("swordBronze") is Item sword) { p.TryPickup(sword, 1); } } 
+                                        else { if (GameLoop.ZPO.ResolveItem("swordIron") is Item sword) { p.TryPickup(sword, 1); } }
+                                    }
+                                }
+                                
                             }
 
                             if (Recipes[j].SecondaryOut != "") {

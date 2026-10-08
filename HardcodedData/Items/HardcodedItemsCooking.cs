@@ -163,10 +163,39 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Cup of nettle tea", "It's a cup of nettle tea.", "cupNettleTea", Color.White, 12) { UseString = "Potion", UseInt4 = 1, ItemReturned = "cupEmpty", Potion = new() { new("Heal", 3) } }); 
             itemsToAdd.Add(new Item("Cup of nettle tea (milky)", "It's a cup of milky nettle tea.", "cupNettleTeaMilky", Color.White, 12) { UseString = "Potion", UseInt4 = 1, ItemReturned = "cupEmpty", Potion = new() { new("Heal", 3) } }); 
             
+            itemsToAdd.Add(new Item("Tea leaves", "Mmm, how about a nice cup of tea?", "teaLeaves", Color.ForestGreen, 1, trade: false)); 
+            itemsToAdd.Add(new Item("Kettle (empty)", "The kettle is empty.", "kettleEmpty", ColorLib.Steel, 1, trade: false)); 
+            itemsToAdd.Add(new Item("Kettle (full)", "The kettle is full of water.", "kettleFull", ColorLib.Steel, 1, trade: false)); 
+            itemsToAdd.Add(new Item("Kettle (hot)", "The kettle is full of boiling water.", "kettleHot", ColorLib.Steel, 1, trade: false)); 
+            itemsToAdd.Add(new Item("Clay teapot (empty)", "Needs some tea leaves.", "teapotClayEmpty", Color.SandyBrown, 1, trade: false)); 
+            itemsToAdd.Add(new Item("Clay teapot (leaves)", "Needs some hot water.", "teapotClayLeaves", Color.SandyBrown, 1, trade: false)); 
+            itemsToAdd.Add(new Item("Clay teapot (tea)", "Ahhhh, lovely. Where's my cup?", "teapotClayTea", Color.SandyBrown, 1, trade: false) { UseString = "Teapot", UsesCharges = true, UseInt4 = 4, ItemReturned = "teapotClayEmpty"}); 
+            itemsToAdd.Add(new Item("Porcelain teapot (empty)", "Needs some tea leaves.", "teapotPorcelainEmpty", Color.White, 1, trade: false)); 
+            itemsToAdd.Add(new Item("Porcelain teapot (leaves)", "Needs some hot water.", "teapotPorcelainLeaves", Color.White, 1, trade: false)); 
+            itemsToAdd.Add(new Item("Porcelain teapot (tea)", "Ahhhh, lovely. Where's my cup?", "teapotPorcelainTea", Color.White, 1, trade: false) { UseString = "Teapot", UsesCharges = true, UseInt4 = 4, ItemReturned = "teapotPorcelainEmpty"}); 
+            itemsToAdd.Add(new Item("Antique teapot (empty)", "Needs some tea leaves.", "teapotAntiqueEmpty", Color.AntiqueWhite, 1, trade: false)); 
+            itemsToAdd.Add(new Item("Antique teapot (leaves)", "Needs some hot water.", "teapotAntiqueLeaves", Color.AntiqueWhite, 1, trade: false));
+            itemsToAdd.Add(new Item("Antique teapot (tea)", "Ahhhh, lovely. Where's my cup?", "teapotAntiqueTea", Color.AntiqueWhite, 1, trade: false) { UseString = "Teapot", UsesCharges = true, UseInt4 = 4, ItemReturned = "teapotAntiqueEmpty"});
+            itemsToAdd.Add(new Item("Clay cup (empty)", "An empty cup.", "cupClayEmpty", Color.SandyBrown, 1, trade: false)); 
+            itemsToAdd.Add(new Item("Porcelain cup (empty)", "An empty cup.", "cupPorcelainEmpty", Color.White, 1, trade: false)); 
+            itemsToAdd.Add(new Item("Antique cup (empty)", "An empty cup.", "cupAntiqueEmpty", Color.AntiqueWhite, 1, trade: false));  
+            itemsToAdd.Add(new Item("Cup of tea", "A lovely cup of tea.", "cupClayTea", Color.SandyBrown, 1, trade: false) { UseString = "Potion", UseInt4 = 1, ItemReturned = "cupClayEmpty", Potion = new() { new("Construction", 1)}}); 
+            itemsToAdd.Add(new Item("Porcelain cup of tea", "A lovelier cup of tea.", "cupPorcelainTea", Color.White, 1, trade: false) { UseString = "Potion", UseInt4 = 1, ItemReturned = "cupPorcelainEmpty", Potion = new() { new("Construction", 2) }}); 
+            itemsToAdd.Add(new Item("Antique cup of tea", "A loveliest cup of tea.", "cupAntiqueTea", Color.AntiqueWhite, 1, trade: false) { UseString = "Potion", UseInt4 = 1, ItemReturned = "cupAntiqueEmpty", Potion = new() { new("Construction", 3) }}); 
+
+            itemsToAdd.Add(new Item("Cup of tea w/ milk", "A lovely cup of tea. Has some milk added.", "cupClayTeaMilk", Color.SandyBrown, 1, trade: false) { UseString = "Potion", UseInt4 = 1, ItemReturned = "cupClayEmpty", Potion = new() { new("Construction", 1)}}); 
+            itemsToAdd.Add(new Item("Porcelain cup of tea w/ milk", "A lovelier cup of tea. Has some milk added.", "cupPorcelainTeaMilk", Color.White, 1, trade: false) { UseString = "Potion", UseInt4 = 1, ItemReturned = "cupPorcelainEmpty", Potion = new() { new("Construction", 2) }}); 
+            itemsToAdd.Add(new Item("Antique cup of tea w/ milk", "A loveliest cup of tea. Has some milk added.", "cupAntiqueTeaMilk", Color.AntiqueWhite, 1, trade: false) { UseString = "Potion", UseInt4 = 1, ItemReturned = "cupAntiqueEmpty", Potion = new() { new("Construction", 3) }}); 
+
 
             itemsToAdd.Add(new Item("Beer glass", "I need to fill this with beer.", "beerGlass", 200, 200, 200, 2));
             itemsToAdd.Add(new Item("Beer", "A glass of frothy ale.", "beer", 255, 255, 0, 2) { UseString = "Potion", UseInt4 = 1, ItemReturned = "beerGlass", Potion = new() { new("Heal", 1), new("Attack", -2), new("Strength", 2) } });
             itemsToAdd.Add(new Item("Dwarven stout", "A pint of thick dark beer.", "dwarvenStout", Color.DimGray, 2) { UseString = "Potion", UseInt4 = 1, ItemReturned = "beerGlass", Potion = new() { new("Heal", 1), new("Attack", -3), new("Strength", -3), new("Defense", -3), new("Mining", 1), new("Smithing", 1) } });
+            itemsToAdd.Add(new Item("Cider", "A glass of cider.", "cider", Color.YellowGreen, 2) { UseString = "Potion", UseInt4 = 1, ItemReturned = "beerGlass", Potion = new() { new("Heal", 1), new("Attack", -2), new("Strength", -2), new("Farming", 1) } });
+            itemsToAdd.Add(new Item("Asgarnian ale", "Probably the finest ale in Asgarnia.", "aleAsgarnian", Color.Orange, 2) { UseString = "Potion", UseInt4 = 1, ItemReturned = "beerGlass", Potion = new() { new("Heal", 1), new("Attack", -3), new("Strength", 2) } });
+            itemsToAdd.Add(new Item("Greenman's ale", "A glass of frothy ale.", "aleGreenman", Color.Goldenrod, 2) { UseString = "Potion", UseInt4 = 1, ItemReturned = "beerGlass", Potion = new() { new("Heal", 1), new("Attack", -3), new("Strength", -3), new("Defense", -3), new("Herblore", 1) } });
+            itemsToAdd.Add(new Item("Dragon bitter", "A glass of bitter.", "dragonBitter", Color.Crimson, 2) { UseString = "Potion", UseInt4 = 1, ItemReturned = "beerGlass", Potion = new() { new("Heal", 1), new("Attack", -3), new("Strength", 2) } });
+            itemsToAdd.Add(new Item("Chef's delight", "A fruit, full-bodied ale.", "chefsDelight", Color.Yellow, 2) { UseString = "Potion", UseInt4 = 1, ItemReturned = "beerGlass", Potion = new() { new("Heal", 1), new("Attack", -3), new("Strength", -3), new("Cooking", 3) } });
             
             itemsToAdd.Add(new Item("Garlic", "Deters vampires.", "garlic", Color.AntiqueWhite, 3));
 

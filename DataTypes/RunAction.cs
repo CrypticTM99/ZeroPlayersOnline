@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Audio;
 using ZeroPlayersOnline.HardcodedData;
+using ZeroPlayersOnline.Hardcodes;
 using ZeroPlayersOnline.Managers;
+using ZeroPlayersOnline.UI;
 
 namespace ZeroPlayersOnline.DataTypes {
     public class RunAction {
@@ -23,7 +25,7 @@ namespace ZeroPlayersOnline.DataTypes {
             if (ActionID != "") {
                 if (ActionID == "Quest") {
                     player.TryProgressQuest(MiscString, MiscInt);
-                }
+                } 
                             
                 if (ActionID == "Data") {
                     Helper.AlterWorldState(MiscString, MiscString2, MiscInt);
@@ -38,6 +40,13 @@ namespace ZeroPlayersOnline.DataTypes {
                         ExtraWindows.Shop.IsVisible = true;
                         ExtraWindows.ShopID = MiscString2;
                         ExtraWindows.BuildShop();
+                    } else if (MiscString == "ManagePOH") {
+                        ExtraWindows.HouseMenu.IsVisible = true;
+                        ExtraWindows.HouseTeleport = false;
+                    } else if (MiscString == "TelePOH") {
+                        ExtraWindows.HouseMenu.IsVisible = true;
+                        ExtraWindows.HouseTeleport = true;
+                        ExtraWindows.HouseTablet = false;
                     }
                 }
 
@@ -48,8 +57,19 @@ namespace ZeroPlayersOnline.DataTypes {
                 }
 
                 if (ActionID == "EndDialogue") {
-                    GameLoop.ZPO.ConversationPartner = null;
+                    UI_LocNPCs.ConversationPartner = null;
                     GameLoop.ZPO.SelectedMenu = "NPCs";
+                }
+
+                if (ActionID == "UnlockSong") {
+                    if (!player.AllSongsUnlocked && !player.UnlockedSongs.Contains(MiscString)) { 
+                        player.UnlockedSongs.Add(MiscString); 
+                        Log.AddMessage("You have unlocked the song: " + MiscString, Color.Turquoise);
+                    }
+
+                    if (player.MusicMode == "Auto" && GameLoop.SoundManager.CurrentSong != MiscString && GameLoop.SoundManager.PlayingSounds.Count == 0) {
+                        GameLoop.SoundManager.PickMusic(MiscString);
+                    }
                 }
 
                 if (ActionID == "SlayerTask") {
@@ -167,6 +187,236 @@ namespace ZeroPlayersOnline.DataTypes {
                                     (totalSeconds > 1 ? totalSeconds + " seconds" : totalSeconds > 0 ? totalSeconds + " second" : "") + ".";
 
                     Log.AddMessage("You've played for a total of " + time, ColorLib.Mithril);
+                }
+
+                if (ActionID == "Minigame") {
+                    if (MiscString == "GetMahoganyContract") {
+                        if (player.MahoganyDestID == "") {
+                            player.MahoganyContractSpots.Clear();
+                            MinigameManager.MH_GetContract();
+
+                            if (!player.HasAllItems(["mahoganyHomesContract"])) {
+                                if (GameLoop.ZPO.ResolveItem("mahoganyHomesContract") is Item contract) {
+                                    player.TryPickup(contract, 1);
+                                }
+                            }
+
+                            if (GameLoop.ZPO.Atlas.TryGetValue(player.MahoganyDestID, out Location? mhDest) && mhDest != null) {
+                                string build = "";
+                                foreach (var kv in player.MahoganyContractSpots) {
+                                    if (!kv.Repaired) {
+                                        if (build != "") {
+                                            build += ", ";
+                                        }
+
+                                        build += kv.Name;
+                                    }
+                                }
+
+                                build += ".";
+
+                                GameLoop.ZPO.Log.AddMessage("Your new contract is " + mhDest.DisplayName + " in " + mhDest.MahoganyTown + ". Remaining: " + build, Color.SandyBrown);
+                            }
+                        } else {
+                            GameLoop.ZPO.Log.AddMessage("You already have a contract and should finish that before getting a new one.", Color.Crimson);
+                        }
+                    } else if (MiscString == "ViewMahoganyContract") {
+                        if (player.MahoganyDestID != "") {
+                            if (GameLoop.ZPO.Atlas.TryGetValue(player.MahoganyDestID, out Location? mhDest) && mhDest != null) {
+                                string build = "";
+                                foreach (var kv in player.MahoganyContractSpots) {
+                                    if (!kv.Repaired) {
+                                        if (build != "") {
+                                            build += ", ";
+                                        }
+
+                                        build += kv.Name;
+                                    }
+                                }
+
+                                build += ".";
+
+                                GameLoop.ZPO.Log.AddMessage("Your current contract is " + mhDest.DisplayName + " in " + mhDest.MahoganyTown + ". Remaining: " + build, Color.SandyBrown);
+                            } else { 
+                                GameLoop.ZPO.Log.AddMessage("Malformed Mahogany Homes destination ID: " + player.MahoganyDestID + ". Report this, contract cleared for now.", Color.Crimson);
+                                GameLoop.ZPO.player.MahoganyDestID = "";
+                                GameLoop.ZPO.player.MahoganyContractSpots.Clear();
+                            }
+                        } else {
+                            GameLoop.ZPO.Log.AddMessage("You do not currently have a Mahogany Homes contract.", Color.Crimson);
+                        }
+                    }
+                }
+
+                if (ActionID == "BoughtHouse") {
+                    PlayerOwnedHome newHouse = new(MiscString2);
+                    newHouse.Rooms.Add(new(HardcodedPOHObjects.RoomTypes[0]));
+
+                    if (player.Homes.Values.Where(o => o.Active).ToList().Count < player.GetSkillTier("Construction")) {
+                        newHouse.Active = true;
+                    }
+
+                    player.Homes.TryAdd(MiscString, newHouse);
+                }
+
+                if (ActionID == "POH") {
+                    if (MiscString == "Rest") {
+                        if (player.TimeLastRested + 3600 < Helper.Time()) { // Can only rest if it's been at least an hour of playtime since last rest
+                            if (GameLoop.ZPO.Atlas.TryGetValue(player.NavLoc, out Location? curr) && curr != null) { 
+                                PlayerOwnedHome? home = null;
+
+                                if (curr.PlayerHomeHere != "" && player.Homes.TryGetValue(curr.PlayerHomeHere, out PlayerOwnedHome? tempHome)) {
+                                    home = tempHome;
+                                }
+
+                                if (home != null) {
+                                    int restBuff = Math.Clamp(home.TotalComfort() / 30, 1, 5); 
+                                    player.CurrentRestedBuff = restBuff; 
+                                    player.TimeLastRested = player.SecondsPlayed;
+                                    player.ActivePotions.Add(new("Well Rested", restBuff));  
+                                    Log.AddMessage("You take a nap and wake up feeling well rested. (+" + restBuff + ")", Color.Lime);
+                                } else {
+                                    Log.AddMessage("You don't seem to be in a home at the moment.", Color.Crimson);
+                                }
+                            }
+                        } else {
+                            double ms = (player.TimeLastRested + 3600) - Helper.Time();
+                            int minutes = (int) (ms / 60);
+
+                            Log.AddMessage("You aren't tired yet. Try again in " + minutes + " minute" + (minutes > 1 ? "s." : "."), Color.Crimson);
+                        }
+                    }
+
+                    if (MiscString == "Telescope") {
+                        if (player.CurrentStarLoc != "") {
+                            double secsToNext = (player.TimeLastStar + 5400) - player.SecondsPlayed;
+                            int minutes = (int) (secsToNext / 60);
+
+                            Log.AddMessage("The last shooting star landed in " + GameLoop.ZPO.ResolveLocationName(player.CurrentStarLoc) + ". Another will land in around " + minutes + " minute" + (minutes > 1 ? "s." : "."), Color.Yellow);
+                        }
+                    }
+
+                    if (MiscString == "OfferBones") {  
+                        foreach (var inv in player.Inventory) {
+                            if (!inv.Noted && inv.GetRef() is Item bone) {
+                                if (bone.UseString == "Bones") {
+                                    int exp = bone.UseInt;
+                                    double multi = MiscInt / 100.0;
+
+                                    if (player.LeftIncense > 0) { multi += 0.5; }
+                                    if (player.RightIncense > 0) { multi += 0.5; }
+
+                                    player.TryGrantExp("Prayer", (int) Math.Ceiling(exp * multi), Log, SidebarManager.RecentlyTrainedSkills);
+
+                                    player.ConsumeItems([inv.ID + ",1"]);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (MiscString == "LightIncense") {
+                        if (player.LeftIncense == 0 || player.RightIncense == 0) {
+                            if (player.HasAllItems(["tinderbox,1", "herbCleanMarrentill,1"], false, true)) {
+                                int fmLv = player.GetEffectiveSkillLevel("Firemaking");
+                                if (fmLv >= 30) {
+                                    player.ConsumeItems(["herbCleanMarrentill,1"], false, true);
+                                
+                                    if (player.LeftIncense == 0) {
+                                        player.LeftIncense = 140 + fmLv;
+                                    } else {
+                                        player.RightIncense = 140 + fmLv;
+                                    }
+                                    
+                                    Log.AddMessage("You light an incense burner.", Color.Yellow);
+                                } else {
+                                    Log.AddMessage("You need at least level 30 Firemaking to light incense burners.", Color.Crimson);
+                                }
+                            } else {
+                                Log.AddMessage("You need a tinderbox and a clean marrentill to light an incense burner.", Color.Crimson);
+                            }
+                        } else {
+                            Log.AddMessage("Both incense burners are already lit. One will burn for " + player.LeftIncense + " seconds more, and the other " + player.RightIncense + " seconds.", Color.Crimson);
+                        }
+                    }
+                }
+
+                if (ActionID == "Teleport") { 
+                    if (player.GetRegion() == "Tutorial Island") { 
+                        player.NavLoc = "TI_Main";
+                        GameLoop.ZPO.Log.AddMessage("The pull of the island distorts your magic and you appear in the center of Tutorial Island.", Color.MediumPurple);
+                    } else {
+                        if (GameLoop.ZPO.Atlas.TryGetValue(MiscString, out Location? dest)) {
+                            player.NavLoc = MiscString;
+                            GameLoop.ZPO.Log.AddMessage("You teleport to " + dest.DisplayName + ".", Color.MediumPurple);
+                        } else {
+                            GameLoop.ZPO.Log.AddMessage("Teleport destination does not exist.", Color.Crimson);
+                        } 
+                    } 
+                }
+
+                if (ActionID == "TransmuteBones") {
+                    bool anyBones = false;
+                    int extras = 0;
+                    foreach (var kv in player.Inventory) {
+                        if (new List<string>() { "bonesRegular", "bonesWolf", "bonesBat", "bonesBig", "bonesBleached", "bonesBurnt", "bonesJogre", "bonesMonkey", "mtaBone1", "mtaBone2", "mtaBone3", "mtaBone4", "bonesAlan" }.Contains(kv.ID) && !kv.Noted) {
+                            if (kv.ID.Contains("mtaBone")) {
+                                int qty = 0;
+                                if (MinigameManager.MTA_Bones[1] == kv.ID) { qty = 1; }
+                                if (MinigameManager.MTA_Bones[2] == kv.ID) { qty = 2; }
+                                if (MinigameManager.MTA_Bones[3] == kv.ID) { qty = 3; }
+                                                    
+                                extras += qty;
+                            }
+                            kv.ID = "fruit" + MiscString;
+                            anyBones = true; 
+                        }
+                    }
+
+                    if (extras > 0) {
+                        if (GameLoop.ZPO.ItemLibrary.TryGetValue("fruit" + MiscString, out Item? banan) && banan != null) {
+                            player.TryPickup(new Item(banan), extras);
+                        }
+                    }
+
+                    if (anyBones) {
+                        if (GameLoop.ZPO.SpellLibrary.TryGetValue(MiscString2, out Spell? bones) && bones != null) {
+                            bones.Cast(player, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
+                            string plural = (MiscString == "Banana" ? "Bananas" : "Peaches");
+                            GameLoop.ZPO.Log.AddMessage("You cast Bones to " + plural + " and all your bones become " + plural.ToLower() + ".", Color.MediumPurple);
+                        }
+                    } else {
+                        GameLoop.ZPO.Log.AddMessage("You have no applicable bones to transmute.", Color.Crimson);
+                    }
+                }
+
+                if (ActionID == "SuperheatItem") {
+                    if (GameLoop.ZPO.ProcessingStations.TryGetValue("Furnace", out ProcessingStation? furnace) && furnace != null) {
+                        furnace.LastWorked = "";
+                        if (furnace.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, SidebarManager.RecentlyTrainedSkills)) {
+                            if (GameLoop.ZPO.SpellLibrary.TryGetValue(MiscString2, out Spell? superheat) && superheat != null) {
+                                superheat.Cast(player, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
+                                GameLoop.ZPO.Log.AddMessage("You cast Superheat Item and smelt an ore mix into a bar.", Color.MediumPurple);
+                            }
+                        } else {
+                            GameLoop.ZPO.Log.AddMessage("You have no ore mixes you have the smithing level to be able to smelt.", Color.Crimson);
+                        }
+                    }
+                }
+
+                if (ActionID == "EnchantItem") {
+                    List<string> types = [ "sapphire/opal", "emerald/jade", "ruby/red topaz", "diamond", "dragonstone", "onyx", "zenyte" ];
+                    if (GameLoop.ZPO.ProcessingStations.TryGetValue("Level " + MiscInt + " Enchanter", out ProcessingStation? enchant) && enchant != null) {
+                        enchant.LastWorked = "";
+                        if (enchant.TryProcessItem(player, GameLoop.ZPO.Log, GameLoop.ZPO.ItemLibrary, SidebarManager.RecentlyTrainedSkills)) {
+                            if (GameLoop.ZPO.SpellLibrary.TryGetValue(MiscString2, out Spell? spell)) {
+                                spell.Cast(player, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
+                                GameLoop.ZPO.Log.AddMessage("You enchant a piece of " + types[MiscInt - 1] + " jewellery.", Color.MediumPurple);
+                            }
+                        } else {
+                            GameLoop.ZPO.Log.AddMessage("You have no unenchanted " + types[MiscInt - 1] + " jewellery to enchant.", Color.Crimson);
+                        }
+                    } 
                 }
             }
         }

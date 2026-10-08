@@ -7,6 +7,9 @@ namespace ZeroPlayersOnline.Hardcodes {
         public static void InitItems(Dictionary<string, Item> ItemLibrary) {
             List<Item> itemsToAdd = new();
 
+            itemsToAdd.Add(new Item("Clue scroll box", "I can store my clue scrolls in this.", "clueScrollBox", Color.Khaki, 5000) { UseString = "ViewInventory", ConsumedOnUse = false, ContainerStacksUnstackable = true, ContainerSlots = 7, ContainableIDs = [ "clueScrollTutorial", "clueScrollBeginner", "clueScrollEasy", "clueScrollMedium", "clueScrollHard", "clueScrollElite", "clueScrollMaster" ]}); 
+            
+
             // Tutorial Clues
             itemsToAdd.Add(new Item("Clue scroll (tutorial)", "A treasure hunt taking place entirely on Tutorial Island.", "clueScrollTutorial", 207, 185, 151, 0, false, false) {
                 UseString = "ClueTutorial", 
@@ -19,6 +22,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 UseString2 = "Tutorial",
                 UseInt = 10,
                 DropTable = {
+                    new ItemDrop("clueScrollBox", 1, 25, 1, 1),
                     new ItemDrop("clueCatEars", 1, 20, 1, 1),
                     new ItemDrop("clueCornyApron", 1, 20, 1, 1),
                     new ItemDrop("clueKilt", 1, 20, 1, 1),
@@ -103,6 +107,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 UseString2 = "Beginner",
                 UseInt = 100,
                 DropTable = {
+                    new ItemDrop("clueScrollBox", 1, 25, 1, 1),
                     new ItemDrop("clueFeetMole", 1, 360, 1, 1), new ItemDrop("clueFeetFrog", 1, 360, 1, 1), new ItemDrop("clueFeetBear", 1, 360, 1, 1), new ItemDrop("clueFeetDemon", 1, 360, 1, 1),
                     new ItemDrop("clueCapeJester", 1, 360, 1, 1), new ItemDrop("clueCapeParrot", 1, 360, 1, 1),
                     new ItemDrop("clueTopMonkT", 1, 360, 1, 1), new ItemDrop("clueBottomMonkT", 1, 360, 1, 1),
@@ -162,6 +167,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 UseString2 = "Easy",
                 UseInt = 1000,
                 DropTable = {
+                    new ItemDrop("clueScrollBox", 1, 25, 1, 1),
                     new ItemDrop("compbowWillow", 1, 360, 1, 1),
                     new ItemDrop("clueAmuletMagicT", 1, 360, 1, 1),
                     new ItemDrop("helmBlackT", 1, 1404, 1, 1),
@@ -443,6 +449,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 UseString2 = "Medium",
                 UseInt = 10000,
                 DropTable = {
+                    new ItemDrop("clueScrollBox", 1, 25, 1, 1),
                     new ItemDrop("gnomishFirelighter", 1, 341, 1, 1),
                     new ItemDrop("compbowYew", 1, 341, 1, 1),
                     new ItemDrop("clueAmuletStrengthT", 1, 341, 1, 1),
@@ -662,7 +669,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Tai bwo wannai teleport", "Teleports you to Tai bwo wannai.", "clueTeleportTaiBwoWannai", Color.Khaki, 5000, true) { UseString = "Teleport", UseString2 = "MIST_LumbridgeCastleBailey" }); // TODO: Fix all these once their places are implemented
             itemsToAdd.Add(new Item("Lumberyard teleport", "Teleports you to the Lumberyard.", "clueTeleportLumberyard", Color.Khaki, 5000, true) { UseString = "Teleport", UseString2 = "MIST_VarrockLumberyard" });
             itemsToAdd.Add(new Item("Iorwerth camp teleport", "Teleports you to the Iorwerth Camp.", "clueTeleportIorwerthCamp", Color.Khaki, 5000, true) { UseString = "Teleport", UseString2 = "MIST_LumbridgeCastleBailey" }); // TODO: Fix all these once their places are implemented
-            itemsToAdd.Add(new Item("Master scroll book", "I can store my teleport scrolls in this.", "clueMasterScrollBook", Color.Khaki, 50000, true) { UseString = "ViewInventory", ConsumedOnUse = false, ContainerSlots = 11, ContainableIDs = [ "clueTeleportNardah", "clueTeleportMosLeHarmless", "clueTeleportMortton", "clueTeleportFeldipHills", "clueTeleportLunar", "clueTeleportDigsite", "clueTeleportPiscatoris", "clueTeleportPestControl", "clueTeleportTaiBwoWannai", "clueTeleportLumberyard", "clueTeleportIorwerthCamp" ]}); 
+            itemsToAdd.Add(new Item("Master scroll book", "I can store my teleport scrolls in this.", "clueMasterScrollBook", Color.Khaki, 50000) { UseString = "ViewInventory", ConsumedOnUse = false, ContainerSlots = 11, ContainableIDs = [ "clueTeleportNardah", "clueTeleportMosLeHarmless", "clueTeleportMortton", "clueTeleportFeldipHills", "clueTeleportLunar", "clueTeleportDigsite", "clueTeleportPiscatoris", "clueTeleportPestControl", "clueTeleportTaiBwoWannai", "clueTeleportLumberyard", "clueTeleportIorwerthCamp" ]}); 
             
 
 

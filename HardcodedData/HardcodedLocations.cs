@@ -149,12 +149,13 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_LumbridgeCastleBailey"),
                             new Connection("MIST_LumbridgeNorth"),
+                            new Connection("MIST_LumbridgePOH", [ new("POHOwned", 0, "MIST_Lumbridge"), new("POHActive", 0, "MIST_Lumbridge") ], true, hideIfNoReqs: true),
                             new Connection("MIST_LumbridgeAcrossLum"),
                             new Connection("MIST_LumbridgeChurch"),
                             new Connection("MIST_LumbridgeGraveyard"),
                             new Connection("MIST_LumbridgeBobsAxes"),
                             new Connection("MIST_LumbridgeVictoria"),
-                            new Connection("MIST_LumbridgeEmptyHouse")
+                            new Connection("MIST_LumbridgeEmptyHouse", [ new("POHNotOwned", 0, "MIST_Lumbridge")], hideIfNoReqs: true)
                         },
                         GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine" }
                     });
@@ -164,7 +165,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_Lumbridge")
                         },
-                        ShopItemsHere = new() { "pickaxeBronze", "pickaxeIron", "pickaxeSteel", "pickaxeMithril", "pickaxeAdamant", "hatchetBronze", "hatchetIron", "hatchetSteel", "hatchetMithril", "hatchetAdamant", "battleaxeBronze", "battleaxeIron", "battleaxeSteel", "battleaxeMithril", "battleaxeAdamant" }
+                        ShopItemsHere = new() { "pickaxeBronze", "pickaxeIron", "pickaxeSteel", "pickaxeMithril", "pickaxeAdamant", "hatchetBronze", "hatchetIron", "hatchetSteel", "hatchetMithril", "hatchetAdamant", "battleaxeBronze", "battleaxeIron", "battleaxeSteel", "battleaxeMithril", "battleaxeAdamant" },
+                        MahoganyTown = "Lumbridge",
+                        MahoganyHomesHotspots = new() { "shelf", "shelf", "shelf", "drawers", "bedLarge", "drawers", "table", "wardrobe", "table", "bookcase", "bookcase"  }
                     });
             
                     locsToAdd.Add(new Location("MIST_LumbridgeChurch", "Lumbridge Church", "Misthalin") {
@@ -173,7 +176,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_Lumbridge")
                         },
                         NPCsHere = new() { "mistLumAereck", "tutorPrayer", "woman" },
-                        AreaMonsters = new() { "woman" }
+                        AreaMonsters = new() { "woman" },
+                        MahoganyTown = "Lumbridge",
+                        MahoganyHomesHotspots = new() { "votary", "organ", "votary", "ladder", "ladder", "lighting", "pew", "pew", "lighting", "pew", "pew", "lighting", "lighting", "pew", "pew", "lighting", "lighting", "altar", "stand", "stand" }
                     }); 
 
                     locsToAdd.Add(new Location("MIST_LumbridgeGraveyard", "Lumbridge Graveyard", "Misthalin") {
@@ -375,6 +380,16 @@ namespace ZeroPlayersOnline.Hardcodes {
                         });
                     }
 
+
+                    locsToAdd.Add(new Location("MIST_LumbridgePOH", "Lumbridge Cottage", "Misthalin") {
+                        Description = "Home sweet home.".Align(HorizontalAlignment.Center, 92),
+                        PlayerHomeHere = "MIST_Lumbridge",
+                        ShopPriceMultiplier = 0,
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_Lumbridge")
+                        }
+                    });
+
                     locsToAdd.Add(new Location("MIST_LumbridgeEmptyHouse", "Empty House", "Misthalin") {
                         Description = "It seems like someone used to live here, but they aren't around anymore. There are a couple shelves up against one wall, some more shelves hanging on another wall with cooking implements stacked on them, and a small table with two chairs in the middle of the room. A bed stuffed in one corner of the room and a couple brown rugs make the shack feel a little more homely. The last thing in the house is a range that still seems functional.",
                         ConnectedLocations = new List<Connection>() {
@@ -389,7 +404,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_Lumbridge")
                         },
                         NPCsHere = new() { "mistLumVictoria" },
-                        ProcessingStations = new() { "Sink" }
+                        ProcessingStations = new() { "Sink" },
+                        MahoganyTown = "Lumbridge",
+                        MahoganyHomesHotspots = new() { "bookcase", "sink", "chair", "table", "chair", "wardrobe", "drawers", "bedLarge" }
                     });
 
                     locsToAdd.Add(new Location("MIST_LumbridgeNorth", "North Lumbridge", "Misthalin") {
@@ -423,6 +440,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     });
 
                     locsToAdd.Add(new Location("MIST_LumbridgeShearedRam", "The Sheared Ram", "Misthalin") {
+                        UPCsong = "Tubthumping",
                         Description = "This small bar is fairly cozy, with windows looking out over the River Lum and rustic decorations around the room. There are a small handful of tables available, or you could take a seat at the bar. The occupants are a little rowdy but the bar is not overly full in such a small town.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_LumbridgeNorth")
@@ -445,9 +463,11 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_LumbridgeNorth")
                         },
-                        ShopItemsHere = new() { "potEmpty", "jugEmpty", "shears", "knife", "bucketEmpty", "bowlEmpty", "tinCakeEmpty", "tinderbox", "chisel", "shovel", "hammer", "plantPotEmpty", "candle" }, // TODO: Once actual places to get candles exist, remove them from here
+                        ShopItemsHere = new() { "potEmpty", "jugEmpty", "shears", "knife", "bucketEmpty", "bowlEmpty", "tinCakeEmpty", "tinderbox", "chisel", "shovel", "hammer", "plantPotEmpty", "candle", "compass" },
                         NPCsHere = new() { "man", "man" },
-                        AreaMonsters = new() { "man", "man" }
+                        AreaMonsters = new() { "man", "man" },
+                        MahoganyTown = "Lumbridge",
+                        MahoganyHomesHotspots = new() { "shelf", "shelf", "counter", "counter", "shelf", "shelf", "shelf", "shelf", "range", "shelf", "bed", "drawers", "drawers", "bedLarge", "desk" }
                     });
 
                     locsToAdd.Add(new Location("MIST_LumbridgeFishingStore", "Fishing Store", "Misthalin") {
@@ -576,6 +596,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     });
 
                     locsToAdd.Add(new Location("MIST_GroatsFarmBrutus", "Groats' Farm - Brutus", "Misthalin") {
+                        UPCsong = "MILK",
                         Description = "This part of the field has a huge angry-looking bull with huge horns and red eyes whose name seems to be Brutus. He snorts and stomps around like he owns the place which, at least by the standards of animals, he essentially does. Brutus looks a bit intimidating. Definitely doesn't skip leg day.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_GroatsFarmCows"), 
@@ -1170,6 +1191,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_DraynorCrossroads"), 
                             new Connection("MIST_DraynorFarm"),
+                            new Connection("MIST_DraynorPOH", [ new("POHActive", 0, "MIST_DraynorVillage")]),
                             new Connection("MIST_DraynorAgility1"), 
                             new Connection("MIST_DraynorNorthEast"), 
                             new Connection("MIST_DraynorMarket"),
@@ -1184,6 +1206,15 @@ namespace ZeroPlayersOnline.Hardcodes {
                         },
                         GatheringSpots = new() { "treeOak", "treeOak", "treePine", "treePine", "treePine" },
                         AreaMonsters = new() { "man", "man", "man", "woman", "woman" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_DraynorPOH", "Draynor Gothic", "Misthalin") {
+                        Description = "Home sweet home.".Align(HorizontalAlignment.Center, 92),
+                        PlayerHomeHere = "MIST_DraynorVillage",
+                        ShopPriceMultiplier = 0,
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_DraynorVillage")
+                        }
                     });
 
                     locsToAdd.Add(new Location("MIST_DraynorMarket", "Draynor Market", "Misthalin") {
@@ -1209,13 +1240,48 @@ namespace ZeroPlayersOnline.Hardcodes {
                         ProcessingStations = new() { "GE Bank" }
                     });
 
+                    locsToAdd.Add(new Location("MIST_DraynorAggie", "Aggie's House", "Misthalin") {
+                        Description = "This house practically screams 'inhabited by a witch'. After a particularly nasty spell it might do so literally. In the middle of the room is a large cauldron with a bubbling blue liquid in it. There are some arcane sigils hanging on the walls, and the shelves are full of occult paraphernalia. There's even what looks like a human skull on one shelf. A string of garlic bulbs hangs by the door - probably wise, given the rumors of vampires running about. There are a few rolls of fabric lying against the wall... *spooky* fabric, probably. There's also a few chairs and two small tables, one with a slice of cheese and the other a tomato resting on it. A staircase leads up to Aggie's bedroom, equally witchy, with some ornate wardrobes and a comfortable looking bed.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_DraynorVillage")
+                        },
+                        NPCsHere = new() { "mistDrayAggie" },
+                        GatheringSpots = new() { "clueWardrobe", "clueWardrobe" },
+                        ItemSpawns = new() { new("cheese", 3), new("tomato", 3) },
+                        MahoganyTown = "Draynor",
+                        MahoganyHomesHotspots = new() { "wardrobe", "lighting", "lighting", "wardrobe", "lighting", "bench", "wardrobe", "lighting", "chair", "lighting", "lighting", "bedLarge" }
+                    });
+
                     locsToAdd.Add(new Location("MIST_DraynorNed", "Ned's House", "Misthalin") {
                         Description = "The inside of the house is stuffed fill of things, to the point that you consider Ned may have a hoarding problem. There are a bunch of chairs and nautical themed decorations all over the place, and a couple tables with ropes in the progress of being woven on them. A nice painting of White Wolf Mountain hangs on the wall. There are some crates full of even more junk, and a fireplace with a roaring fire in it.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_DraynorVillage")
                         },
-                        NPCsHere = new() { "mistDrayNed1" },
-                        ShopItemsHere = new() { "rope" }
+                        NPCsHere = new() { "mistDrayNed" },
+                        ShopItemsHere = new() { "rope" },
+                        MahoganyTown = "Draynor",
+                        MahoganyHomesHotspots = new() { "chair", "stool", "shelf", "shelf", "lighting", "table", "table", "lighting", "bench", "lighting", "lighting", "wheel", "bench", "drawers", "bedLarge", "chair", "lighting", "lighting", "shelf" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_DraynorSpria", "Spria's House", "Misthalin") {
+                        Description = "A small house on the edge of Draynor. There's not much inside it besides a chest, a fireplace, a bed, and some drawers. There's a stuff bull head mounted on the wall.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_DraynorVillage")
+                        },
+                        NPCsHere = new() { "mistDraySpria" },
+                        GatheringSpots = new() { "clueDrawers" },
+                        ItemSpawns = new() { new("logPine", 2, count: 2) }
+                    });
+
+
+                    locsToAdd.Add(new Location("MIST_DraynorMorgan", "Morgan's House", "Misthalin") {
+                        Description = "A small house on the edge of Draynor. There's not much inside it. On the ground floor there are a couple small rugs and chests, a barrel, and a small table with some stools. The upper floor has another table, a bed, and a cupboard seemingly full of garlic.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_DraynorVillage")
+                        },
+                        NPCsHere = new() { "mistDrayMorgan", "woman" },
+                        AreaMonsters = new() { "woman" },
+                        GatheringSpots = new() { "clueChest", "clueChest", "cupboardMorgan" }
                     });
 
                     locsToAdd.Add(new Location("MIST_DraynorCrossroads", "Draynor Crossroads", "Misthalin") {
@@ -1494,7 +1560,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     });
 
                     locsToAdd.Add(new Location("MIST_VarrockLumberyard", "Lumberyard", "Misthalin") {
-                        Description = "This place has definitely seen better days, though the store at the front is somehow still functional despite the rest of the lumberyard falling apart. The lumberyard is surrounded be a short wooden fence, broken at one point near the front where you could hop over into the crumbling ruins if you wanted.",
+                        Description = "This place has definitely seen better days, though the store at the front is somehow still functional despite the rest of the lumberyard falling apart. The lumberyard is surrounded by a short wooden fence, broken at one point near the front where you could hop over into the crumbling ruins if you wanted.",
                         ConnectedLocations = new List<Connection>() { 
                             new Connection("MIST_VarrockCrossroadsNorth"),
                             new Connection("MIST_VarrockCrossroadsEast"),
@@ -1502,7 +1568,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("MIST_VarrockLumberyardInside", alt: "(Hop Broken Fence)")
                         },
                         ShopPriceMultiplier = 1.3,
-                        ShopItemsHere = new() { "saw", "hammer", "clothBolt", "nailsBronze", "nailsIron", "nailsSteel", "plankPine", "plankOak" }
+                        ShopItemsHere = new() { "saw", "hammer", "clothBolt", "candle", "nailsBronze", "plankPine", "barBronze" },
+                        ProcessingStations = new() { "Sawmill" }
                     });
 
                     locsToAdd.Add(new Location("MIST_VarrockLumberyardInside", "Lumberyard", "Misthalin") {
@@ -1671,8 +1738,8 @@ namespace ZeroPlayersOnline.Hardcodes {
                         GatheringSpots = new() { "clueCrates" }
                     });
 
-                    locsToAdd.Add(new Location("MIST_VarrockPlaza", "Varrock Plaza", "Misthalin") {
-                        Description = "The beating heart of the kindom of Misthalin! The plaza has a nice fountain with a statue looking in each ordinal direction, and a number of small stalls hawk various goods that they won't actually let you buy.",
+                    locsToAdd.Add(new Location("MIST_VarrockPlaza", "Varrock Square", "Misthalin") {
+                        Description = "The beating heart of the kindom of Misthalin! The square has a nice fountain with a statue looking in each ordinal direction, and a number of small stalls hawk various goods that they won't actually let you buy.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_VarrockPalaceBailey"),
                             new Connection("MIST_VarrockWest"),
@@ -1705,10 +1772,12 @@ namespace ZeroPlayersOnline.Hardcodes {
                         }, 
                         NPCsHere = new() { "mistVarShopkeeperGeneral", "mistVarAssistantGeneral" },
                         GatheringSpots = new() { "clueCrates", "clueBoxes" },
-                        ShopItemsHere = new() { "potEmpty", "jugEmpty", "shears", "bucketEmpty", "bowlEmpty", "tinCakeEmpty", "tinderbox", "chisel", "hammer", "compass" }
+                        ShopItemsHere = new() { "potEmpty", "jugEmpty", "shears", "bucketEmpty", "bowlEmpty", "tinCakeEmpty", "tinderbox", "chisel", "hammer", "compass" },
+                        MahoganyTown = "Varrock",
+                        MahoganyHomesHotspots = new() { "shelf", "shelf", "shelf", "shelf", "shelf", "lighting", "stool", "stool", "table", "stool", "bed", "portrait", "lighting", "portrait"  }
                     });
 
-                    locsToAdd.Add(new Location("MIST_VarrockWest", "Varrock West", "Misthalin") {
+                    locsToAdd.Add(new Location("MIST_VarrockWest", "West Varrock", "Misthalin") {
                         Description = "A majority of west Varrock is in ruins, most of the buildings crumbling and unoccupied except by the unfortunately large homeless population. The only buildings here worthy of note are the apothecary and the bank, though the smithy is still technically usable. The roads also lead to the plaza, the western crossroads, and the Grand Exchange, any of which are more desirable places to be than this.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("MIST_VarrockPlaza"),
@@ -1759,11 +1828,11 @@ namespace ZeroPlayersOnline.Hardcodes {
                         GatheringSpots = new() { "clueCrates", "clueBoxes" }
                     });
                      
-                    locsToAdd.Add(new Location("MIST_VarrockNorth", "Varrock North", "Misthalin") {
-                        Description = "Really more of the north-east of Varrock, this is a small section of the city just east of the palace. The salon and Saradominist chapel are found here, along with a real estate agent for those looking to purchase a home. There's a manhole leading down into the sewer system, which is infested with monsters, for the adventurous. Also Bob lives here.",
+                    locsToAdd.Add(new Location("MIST_VarrockNorth", "North Varrock", "Misthalin") {
+                        Description = "Really more of the north-east of Varrock, this is a small section of the city just east of the palace. The salon and Saradominist chapel are found here, along with a real estate agent for those looking to purchase a home. There's a manhole leading down into the sewer system, which is infested with monsters, for the adventurous. Also Charos lives here.",
                         ConnectedLocations = new List<Connection>() { 
                             new Connection("MIST_VarrockCrossroadsNorth"),
-                            new Connection("MIST_VarrockHouseBob"),
+                            new Connection("MIST_VarrockHouseCharos"),
                             new Connection("MIST_VarrockChapel"),
                             new Connection("MIST_VarrockEstateAgent"),
                             new Connection("MIST_VarrockSalon"),
@@ -1776,7 +1845,26 @@ namespace ZeroPlayersOnline.Hardcodes {
                         GatheringSpots = new() { "treePine", "treePine", "treePine", "treePine", "treePine", "treeYew" }
                     });
 
-                    locsToAdd.Add(new Location("MIST_VarrockEast", "Varrock East", "Misthalin") {
+                    locsToAdd.Add(new Location("MIST_VarrockHouseCharos", "Charos' House", "Misthalin") {
+                        Description = "A fairly large luxurious manor in the upperclass part of Varrock. The downstairs is well lit by candlebras on the walls, with a rug in the middle and a large table to receive guests. There are a handful of bookcases and cabinets placed around the edge of the room containing expensive knick-knacks. Upstairs is the bedroom, containing a four-posted bed and some storage for clothing and personal belongings. A smaller table is placed there with some chairs.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockNorth")
+                        },
+                        NPCsHere = new() { "mistVarCharos" },
+                        MahoganyTown = "Varrock",
+                        MahoganyHomesHotspots = new() { "tableLarge", "chair", "chair", "bookcase", "bookcase", "shelf",  "table", "bedLarge", "chair", "chair", "wardrobe", "wardrobe", "dresser", "lighting", "lighting"  }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockEstateAgent", "Misthalin Mortgages", "Misthalin") {
+                        Description = "A small office just across the road from the Varrock chapel. The entry room has a row of bookshelves lining one wall, with a small desk acting as the counter for business. The room is decorate with a nice Varrockian rug and some paintings of potential houses you could one day own. Through a door near the back is the office, where there's another desk stacked with papers and ledgers. Some shelves back here hold various construction tools, and there's a grandfather clock ticking away in one corner.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockNorth")
+                        },
+                        NPCsHere = new() { "estateAgent" },
+                        ItemSpawns = new() { new("saw", 1), new("bookConstructionGuide", 1) }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockEast", "East Varrock", "Misthalin") {
                         Description = "The bustling eastern district of Varrock, home to the bank, Horvik's Armor Shop, Lowe's Archery Emporium, and Jeff's house. Perhaps most notably though is the presence of the Varrock Museum, housing a number of fascinating exhibits. There's even a small fountain here, and a mostly useless training hall. So many sights to see!",
                         ConnectedLocations = new List<Connection>() { 
                             new Connection("MIST_VarrockNorth"),
@@ -1795,6 +1883,25 @@ namespace ZeroPlayersOnline.Hardcodes {
                         AreaMonsters = new() { "guard", "man", "man", "woman", "woman", "woman", "woman" },
                         GatheringSpots = new() { "treePine", "treePine", "treePine" },
                         ProcessingStations = new() { "Fountain" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockHouseJeff", "Jeff's House", "Misthalin") {
+                        Description = "A cozy but upscale house in east Varrock. The entry hall contains some shelves and a bookcase, plus a table with some chairs. There are some paintings and lanterns on the wall. Through to the storage room, there are a bunch of shelves holding various items of no particular interest. Upstairs is a spacious bedroom with a large Varrockian rug, some bookcases, the large bed, and some portraits for decoration.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockEast")
+                        },
+                        NPCsHere = new() { "mistVarJeff" },
+                        GatheringSpots = new() { "clueDrawers", "clueBookcase", "clueBookcase" },
+                        MahoganyTown = "Varrock",
+                        MahoganyHomesHotspots = new() { "chair", "chair", "bookcase", "table", "chair", "portrait", "shelf", "shelf", "shelf", "shelf", "shelf", "chest", "drawers", "bookcase", "bookcase", "portrait", "portrait", "portrait" }
+                    });
+
+                    locsToAdd.Add(new Location("MIST_VarrockTrainingHall", "Training Hall", "Misthalin") {
+                        Description = "A modest, largely unused, training hall. There are some scrolls hanging from the walls depicting proper stances for attacking and defending, plus some tables to rest at. Someone has stored some hay bales here in one corner due to the lack of use. The main attraction of the hall is the rows of training dummies, calibrated in two ways. The first set are a little trickier to hit, allowing you to train Attack, and the second are a little tougher, allowing you to train Strength. They'll only be any benefit up to level 8 in either skill though.",
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockEast")
+                        },
+                        GatheringSpots = new() { "dummyAttack", "dummyAttack", "dummyAttack", "dummyStrength", "dummyStrength", "dummyStrength" },
                     });
 
                     locsToAdd.Add(new Location("MIST_VarrockBankEast", "Varrock East Bank", "Misthalin") {
@@ -1840,10 +1947,11 @@ namespace ZeroPlayersOnline.Hardcodes {
                                                 "coifGreenDragonhide", "bodyGreenDragonhide", "chapsGreenDragonhide", "bootsGreenDragonhide", "vambracesGreenDragonhide", "shieldGreenDragonhide" }
                     });
 
-                    locsToAdd.Add(new Location("MIST_VarrockSouthEast", "Varrock Southeast", "Misthalin") {
+                    locsToAdd.Add(new Location("MIST_VarrockSouthEast", "Southeast Varrock", "Misthalin") {
                         Description = "In a larger city this part of town might be called the slums, but that feels like overkill when it's really just a cluster of buildings you're likely to get stabbed as you walk past. Interestingly there's also a sort of gated community in the corner of the city. You know, next to the Zamorakian temple and the run-down houses and the crumbling ruins of former run-down houses. Prime real estate.",
                         ConnectedLocations = new List<Connection>() { 
                             new Connection("MIST_VarrockEast"),
+                            new Connection("MIST_VarrockPOH", [ new("POHActive", 0, "MIST_VarrockSouthEast")]),
                             new Connection("MIST_VarrockFencedArea"),
                             new Connection("MIST_VarrockAubury"),
                             new Connection("MIST_VarrockHouseAbandoned"),
@@ -1860,6 +1968,15 @@ namespace ZeroPlayersOnline.Hardcodes {
                         NPCsHere = new() { "dogStray", "man" },
                         AreaMonsters = new() { "man", "mugger", "thief" },
                         GatheringSpots = new() { "treeDead", "treeDead" }
+                    });
+                    
+                    locsToAdd.Add(new Location("MIST_VarrockPOH", "Varrock Townhouse", "Misthalin") {
+                        Description = "Home sweet home.".Align(HorizontalAlignment.Center, 92),
+                        PlayerHomeHere = "MIST_VarrockSouthEast",
+                        ShopPriceMultiplier = 0,
+                        ConnectedLocations = new List<Connection>() {
+                            new Connection("MIST_VarrockSouthEast")
+                        }
                     });
 
                     locsToAdd.Add(new Location("MIST_VarrockAubury", "Aubury's Rune Shop", "Misthalin") {
@@ -1909,7 +2026,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                         GatheringSpots = new() { "clueCrates" }
                     });
 
-                    locsToAdd.Add(new Location("MIST_VarrockSouth", "Varrock South", "Misthalin") {
+                    locsToAdd.Add(new Location("MIST_VarrockSouth", "South Varrock", "Misthalin") {
                         Description = "The southern entrance to Varrock, home to the sword shop and the Blue Moon Inn, the best inn in all of Misthalin! Or so they say. Probably not really anyone verifying claims like that around here. There's also a lovely little house with a cabbage patch, and a back alley west of the gate being frequented by some suspicious looking people.",
                         ConnectedLocations = new List<Connection>() { 
                             new Connection("MIST_VarrockPlaza"),
@@ -1987,7 +2104,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                         }, 
                         NPCsHere = new() { "man", "man" },
                         AreaMonsters = new() { "man", "man" },
-                        GatheringSpots = new() { "clueDrawers", "clueBookcase", "clueBookcase" }
+                        GatheringSpots = new() { "clueDrawers", "clueBookcase", "clueBookcase" },
+                        MahoganyTown = "Varrock",
+                        MahoganyHomesHotspots = new() { "bedLarge", "portrait", "chest", "portrait", "drawers", "bookcase", "bed", "chest", "drawers", "portrait", "bed", "drawers", "bookcase", "bookcase"  }
                     });
 
                     locsToAdd.Add(new Location("MIST_VarrockBlueMoonKitchen", "The Blue Moon Inn - Kitchen", "Misthalin") {
@@ -2085,6 +2204,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     });
 
                     locsToAdd.Add(new Location("DES_AlKharid", "Al Kharid", "Desert") {
+                        UPCsong = "Sandstorm",
                         Description = "A sort of plaza, relatively centrally located in front of the palace. There are a variety of useful stores and services offered here, in addition to a set of handholds to climb up onto the roofs to train agility. The ground here is fairly hard packed sand, with a more defined path leading from the palace through the plaza and off to the north. There are a few stalls offering goods, but they are being watched too closely to be stolen from.",
                         ConnectedLocations = new List<Connection>() {
                             new Connection("DES_AlKharidOutskirts"),
@@ -2135,7 +2255,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                             new Connection("DES_AlKharid")
                         },
                         NPCsHere = new() { "desAlKharidShopkeeper" },
-                        ShopItemsHere = new() { "potEmpty", "jugEmpty", "shears", "bucketEmpty", "bowlEmpty", "tinCakeEmpty", "tinderbox", "chisel", "hammer" },
+                        ShopItemsHere = new() { "potEmpty", "jugEmpty", "shears", "bucketEmpty", "bowlEmpty", "tinCakeEmpty", "tinderbox", "chisel", "hammer", "compass" },
                         GatheringSpots = new() { "clueCrates" }
                     });
 

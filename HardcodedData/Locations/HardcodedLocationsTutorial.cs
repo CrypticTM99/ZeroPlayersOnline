@@ -43,7 +43,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 ConnectedLocations = new List<Connection>() { 
                     new Connection("TI_Main") 
                 },
-                NPCsHere = new List<string>() { "tutorBanking" },
+                NPCsHere = new List<string>() { "tutorBanking", "estateAgent" },
                 IsBank = true
             });
 
@@ -52,7 +52,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                 ConnectedLocations = new List<Connection>() { 
                     new Connection("TI_Main")
                 },
-                NPCsHere = new() { "tiFatherGuy" }
+                NPCsHere = new() { "tiFatherGuy" },
+                MahoganyTown = "Tutorial Island",
+                MahoganyHomesHotspots = new() { "pew", "pew", "pew", "pew", "votary", "lighting", "lighting", "stand", "stand", "lighting" }
             });
 
             locsToAdd.Add(new Location("TI_Cavern", "Cavern", "Tutorial Island") {
@@ -164,10 +166,12 @@ namespace ZeroPlayersOnline.Hardcodes {
                 ConnectedLocations = new List<Connection>() {
                     new Connection("TI_Main")
                 },
-                ShopItemsHere = new() { "tinderbox", "seedPotato", "shovel", "hammer", "needle", "knife", "hatchetBronze", "pickaxeBronze", "fishingNetSmall", "vialEmpty", "trapBird", "runeAir", "runeEarth", "runeFire", "runeWater", "runeMind", "runeBody" },
+                ShopItemsHere = new() { "tinderbox", "seedPotato", "shovel", "hammer", "saw", "needle", "knife", "hatchetBronze", "pickaxeBronze", "fishingNetSmall", "vialEmpty", "trapBird", "candle", "compass", "runeAir", "runeEarth", "runeFire", "runeWater", "runeMind", "runeBody" },
                 GatheringSpots = new List<string>() { "clueCrates" },
                 ProcessingStations = new List<string>() { "Tannery", "Pottery Kiln", "Pottery Wheel" },
-                NPCsHere = new() { "tiDrunkPirate" }
+                NPCsHere = new() { "tiDrunkPirate" },
+                MahoganyTown = "Tutorial Island",
+                MahoganyHomesHotspots = new() { "shelf", "shelf", "shelf", "shelf", "counter", "lighting", "lighting", "portrait", "stool", "lighting" }
             });
 
             locsToAdd.Add(new Location("TI_WizardHut", "Wizard Hut", "Tutorial Island") {

@@ -240,7 +240,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 38, new("Oh, no worries, here's another.", new() { new("Thank you so much!", -1), byeThen }, items: ["amuletCowbell"]) }
             }));
 
-            toAdd.Add(new("Cassius", "mistLumCassius", new() { // TODO: Fill this out once implementing Ides of Milk
+            toAdd.Add(new("Cassius", "mistLumCassius", new() {
                 { 0, new(new List<TextReq>() {
                         new("You!", [ new("QuestAt", -1, "MI_IdesOfMilk") ]),
                         new("How goes your mission, associate?", [ new("QuestAt", 0, "MI_IdesOfMilk") ]),
@@ -275,7 +275,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 10, new("Of milk.", new() { new("How do you intend to make an empire of milk?", 11), byeThen }) },  
                 { 11, new("So, the first step is going to involve you doing a little... research.", new() { new("Right...", 12), byeThen }) },  
                 { 12, new("You're going to cross the River Lum, find Gillie and Seth Groats, and learn about animal husbandry.", new() { new("(NEXT)", 13), byeThen }) },  
-                { 13, new("Then... then you're going to gross back to this side of the river, and tell me all about how they've made their animals so productive.", new() { new("(NEXT)", 14), byeThen }) },  
+                { 13, new("Then... then you're going to cross back to this side of the river, and tell me all about how they've made their animals so productive.", new() { new("(NEXT)", 14), byeThen }) },  
                 { 14, new("It's a perfect plan!", new() { new("What use is it if I know everything and you don't? Couldn't I make my own... milk empire... with that information?", 15), byeThen }) },  
                 { 15, new("", new() { new("If anything I should be cutting you in at ten to fifteen percent.", 16), byeThen }) },  
                 { 16, new("Hey, I'm the one supplying the high-quality milk here.", new() { new("(NEXT)", 17), byeThen }) },  
@@ -649,7 +649,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 } 
             });
 
-            toAdd.Add(new("Ned", "mistDrayNed1", new() { 
+            toAdd.Add(new("Ned", "mistDrayNed", new() { 
                 { 0, new("Why, hello there, young'un! Me friends call me Ned. I was a man of the sea, but it's past me now. Could I be making or selling you some rope?", new() { new DialogueChoice("Yes, one rope please. (16 gp)", 1, [ new("Item", 16, "Gold") ]), new DialogueChoice("Could you make me a rope with these? (4 balls of wool)", 1, [ new("Item", 4, "woolBall") ]), new DialogueChoice("Actually, could you make me a wig? (3 balls of wool)", 1, [ new("Item", 3, "woolBall") ]), byeThen }) },
                 { 1, new("Certainly! Here ye go.", new() { new DialogueChoice("Another, please. (16 gp)", 1, [ new("Item", 16, "Gold") ]), byeThen }, items: [ "rope" ]) },
                 { 2, new("Certainly! Here ye go.", new() { new DialogueChoice("Another, please. (4 balls of wool)", 2, [ new("Item", 4, "woolBall") ]), byeThen }, items: [ "rope" ]) },

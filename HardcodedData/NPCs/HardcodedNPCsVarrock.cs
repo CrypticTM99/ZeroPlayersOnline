@@ -374,7 +374,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 4, new("My beloved feline friend Fluffs. She's been purring by my side for almost a decade. Please, could you go search for her while I look over the kids?", new() { new("[Q+] Well, I suppose I could.", 6), new("Sorry, I'm too busy to play pet rescue.", 5), byeThen }) },
                 { 5, new("Well, okay then. I'll have to find someone else.", new() { byeThen }) },
                 { 6, new("Really? Thank you so much! I really have no idea where she could be!", new() { new("(NEXT)", 7), byeThen }) },
-                { 7, new("I think my sons, Shilop and Wilough, saw the cat last. They'll be out in the plaza.", new() { new("Alright then, I'll see what I can do.", -1), byeThen }, "MI_GertrudesCat", 0) },
+                { 7, new("I think my sons, Shilop and Wilough, saw the cat last. They'll be out in the square.", new() { new("Alright then, I'll see what I can do.", -1), byeThen }, "MI_GertrudesCat", 0) },
                 { 8, new("What about Shilop?", new() { new("No sign of him either.", 9), byeThen }) },
                 { 9, new("Hmmm... strange, he should be at the market.", new() { byeThen }) },
                 { 10, new("You have no idea! Did he help at all?", new() { new("I think so, I'm just going to look now.", 11), byeThen }) },
@@ -455,21 +455,21 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Fluffs the Cat", "mistVarFluffs", new() { 
                 { 0, new("Mioaww", new() { 
-                    new("(Try to pick up)", 1, [ new("QuestAt", 10, "MI_GertrudesCat") ]), 
+                    new("(Try to pick up)", 1, [ new("QuestPast", 10, "MI_GertrudesCat"), new("QuestBelow", 30, "MI_GertrudesCat") ]), 
                     new("(Give some milk)", 2, [ new("QuestAt", 20, "MI_GertrudesCat"), new("Item", 1, "bucketMilk", true) ]), 
-                    new("(Try to pick up)", 3, [ new("QuestAt", 30, "MI_GertrudesCat") ]),  
+                    new("(Try to pick up)", 3, [ new("QuestPast", 30, "MI_GertrudesCat"), new("QuestBelow", 50, "MI_GertrudesCat") ]),  
                     new("(Give a seasoned sardine)", 4, [ new("QuestAt", 40, "MI_GertrudesCat"), new("Item", 1, "sardineSeasoned", true) ]),
-                    new("(Try to pick up)", 5, [ new("QuestAt", 50, "MI_GertrudesCat") ]),
+                    new("(Try to pick up)", 5, [ new("QuestPast", 50, "MI_GertrudesCat"), new("QuestBelow", 70, "MI_GertrudesCat") ]),
                     new("(Return kitten)", 6, [ new("QuestAt", 60, "MI_GertrudesCat"), new("Item", 1, "kittenFluffs", true) ]),
                     byeThen 
                 }) },
                 { 1, new("Hisss!", new() { new("Maybe the cat is thirsty?", -1), byeThen }, "MI_GertrudesCat", 20) },
-                { 2, new("Mew!", new() { new("(Try to pick up)", 3), byeThen }, "MI_GertrudesCat", 30) },
-                { 3, new("Hisss!", new() { new("(Maybe the cat is hungry?)", -1), byeThen }, "MI_GertrudesCat", 40) },
+                { 2, new("Mew!", new() { new("(Try to pick up)", 3), byeThen }, "MI_GertrudesCat", 30, [ "bucketEmpty" ]) },
+                { 3, new("Hisss!", new() { new("(Maybe the cat is hungry? Gertrude might know what she likes)", -1), byeThen }, "MI_GertrudesCat", 40) },
                 { 4, new("Mew!", new() { new("(Try to pick up)", 5), byeThen }, "MI_GertrudesCat", 50) },
                 { 5, new("Hisss!", new() { new("(The cat seems afraid to leave. In the distance you can hear kittens mewing...)", -1), byeThen }, "MI_GertrudesCat", 60) },
                 { 6, new("Purr...", new() { new("(Fluffs has run off home with her offspring)", -1), byeThen }, "MI_GertrudesCat", 70) }
-            }));
+            }, req: new("QuestNot", 70, "MI_GertrudesCat") ));
              
             for (int i = 0; i < toAdd.Count; i++) { 
                 NPCLib.Add(toAdd[i].ID, toAdd[i]);

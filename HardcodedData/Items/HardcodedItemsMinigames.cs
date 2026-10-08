@@ -23,8 +23,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Emerald [M]", "An emerald. Used in the Alchemist's Playground of the Mage Training Arena.", "mtaAlch4", Color.Lime, 3, trade: false));
             itemsToAdd.Add(new Item("Rune sword [M]", "A rune sword. Used in the Alchemist's Playground of the Mage Training Arena.", "mtaAlch5", ColorLib.Rune, 3, trade: false));
             itemsToAdd.Add(new Item("Coins [M]", "Coins. Used in the Alchemist's Playground of the Mage Training Arena.", "mtaAlchCoin", Color.Goldenrod, 0, true, false));
-            
-
+             
+            itemsToAdd.Add(new Item("Stardust", "Small, shiny bits of rock. Someone at the Mining Guild might find these interesting.", "stardust", Color.Yellow, 50, true, false));
 
             for (int i = 0; i < itemsToAdd.Count; i++) {
                 ItemLibrary.Add(itemsToAdd[i].ID, itemsToAdd[i]);

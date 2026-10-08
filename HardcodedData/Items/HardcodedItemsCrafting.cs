@@ -11,7 +11,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Bark", "Bark from a hollow tree.", "bark", Color.SaddleBrown, 50));
             itemsToAdd.Add(new Item("Fine cloth", "Amazingly untouched by time.", "clothFine", Color.SaddleBrown, 500)); 
             itemsToAdd.Add(new Item("Silk", "It's a sheet of silk.", "clothSilk", Color.AntiqueWhite, 30)); 
-            itemsToAdd.Add(new Item("Ball of wool", "Spun from wool.", "woolBall", 255, 255, 255, 7)); 
+            itemsToAdd.Add(new Item("Ball of wool", "Spun from wool.", "woolBall", 255, 255, 255, 10)); 
+            itemsToAdd.Add(new Item("Bolt of cloth", "A bolt of ordinary cloth.", "clothBolt", 255, 255, 255, 50)); 
             itemsToAdd.Add(new Item("Chisel", "Good for detailed crafting.", "chisel", Color.SaddleBrown, 14));
 
             itemsToAdd.Add(new Item("Ammo mould", "Used to make cannon ammunition.", "mouldAmmo", Color.Gray, 5));
