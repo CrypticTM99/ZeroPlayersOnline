@@ -71,7 +71,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Waterskin (4)", "A full waterskin with four portions of water.", "waterskin4", Color.Khaki, 30));
             itemsToAdd.Add(new Item("Rope", "A coil of rope.", "rope", Color.SaddleBrown, 18));
             itemsToAdd.Add(new Item("Mahogany Homes contract", "A note detailing your current active Mahogany Homes contract, if any. Activate to check.", "mahoganyHomesContract", Color.Beige, 1) { UseString = "MahoganyHomes", ConsumedOnUse = false});
-            itemsToAdd.Add(new Item("Compass", "Points to any map within 20 connections. Only considers usable primary connection destinations. May not result in fastest possible route.", "compass", ColorLib.Steel, 1) { UseString = "CompassMenu", ConsumedOnUse = false });
+            itemsToAdd.Add(new Item("Compass", "Points to any map within 20 connections. Only considers usable primary connection destinations. May not result in fastest possible route.", "compass", ColorLib.Steel, 100) { UseString = "CompassMenu", ConsumedOnUse = false });
              
             
             itemsToAdd.Add(new Item("Broken arrows", "This must have been shot at high speed.", "arrowsBroken", Color.SaddleBrown, 1, true, false));
@@ -515,7 +515,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                 itemsToAdd.Add(new Item("Big bones", "The remains of some huge creature or person.", "bonesBig", 255, 255, 255, 100) { UseString = "Bones", UseInt = 15 });
                 itemsToAdd.Add(new Item("Long bone", "A Construction bone.", "boneLong", 255, 255, 255, 100, trade: false) { UseString = "Bones", UseInt = 15 });
                 itemsToAdd.Add(new Item("Curved bone", "A curved Construction bone.", "boneCurved", 255, 255, 255, 100, trade: false) { UseString = "Bones", UseInt = 15 });
+
                 itemsToAdd.Add(new Item("Bull bones", "Bigger than cow bones.", "bonesBull", 255, 255, 255, 1, trade: false) { UseString = "Bones", UseInt = 40 });
+                itemsToAdd.Add(new Item("Giant bones", "Bigger than big bones.", "bonesGiant", 255, 255, 255, 1, trade: false) { UseString = "Bones", UseInt = 150 });
             
                 itemsToAdd.Add(new Item("Fiendish ashes", "A heap of ashes.", "ashesFiendish", 122, 104, 127, 1) { UseString = "Ashes", UseInt = 10 });
                 itemsToAdd.Add(new Item("Vile ashes", "A heap of ashes.", "ashesVile", 122, 104, 127, 1) { UseString = "Ashes", UseInt = 25 });
@@ -590,6 +592,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Energy potion", "Energizes you to receive up to 5% additional experience from all actions.", "potionEnergy", Color.DeepPink.GetDark(), 50) { UsesCharges = true, UseString = "Potion", UseInt4 = 3, ItemReturned = "vialEmpty", Potion = new() { new("Experience", 5) } });
             itemsToAdd.Add(new Item("Restore potion", "Restores reduced stats by up to 5 levels per sip.", "potionRestore", Color.Salmon, 30) { UsesCharges = true, UseString = "Potion", UseInt4 = 3, ItemReturned = "vialEmpty", Potion = new() { new("Restore", 5) } });
             itemsToAdd.Add(new Item("Antipoison", "Cures poison and provides immunity to poison for two minutes.", "potionAntipoison", Color.Lime, 90) { UsesCharges = true, UseString = "Potion", UseInt4 = 3, ItemReturned = "vialEmpty", Potion = new() { new("Antipoison", 2) } });
+            itemsToAdd.Add(new Item("Super strength potion", "Temporarily boosts your Strength level by 10.", "potionStrengthSuper", Color.White, 110) { UsesCharges = true, UseString = "Potion", UseInt4 = 3, ItemReturned = "vialEmpty", Potion = new() { new("Strength", 10) } });
+            itemsToAdd.Add(new Item("Prayer potion", "Temporarily boosts your Prayer level by 5.", "potionPrayer", Color.Turquoise, 75) { UsesCharges = true, UseString = "Potion", UseInt4 = 3, ItemReturned = "vialEmpty", Potion = new() { new("Prayer", 5) } });
             
 
             itemsToAdd.Add(new Item("Al Kharid flyer", "The money off voucher has expired.", "flyerAli", Color.Khaki, 1) { UseString = "SecondExamine", MiscString = "'Come to the Al Kharid Market place! High quality produce at low, low prices! Show this flyer to a merchant for money off your next purchase, courtesy of Ali Morrisane!'", ConsumedOnUse = false});
@@ -599,10 +603,12 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Imp champion scroll", "It's a challenge from the Imp Champion!", "scrollChampionImp", Color.Crimson.GetBrighter(), 1, trade: false));
             itemsToAdd.Add(new Item("Zombie champion scroll", "It's a challenge from the Zombie Champion!", "scrollChampionZombie", Color.Teal, 1, trade: false));
             itemsToAdd.Add(new Item("Skeleton champion scroll", "It's a challenge from the Skeleton Champion!", "scrollChampionSkeleton", Color.White, 1, trade: false));
+            itemsToAdd.Add(new Item("Giant champion scroll", "It's a challenge from the Giant Champion!", "scrollChampionGiant", Color.SandyBrown, 1, trade: false));
 
             
             itemsToAdd.Add(new Item("Coins", "Filthy lucre. Activate to add to your coin pouch.", "coins", Color.Goldenrod, 1, true) { UseString = "Gold" });
-            itemsToAdd.Add(new Item("Key (Varrock shack)", "This key opens the door of the shack at the Varrock West Crossroads.", "keyVarrockShack", Color.Goldenrod, 1));
+            itemsToAdd.Add(new Item("Key (Varrock shack)", "This key opens the door of the shack at the Varrock West Crossroads.", "keyVarrockShack", Color.Goldenrod, 100));
+            itemsToAdd.Add(new Item("Mossy key", "This key opens the gate to Bryophyta in the Varrock Sewers, and also the rewards chest within.", "keyMossy", Color.ForestGreen, 1, trade: false));
             itemsToAdd.Add(new Item("Key (clue step)", "Used to open the container you need to access for your clue step.", "keyClue", Color.Goldenrod, 0, trade: false));
 
             itemsToAdd.Add(new Item("Pie recipe book", "Lots of pie recipes for me to try.", "bookRecipesPie", Color.Crimson, 5) { ConsumedOnUse = false, UseString = "Book", UseString2 = "recipesPie"});
@@ -614,11 +620,21 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             itemsToAdd.Add(new Item("Cow slippers", "Cute cow slippers.", "slippersCow",  Color.DimGray, 1000) { EquipSlot = "Feet", Cosmetic = true });
             itemsToAdd.Add(new Item("Mooleta", "A defensive weapon.", "mooleta", Color.DarkGray, 1, trade: false) {
-                EquipSlot = "Offhand",  EquipTier = 2, EquipSkill = "Defense", EquipLevel =1, MiscString = "Defender"
+                EquipSlot = "Offhand",  EquipTier = 2, EquipSkill = "Defense", EquipDamageType = "Slash", EquipLevel =1, MiscString = "Defender"
             });
             
             itemsToAdd.Add(new Item("Construction guidebook", "Curious about home ownership? Read this!", "bookConstructionGuide", Color.SaddleBrown, 1) { ConsumedOnUse = false, UseString = "Book", UseString2 = "bookConstructionGuide" });
             
+            itemsToAdd.Add(new Item("Scurrius' spine", "Could be attached to a battlestaff, rune mace, or acadia shortbow.", "spineScurrius", Color.AntiqueWhite, 0, trade: false));
+            itemsToAdd.Add(new Item("Bone shortbow", "An acadia shortbow fused with Scurrius' spine.", "shortbowBone", Color.AntiqueWhite, 0, trade: false) {
+                EquipSlot = "Weapon", EquipTier = 7, EquipLevel = 60,  EquipDamageType = "Rat", EquipSkill = "Ranged", EquipAmmo = "RangedStandard", AttackSpeed = 0.75, TwoHanded = true
+            });
+            itemsToAdd.Add(new Item("Bone mace", "A rune mace fused with Scurrius' spine.", "maceBone", Color.AntiqueWhite, 0, trade: false) {
+                EquipSlot = "Weapon", EquipTier = 7, EquipLevel = 60,  EquipDamageType = "Rat", EquipSkill = "Attack", AttackSpeed = 0.75
+            });
+            itemsToAdd.Add(new Item("Bone staff", "A battlestaff fused with Scurrius' spine.", "staffBone", Color.AntiqueWhite, 0, trade: false) {
+                EquipSlot = "Weapon", EquipTier = 7, EquipLevel = 60,  EquipDamageType = "Rat", EquipSkill = "Magic", AttackSpeed = 0.75
+            });
 
             for (int i = 0; i < itemsToAdd.Count; i++) {
                 ItemLibrary.Add(itemsToAdd[i].ID, itemsToAdd[i]);

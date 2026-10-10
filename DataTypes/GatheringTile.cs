@@ -23,6 +23,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public string NeedToolCat = "";
         public string NeededBait = "";
+        public string CustomLogMessage = "";
 
         public RunAction? GatherAct = null;
         public Requirement? Req = null;
@@ -33,7 +34,7 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public double LastGathered = 0;
 
-        public GatheringTile(string id, string name, string verb, int succ, int deplete, int restock, string skill = "", int skLevel = 0, int exp = 0, int expFail = 0, int damageOnFail = 0, bool levelBasedSucc = false, string neededTool = "", string neededBait = "", List<WeightedItem>? items = null, Requirement? req = null, bool show = true, RunAction? action = null) {
+        public GatheringTile(string id, string name, string verb, int succ, int deplete, int restock, string skill = "", int skLevel = 0, int exp = 0, int expFail = 0, int damageOnFail = 0, bool levelBasedSucc = false, string neededTool = "", string neededBait = "", List<WeightedItem>? items = null, Requirement? req = null, bool show = true, RunAction? action = null, string customLog = "") {
             ID = id;
             Name = name;
             InteractVerb = verb;
@@ -55,6 +56,8 @@ namespace ZeroPlayersOnline.DataTypes {
             GatherAct = action;
             Req = req;
             ShowAnyways = show;
+
+            CustomLogMessage = customLog;
         }
 
 
@@ -195,6 +198,10 @@ namespace ZeroPlayersOnline.DataTypes {
                         } else {
                             LastGathered = Helper.Time();
                         }
+                    }
+
+                    if (CustomLogMessage != "") {
+                        log.AddMessage(new ColoredString(CustomLogMessage, Color.Yellow, Color.Black));
                     }
                 } else {
                     log.AddMessage(new ColoredString("You failed to " + InteractVerb.ToLower() + " the " + Name.ToLower() + ".", Color.Red, Color.Black));

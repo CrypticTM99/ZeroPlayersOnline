@@ -90,6 +90,20 @@ namespace ZeroPlayersOnline.Hardcodes {
             
             itemsToAdd.Add(new Item("Combat lamp (1k)", "Grants 1,000 experience to your choice of Attack, Strength, Defense, Constitution, Ranged, Magic, or Prayer.", "lampCombat1k", Color.White, 1, trade: false) { ConsumedOnUse = false, UseString = "LampChoice", UseString2 = "Attack,Strength,Defense,Constitution,Ranged,Magic,Prayer", UseInt = 1000 });
             
+            itemsToAdd.Add(new Item("Romeo's letter [Q]", "A sappy love letter written by Romeo for Juliet. (Romeo & Juliet)", "letterRomeo", Color.SkyBlue, 0, trade: false) { ConsumedOnUse = false, UseString = "Book", UseString2 = "letterRomeo" });
+            itemsToAdd.Add(new Item("Juliet's letter [Q]", "A sappier love letter written by Juliet for Romeo. (Romeo & Juliet)", "letterJuliet", Color.HotPink, 0, trade: false) { ConsumedOnUse = false, UseString = "Book", UseString2 = "letterJuliet" });
+            itemsToAdd.Add(new Item("Cleaner disguise [Q]", "A disguise to allow me to pose as a cleaner. (Romeo & Juliet)", "disguiseCleaner", Color.Beige, 0, trade: false) { Cosmetic = true, EquipSlot = "Body" });
+            itemsToAdd.Add(new Item("Cadava potion (unf) [Q]", "A vial of water with some cadava berries added. Needs more ingredients to be complete. (Romeo & Juliet)", "potionCadavaUnf", Color.Magenta, 0, trade: false) { ConsumedOnUse = false, UseString = "CadavaPotion" });
+            itemsToAdd.Add(new Item("Wing of rat [Q]", "The wing of a rat. (Romeo & Juliet)", "potionCadavaWing", Color.DimGray, 0, trade: false));
+            itemsToAdd.Add(new Item("Tail of frog [Q]", "The tail of a frog. (Romeo & Juliet)", "potionCadavaTail", Color.ForestGreen, 0, trade: false));
+            itemsToAdd.Add(new Item("Ear of snake [Q]", "The ear of a snake. (Romeo & Juliet)", "potionCadavaEar", Color.Pink, 0, trade: false));
+            itemsToAdd.Add(new Item("Horn of dog [Q]", "The horn of a dog. (Romeo & Juliet)", "potionCadavaHorn", Color.White, 0, trade: false));
+            itemsToAdd.Add(new Item("Cadava potion [Q]", "A vial of death sleeping draught. (Romeo & Juliet)", "potionCadava", Color.Magenta, 0, trade: false));
+            itemsToAdd.Add(new Item("Cadava potion list [Q]", "A list of the ingredients to finish a cadava potion. (Romeo & Juliet)", "potionCadavaList", Color.SandyBrown, 0, trade: false) { ConsumedOnUse = false, UseString = "Book", UseString2 = "potionCadavaList" });
+            itemsToAdd.Add(new Item("Tybalt's sword [Q]", "A fine steel sword. Soon to be a little less fine. (Romeo & Juliet)", "swordTybalt", ColorLib.Steel, 0, trade: false));
+            itemsToAdd.Add(new Item("Brittle sword [Q]", "A steel sword with the temper ruined. Will shatter easily under stress. (Romeo & Juliet)", "swordBrittle", Color.Silver, 0, trade: false));
+            
+
 
             for (int i = 0; i < itemsToAdd.Count; i++) {
                 ItemLibrary.Add(itemsToAdd[i].ID, itemsToAdd[i]);

@@ -16,10 +16,10 @@ Misthalin Mania
 - (DONE) Quest: Shield of Arrav
 - (DONE) Quest: The Ides of Milk
 - (DONE) Quest: Gertrude's Cat
+- (DONE) Quest: Romeo & Juliet
 - x Quest: A Porcine of Interest
 - x Quest: Sleeping Giants (unlocks Giants' Foundry)
-- x Quest: Demon Slayer (needs varrock) 
-- x Quest: Romeo & Juliet (needs varrock) 
+- x Quest: Demon Slayer (needs varrock)  
 - x Quest: Ernest the Chicken (needs draynor but christ)
 - x Quest: Vampire Slayer (needs varrock) 
 - Quest: Misthalin Mystery (just lumbridge i think but this one might be spicy to do right)
@@ -63,6 +63,20 @@ Misthalin Demo v6 Goals
 - New Skill(s): Construction, Artisan?
 - Random Events
 
+Combat Rework
+- Move gear to a custom GearBlock data type to hold everything because it's getting messy
+- Everything has attack/accuracy bonuses for five categories (stab, slash, crush, magic, ranged)
+- Same but for defense bonuses, also melee/ranged/magic strength and prayer bonus
+- Scaling thoughts (Generally speaking, +50% to scalable stats if NOT craftable)
+- - Daggers: 2.4s attack, 4 stab and 2 slash per tier, 4 melee strength per tier, 
+
+
+Bugs to fix / immediate tasks and such
+- Forgot to make the Mahogany Homes reward shop lmao, needs the plank box and the outfit, the equipable saw, and i guess the pointless waste of points supply crate
+- Skill, prayer, magic, etc windows check to make sure they're capping the scroll number actively not only checking when you scroll (otherwise it likes to be a black screen after music change)
+- Find a way to fix damage because players do way too much right now
+- Maybe just scrap the prayer thing entirely in favor of more traditional system
+
 
 POH basic structure
 - Buy house from Estate Agent, only options available are ones in region they're in (one agent per region)
@@ -74,31 +88,7 @@ POH basic structure
 - - Fremennik house spots: Relekka (need Fremennik Trials), Miscellania (need Managing Miscellania), Lunar Isle (need Lunar Diplomacy), maybe Neitiznot/Jatizso or something
 - - Wilderness house spots??? Interesting idea but not sure where yet
 - - Karamja house spots: Brimhaven, Tai Bwo Wannai village (need Tai Bwo Wannai Trio), Shilo Village (need Shilo Village)
-- (DONE) Start with one room, up to Construction Tier rooms total
-- (DONE) Each room has a set number of build spots which can be various things
-- (DONE) - Decorative items raise comfort rating of house, resting in a bed in a house restores you to max HP and has a chance to give a well rested buff (only once per hour of playtime, lasts 30 minutes maybe)
-- (DONE) - - Well rested buff: Maybe when a positive potion effect is applied, slightly increase it based on some metric (1, +1 per 50 comfort or something, see what the max possible comfort ends up being)
-- (DONE) - Stations are processing stations (Range, Spinning Wheel, Anvil, etc) that facilitate skilling
-- (DONE) - Gathers allow you to create specific gathering spots in your house (usually in gardens) for skilling and item gain 
-- (DONE) Decent experience from building individual spots, big exp drop for filling out all spots in a room (max of Construction Tier per house, but only once per room)
 
-POH - Making it actually work
-- (DONE) Purchase house from the Estate Agent, also give them an option to manage purchased houses (enable and disable them up to your limit)
-- (DONE) Build and manage house through the minigame menu. Separate build and view modes (view mode lets you activate and examine built objects to use them)
-- (DONE) Allow buying and deleting rooms if you have extra capacity available, give big warning if deleting a room with stuff built in it
-- (DONE) While in a location marked as tied to a house ID, intercept the description and name to show a constructed description/name for the room you're currently viewing (reset to 0 when entering a house location)
-- (DONE) If viewing a player house, redirect the listings for (done) gathering tiles and (done) processing stations and farm patches to the lists from the currently viewed room
-- (DONE) Show all rooms as connected locations for eachother, and also the exit back out to the map the house is connected to
-- (DONE) Objects that provide infinite of an item (for example Larders giving infinite of specific cooking materials) can add them as shop items with a 0x price multiplier, add a safety so you can't sell for 0 gp
-- (DONE) Write a Construction Guide book item explaining how to build up a POH
-- (DONE) - How buying a house works
-- (DONE) - How building in a house works
-- (DONE) - The benefits of comfort and finishing rooms
-- (DONE) - How teleporting to houses works
-- (DONE) - Description of each buildable room and some of the benefits of having such a room in your home
-- (DONE) Test to make sure the whole tea making process in the kitchen works
-- (DONE) Finish all the rooms and buildable objects that can currently be implemented
-- (DONE) Make the teleport to house menu work
 
 - Can nearly begin adding task diaries
 - Lock ruby necklace -> digsite pendant behind the museum cleaning thing
@@ -161,9 +151,6 @@ Randomizer Options - Basically just provide an option for ID remaps
 
 
 Future Skills to work on:
-- Construction: Player-owned house in each place that you could put it, but you can own any/all of them at once. 
-- - Maximum number of houses based on your current construction level, 1 and level 1 and then every 10th level after. Have to choose where you want houses
-- - Must build a teleport focus in a house to be able to teleport to it
 - Artisan (slayer for skilling)
 - Divination (create gathering spots, transmute materials, etc)
 - Proxy combat skill of some kind (ex necromancy, summoning, taming, something like that)
@@ -172,7 +159,6 @@ Future Skills to work on:
 
 Distraction and Diversions / Activities / Minigames
 - Implement Existing Ones
-- - Mahogany Homes (get contract from estate agent, go to correct building, build all hotspots, get exp and contract points)
 - "New" Ideas
 - - A TCG thing with various NPCs that play scattered around the world? Gives more interesting drop potentials
 

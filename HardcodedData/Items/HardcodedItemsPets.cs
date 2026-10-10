@@ -16,6 +16,11 @@ namespace ZeroPlayersOnline.Hardcodes {
                 UseString = "BeefEmote", ConsumedOnUse = false
             }); 
 
+            itemsToAdd.Add(new Item("Scurry", "Three conjoined rats, each with its own personality.", "petScurry", Color.SandyBrown, 0, trade: false) {
+                EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Scurry says, 'We need-desire food-morsels.'", "Scurry says, 'Yessss, kill-slay them all.'", "Chewy says, 'Toss-throw the fur, make them regret-rue our rage-wrath!'", "Nibbles says, 'Sorry about my brothers. We don't all speak like that.'"},
+                UseString = "BeefEmote", ConsumedOnUse = false
+            });
+
             // Skill pets
             itemsToAdd.Add(new Item("Dojo Mojo", "A highly-trained ninja monkey.", "petSkillAgility", Color.DimGray, 0, trade: false) {
                 EquipSlot = "Pet",  Cosmetic = true, PetBlurbs = new() { "Dojo Mojo does a sick flip.", "Dojo Mojo scratches his side idly.", "Dojo Mojo desires a banana but as a ninja must abstain.", "Dojo Mojo keeps watch for assassins."}

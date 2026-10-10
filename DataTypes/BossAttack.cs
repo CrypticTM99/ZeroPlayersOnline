@@ -8,6 +8,9 @@
         public List<int> HitsLanes = new();
         public bool LanesRelativeToPlayer = false;
 
+        public string SummonID = "";
+        public string SummonDice = ""; // amount summoned if variable
+
 
         public BossAttack(string warn, string dmgDice, string dmgType, List<int> lanes, bool relative = false) {
             WarningText = warn;

@@ -372,8 +372,6 @@ namespace ZeroPlayersOnline.Managers {
                                         dropped = true;
                                     }
                                 });
-                            } else { 
-                                mini.Con.Print(50, 15 + i, "  ");
                             }
                             px -= 2;
                             if (dropped)
@@ -384,6 +382,7 @@ namespace ZeroPlayersOnline.Managers {
                                     mini.Con.PrintClickable(px, 15 + i, new ColoredString("* ", Color.Yellow, Color.Black), () => { 
                                         bool success = ItemUseLogic.UseItem(player.Inventory[i], player);
                                         bool flagForDeletion = false;
+
                                         if (inv.ConsumedOnUse && success) { 
                                             if (inv.UsesCharges) {
                                                 if (player.Inventory[i].Charges > 0) {
@@ -413,6 +412,11 @@ namespace ZeroPlayersOnline.Managers {
                                                     }
                                                 }
                                             }
+                                        } 
+
+                                        if (player.Inventory.Count <= i) {
+                                            dropped = true;
+                                            return;
                                         }
 
                                         if (flagForDeletion || player.Inventory[i].Quantity <= 0) {
@@ -422,7 +426,7 @@ namespace ZeroPlayersOnline.Managers {
                                             if (inv.ItemReturned != "" && GameLoop.ZPO.ResolveItem(inv.ItemReturned) is Item returned) {
                                                 player.TryPickup(returned, 1);
                                             }
-                                        }
+                                        } 
                                     });
                                     px -= 2;
                                 }
@@ -433,6 +437,11 @@ namespace ZeroPlayersOnline.Managers {
 
                             if (inv.EquipSlot != "" && !player.Inventory[i].Noted) {
                                 mini.Con.PrintClickable(px, 15 + i, new ColoredString("E ", Color.Yellow, Color.Black), () => { dropped = ItemUseLogic.TryEquipItem(player, i); });
+                                px -= 2;
+                            } 
+
+                            if (inv.ChargeItem != "" && !player.Inventory[i].Noted && player.HasAllItems([inv.ChargeItem + ",1"])) {
+                                mini.Con.PrintClickable(px, 15 + i, new ColoredString("+ ", Color.Turquoise, Color.Black), () => { dropped = ItemUseLogic.TryChargeItem(player, i); });
                                 px -= 2;
                             } 
 
@@ -818,6 +827,21 @@ namespace ZeroPlayersOnline.Managers {
                     mini.Con.DrawLine(new Point(0, 16), new Point(54, 16), 196);
 
                     int printY = 17;
+                      
+                    int qty = 1;
+                    if (Helper.EitherShift()) { qty *= 5; }
+                    if (Helper.EitherControl()) { qty *= 10; }
+
+                    SidebarScrollTop = Math.Clamp(SidebarScrollTop, 0, player.Skills.Count - 18);
+                        
+                    if (SidebarRect.Contains(mousePos)) {
+                        if (player.Skills.Count > 18) {
+                            if (Helper.ScrolledUp()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop - qty, 0, player.Skills.Count - 18); }
+                            if (Helper.ScrolledDown()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop + qty, 0, player.Skills.Count - 18); }
+                        } else {
+                            SidebarScrollTop = 0;
+                        }
+                    }
 
                     for (int i = SidebarScrollTop; i < playerSkills.Count && i < SidebarScrollTop + 18; i++) {
                         bool mouseHovering = mousePos.X < 54 && mousePos.Y == printY;
@@ -877,6 +901,21 @@ namespace ZeroPlayersOnline.Managers {
                             kv.Value.Active = false;
                         }
                     });
+
+                    int qty = 1;
+                    if (Helper.EitherShift()) { qty *= 5; }
+                    if (Helper.EitherControl()) { qty *= 10; }
+
+                    SidebarScrollTop = Math.Clamp(SidebarScrollTop, 0, prayers.Count - 18);
+                    
+                    if (SidebarRect.Contains(mousePos)) {
+                        if (prayers.Count > 18) {
+                            if (Helper.ScrolledUp()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop - qty, 0, prayers.Count - 18); }
+                            if (Helper.ScrolledDown()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop + qty, 0, prayers.Count - 18); }
+                        } else {
+                            SidebarScrollTop = 0;
+                        }
+                    }
 
                     for (int i = 0; i < prayers.Count; i++) {
                         if (prayers[i].Book == player.PrayerBook) {
@@ -949,11 +988,13 @@ namespace ZeroPlayersOnline.Managers {
                     if (Helper.EitherControl())
                         qty *= 10;
 
-                    if (sortedList.Count > 18) {
-                        if (Helper.ScrolledUp()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop - qty, 0, sortedList.Count - 18); }
-                        if (Helper.ScrolledDown()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop + qty, 0, sortedList.Count - 18); }
-                    } else {
-                        SidebarScrollTop = 0;
+                    if (SidebarRect.Contains(mousePos)) {
+                        if (sortedList.Count > 18) {
+                            if (Helper.ScrolledUp()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop - qty, 0, sortedList.Count - 18); }
+                            if (Helper.ScrolledDown()) { SidebarScrollTop = Math.Clamp(SidebarScrollTop + qty, 0, sortedList.Count - 18); }
+                        } else {
+                            SidebarScrollTop = 0;
+                        }
                     }
 
                     for (int quest = SidebarScrollTop; quest < sortedList.Count && quest < SidebarScrollTop + 18; quest++) {

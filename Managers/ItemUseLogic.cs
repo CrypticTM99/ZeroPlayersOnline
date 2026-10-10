@@ -681,6 +681,17 @@ namespace ZeroPlayersOnline.Managers {
                     ExtraWindows.HouseMenu.IsVisible = true;
                     ExtraWindows.HouseTeleport = true;
                     ExtraWindows.HouseTablet = true;
+                } else if (item.UseString == "CadavaPotion") {
+                    if (player.HasAllItems(["potionCadavaUnf,1", "potionCadavaWing,1", "potionCadavaTail,1", "potionCadavaEar,1", "potionCadavaHorn,1"])) {
+                        if (GameLoop.ZPO.ResolveItem("potionCadava") is Item cadavaPotion) {
+                            player.ConsumeItems(["potionCadavaUnf,1", "potionCadavaWing,1", "potionCadavaTail,1", "potionCadavaEar,1", "potionCadavaHorn,1"]);
+                            player.TryPickup(cadavaPotion, 1);
+                            GameLoop.ZPO.Log.AddMessage("You successfully mix a Cadava potion. Now you just have to get it to Juliet without her family seeing you.", Color.Turquoise);
+                            return true;
+                        }
+                    } else { 
+                        GameLoop.ZPO.Log.AddMessage("Hmm, missing some ingredients. Better check the recipe list again.", Color.Crimson);
+                    }
                 }
 
                 return true;
@@ -740,19 +751,27 @@ namespace ZeroPlayersOnline.Managers {
                     return true;
                 }
                 
-                if (GameLoop.ZPO.ResolveItem(first) is Item firstCharge && GameLoop.ZPO.ResolveItem(second) is Item secondCharge) {  
+                if (GameLoop.ZPO.ResolveItem(first) is Item firstCharge && GameLoop.ZPO.ResolveItem(second) is Item secondCharge) {   
+                    ItemWrapper firstChargeWrap = player.Inventory[firstSlot];
+                    ItemWrapper secondChargeWrap = player.Inventory[secondSlot];
+
                     if (secondCharge.ChargeItem == first) {
-                        Item swap = new(firstCharge);
+                        ItemWrapper swap = new(firstChargeWrap);
+                        firstChargeWrap = secondChargeWrap;
+                        secondChargeWrap = swap;
+
+                        Item swapItem = new(firstCharge);
                         firstCharge = secondCharge;
-                        secondCharge = swap;
+                        secondCharge = swapItem;
                         
                         int swapSlot = firstSlot;
                         firstSlot = secondSlot;
                         secondSlot = swapSlot;
-                    }
 
-                    ItemWrapper firstChargeWrap = player.Inventory[firstSlot];
-                    ItemWrapper secondChargeWrap = player.Inventory[secondSlot];
+                        string swapStr = first;
+                        first = second;
+                        second = swapStr;
+                    } 
                      
                     if (firstCharge.ChargeItem == second) {
                         if (secondChargeWrap.Charges != 0) {
@@ -1024,6 +1043,30 @@ namespace ZeroPlayersOnline.Managers {
                 return false;
             }
             return false;
-        } 
+        }
+        
+
+        public static bool TryChargeItem(Player p, int slot) {
+            if (slot >= 0 && slot < p.Inventory.Count) {
+                ItemWrapper wrap = p.Inventory[slot];
+                if (wrap.GetRef() is Item inv) {
+                    if (inv.ChargeItem != "") {
+                        int qty = Helper.QuantitySelector(0, int.MaxValue, false, false, true);
+
+                        bool foundAny = false;
+                        while (p.HasAllItems([inv.ChargeItem + ",1"]) && qty > 0) {
+                            qty--; 
+                            p.ConsumeItems([inv.ChargeItem + ",1"]);
+                            wrap.Charges++;
+                            foundAny = true;
+                        }
+
+                        return foundAny;
+                    }
+                }
+            }
+
+            return false;
+        }
     }
 }

@@ -214,11 +214,15 @@ namespace ZeroPlayersOnline.Managers {
 
                         if (!hot.Repaired) {
                             mini.Con.PrintClickable(resX + 5, resY + (i - MH_ScrollTop) + 2, new ColoredString(hot.Name, player.HasAllItems(mats) ? Color.Green : Color.Crimson, Color.Black), () => {
-                                if (player.HasAllItems(["hammer,1", "saw,1"])) {
-                                    player.ConsumeItems(mats);
-                                    hot.Repaired = true;
-                                } else { 
-                                    GameLoop.ZPO.Log.AddMessage("You have all the materials, but need a hammer and saw to repair that.", Color.Crimson);
+                                if (player.HasAllItems(mats)) {
+                                    if (player.HasAllItems(["hammer,1", "saw,1"])) {
+                                        player.ConsumeItems(mats);
+                                        hot.Repaired = true;
+                                    } else { 
+                                        GameLoop.ZPO.Log.AddMessage("You have all the materials, but need a hammer and saw to repair that.", Color.Crimson);
+                                    }
+                                } else {
+                                    GameLoop.ZPO.Log.AddMessage("You are missing some materials to repair that.", Color.Crimson);
                                 }
                             });
                         } else {

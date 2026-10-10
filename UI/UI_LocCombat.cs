@@ -12,7 +12,17 @@ namespace ZeroPlayersOnline.UI {
         public static double GraceTimeStart = 0;
         public static string Targetting = "Single";  
 
+        public static double LastClickTime = 0;
+
         public static int DrawCombat(Location curr, Player player, UI_EmbeddedMini mini, int printY, MessageLog Log) {
+            if ((AttackingBoss || AttackingMonster != null) && LastClickTime + 600_000 < Helper.Time()) { // if player hasn't clicked an enemy in 10 minutes, stop fighting
+                AttackingBoss = false;
+                AttackingMonster = null; 
+
+                GameLoop.ZPO.Log.AddMessage("You feel your arms get tired of this repetitive motion. To prove your determination and continue attacking, click to attack an enemy again.");
+            }
+
+
 
             if (curr.BossHere != "" && GameLoop.ZPO.BossLibrary.TryGetValue(curr.BossHere, out BossFight? boss) && boss != null) {  
                 mini.Con.DrawLine(new Point(56, printY), new Point(109, printY++), 196);
@@ -30,6 +40,10 @@ namespace ZeroPlayersOnline.UI {
                         Log.AddMessage("It may be a bad idea to aggravate a monster you can't currently see to hit.");
                     } else {
                         AttackingBoss = !AttackingBoss;
+
+                        if (AttackingBoss) {
+                            LastClickTime = Helper.Time();
+                        }
                     }
                 });
                     
@@ -130,6 +144,19 @@ namespace ZeroPlayersOnline.UI {
 
                         if (player.IsMaging() && bossType == "Melee") {
                             safespotting = true;
+                        }
+
+                        if (boss.UsingMove != -1 && boss.Specials.Count > boss.UsingMove && boss.Specials[boss.UsingMove].SummonID != "") {
+                            if (GameLoop.ZPO.MonsterLibrary.TryGetValue(boss.Specials[boss.UsingMove].SummonID, out AreaMonster? summon) && summon != null) {
+                                int amount = GoRogue.DiceNotation.Dice.Roll(boss.Specials[boss.UsingMove].SummonDice);
+
+                                for (int i = 0; i < amount; i++) {
+                                    Log.AddMessage(boss.Name + " summons a" + (Helper.VowelStart(summon.Name.ToLower()) ? "n ": " ") + summon.Name.ToLower() + "!", Color.Crimson);
+                                    AreaMonster summonCopy = Helper.Clone(summon);
+                                    summonCopy.Temporary = true;
+                                    curr.MonstersHere.Add(summonCopy);
+                                }
+                            }
                         }
 
                         if (!safespotting && boss.UsingMove != -1 && boss.Specials.Count > boss.UsingMove && !boss.Specials[boss.UsingMove].AdjustedLanes(boss.LaneWhenMoveSelected, boss.LanesHere).Contains(boss.CurrentLane)) {
@@ -336,7 +363,7 @@ namespace ZeroPlayersOnline.UI {
                                 pdmg = (int) Math.Ceiling(pdmg * 1.2f);
                             }
 
-                            if (player.GetDamageType() == "Undead" && boss.SpecialCategory != "Undead") {
+                            if ((player.GetDamageType() == "Undead" && boss.SpecialCategory != "Undead") || (player.GetDamageType() == "Ratlike" && boss.SpecialCategory != "Ratlike")) {
                                 pdmg = 0;    
                                 Log.AddMessage(new ColoredString("That kind of attack only works against the " + player.GetDamageType().ToLower() + "!", Color.Crimson, Color.Black));
                             } else { 
@@ -363,7 +390,7 @@ namespace ZeroPlayersOnline.UI {
 
                                 boss.CurrentHP -= pdmg;
                                      
-                                Log.AddMessage(new ColoredString("You hit the " + boss.Name + " for " + pdmg + "." + (crit ? " Critical Hit!" : ""), crit ? Color.Lime : Color.Green, Color.Black));
+                                Log.AddMessage(new ColoredString("You hit " + (boss.ProperName ? "" : "the ") + boss.Name + " for " + pdmg + "." + (crit ? " Critical Hit!" : ""), crit ? Color.Lime : Color.Green, Color.Black));
                             }
 
                             if (player.IsMaging()) {  
@@ -522,7 +549,7 @@ namespace ZeroPlayersOnline.UI {
 
                     Color nameCol = Color.White;
 
-                    if (((thisOne.Level > (player.GetCombatLevel() * 2) + 1) && thisOne.AlwaysAggro) || thisOne.AttackingPlayer)
+                    if ((thisOne.Level > player.GetCombatLevel() && thisOne.AlwaysAggro) || thisOne.AttackingPlayer)
                         nameCol = Color.Crimson;
 
                     if (thisOne == AttackingMonster)
@@ -538,7 +565,7 @@ namespace ZeroPlayersOnline.UI {
                     }
 
                     if (GraceTimeStart + 5000 < Helper.Time() && thisOne.TimeLastAttacked + (1000 * thisOne.AttackSpeedSeconds) < Helper.Time() && thisOne.CurrentHP > 0) {
-                        if (((thisOne.Level > (player.GetCombatLevel() * 2) + 1) && thisOne.AlwaysAggro) || thisOne.AttackingPlayer) {
+                        if ((thisOne.AggroLevel > player.GetCombatLevel() && thisOne.AlwaysAggro) || thisOne.AttackingPlayer) {
                             thisOne.TimeLastAttacked = Helper.Time();
 
                             int dmg = GoRogue.DiceNotation.Dice.Roll(thisOne.DamageDice);
@@ -889,36 +916,38 @@ namespace ZeroPlayersOnline.UI {
                         thisOne.TimeLastAttacked = Helper.Time();
                         thisOne.AttackingPlayer = false;
                     } 
+                    
+                    if (printY < 35) {
+                        mini.Con.Print(57, printY, "|");
 
-                    mini.Con.Print(57, printY, "|");
+                        if (GameLoop.ZPO.SpellLibrary.TryGetValue("utilMonsterInspect", out Spell? inspect) && inspect != null) { 
+                            if (player.CanCast(inspect) == "") {
+                                mini.Con.PrintClickable(57, printY, new ColoredString("?", Color.MediumPurple, Color.Black), () => {
+                                    Log.AddMessage("You cast monster inspect on the " + curr.MonstersHere[i].Name + ".", Color.MediumPurple);
+                                    Log.AddMessage(curr.MonstersHere[i].GetSummary(), Color.Yellow);  
+                                    inspect.Cast(player, Log, SidebarManager.RecentlyTrainedSkills);  
+                                });  
+                            }
+                        } 
+                     
+                        mini.Con.PrintClickable(59, printY, new ColoredString(curr.MonstersHere[i].Name, nameCol, Color.Black), () => { 
+                            if (curr.Dark && !player.HasLightSource()) { 
+                                Log.AddMessage("It may be a bad idea to aggravate a monster you can't currently see to hit.");
+                            } else {
+                                AttackingMonster = thisOne; 
+                                LastClickTime = Helper.Time();
+                            }
+                        }); 
+                        mini.Con.Print(90, printY, ("(" + curr.MonstersHere[i].CurrentHP + "/" + curr.MonstersHere[i].MaxHP + " hp)").Align(HorizontalAlignment.Right, 15));
+                        mini.Con.Print(80, printY, ("[Lv " + curr.MonstersHere[i].Level.ToString().Align(HorizontalAlignment.Right, 4) + "]"));
 
-                    if (GameLoop.ZPO.SpellLibrary.TryGetValue("utilMonsterInspect", out Spell? inspect) && inspect != null) { 
-                        if (player.CanCast(inspect) == "") {
-                            mini.Con.PrintClickable(57, printY, new ColoredString("?", Color.MediumPurple, Color.Black), () => {
-                                Log.AddMessage("You cast monster inspect on the " + curr.MonstersHere[i].Name + ".", Color.MediumPurple);
-                                Log.AddMessage(curr.MonstersHere[i].GetSummary(), Color.Yellow);  
-                                inspect.Cast(player, Log, SidebarManager.RecentlyTrainedSkills);  
-                            });  
-                        }
+                        mini.Con.PrintClickable(106, printY++, "Log", () => {
+                            ExtraWindows.CollectionLog.IsVisible = true;
+                            ExtraWindows.CollectionID = curr.MonstersHere[i].ID;
+                            ExtraWindows.CollectionDropTop = 0;
+                            ExtraWindows.CollectionCat = "Monster";
+                        });
                     }
-
-
-                    mini.Con.PrintClickable(59, printY, new ColoredString(curr.MonstersHere[i].Name, nameCol, Color.Black), () => { 
-                        if (curr.Dark && !player.HasLightSource()) { 
-                            Log.AddMessage("It may be a bad idea to aggravate a monster you can't currently see to hit.");
-                        } else {
-                            AttackingMonster = thisOne; 
-                        }
-                    }); 
-                    mini.Con.Print(90, printY, ("(" + curr.MonstersHere[i].CurrentHP + "/" + curr.MonstersHere[i].MaxHP + " hp)").Align(HorizontalAlignment.Right, 15));
-                    mini.Con.Print(80, printY, ("[Lv " + curr.MonstersHere[i].Level.ToString().Align(HorizontalAlignment.Right, 4) + "]"));
-
-                    mini.Con.PrintClickable(106, printY++, "Log", () => {
-                        ExtraWindows.CollectionLog.IsVisible = true;
-                        ExtraWindows.CollectionID = curr.MonstersHere[i].ID;
-                        ExtraWindows.CollectionDropTop = 0;
-                        ExtraWindows.CollectionCat = "Monster";
-                    });
 
                     if (usedAmmo) {
                         List<string> empties = new();
@@ -931,6 +960,11 @@ namespace ZeroPlayersOnline.UI {
                         foreach (var rem in empties) {
                             player.Equipment.Remove(rem);
                         }
+                    }
+
+                    if (thisOne.CurrentHP <= 0 && thisOne.Temporary) {
+                        curr.MonstersHere.Remove(thisOne);
+                        break;
                     }
                 }
             } 

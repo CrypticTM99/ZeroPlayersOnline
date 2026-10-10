@@ -254,7 +254,28 @@ namespace ZeroPlayersOnline {
                 
                 
                 mini.Con.Print(resourceX + 4, resourceY, "|");
-                mini.Con.PrintClickable(resourceX + 6, resourceY, new ColoredString("N", SelectedMenu == "NPCs" ? Color.Yellow : curr.NPCsHere.Count > 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "NPCs"; });
+
+                int npcCount = 0;
+
+                foreach (var str in curr.NPCsHere) {
+                    if (NPCLibrary.TryGetValue(str, out NPC? npc) && npc != null) {
+                        if (npc.ReqsToSee != null && npc.ReqsToSee.Count > 0) {
+                            npcCount++;
+
+                            foreach (var req in npc.ReqsToSee) {
+                                if (!req.CheckRequirement(player, false, true)) {
+                                    npcCount--;
+                                    break;
+                                }
+                            }
+                        } else {
+                            npcCount++;
+                        }
+                    }
+                }
+
+
+                mini.Con.PrintClickable(resourceX + 6, resourceY, new ColoredString("N", SelectedMenu == "NPCs" ? Color.Yellow : npcCount > 0 ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "NPCs"; });
                 mini.Con.Print(resourceX + 8, resourceY, "|");
                 mini.Con.PrintClickable(resourceX + 10, resourceY, new ColoredString("P", SelectedMenu == "Processing" ? Color.Yellow : curr.ProcessingStations.Count > 0 || curr.TempStations.Count > 0 || (home != null && home.Rooms[MinigameManager.POH_ViewingRoom].AnyStations()) ? Color.White : Color.DarkSlateGray, Color.Black), () => { SelectedMenu = "Processing"; });
                 mini.Con.Print(resourceX + 12, resourceY, "|");
@@ -524,6 +545,13 @@ namespace ZeroPlayersOnline {
                 }
             }
 
+            mini.Win.PrintClickable(85, 49, ("[" + GameLoop.SoundManager.CurrentSong + "]").Align(HorizontalAlignment.Right, 30, (char) 196), () => {
+                player.MusicMode = "Shuffle UPC";
+                GameLoop.SoundManager.CurrentSong = "";
+                GameLoop.SoundManager.music.StopAllSounds();
+                GameLoop.SoundManager.PickMusic();
+            });
+
             mini.Win.Print(120, 49, "[VOLUME:         ]");
             mini.Win.PrintClickable(129, 49, new ColoredString("-", Color.White, Color.Transparent), () => {
                 double qty = 0.01;
@@ -579,8 +607,8 @@ namespace ZeroPlayersOnline {
                 qty *= 10;
 
             if (mousePos.Y > 34 && !ExtraWindows.AnyVisible()) {
-                if (Helper.ScrolledUp()) { Log.TopIndex = Math.Clamp(Log.TopIndex + qty, 0, Log.Log.Count - 1); }
-                if (Helper.ScrolledDown()) { Log.TopIndex = Math.Clamp(Log.TopIndex - qty, 0, Log.Log.Count - 1); }
+                if (Helper.ScrolledDown()) { Log.TopIndex = Math.Clamp(Log.TopIndex + qty, 0, Log.Log.Count - 1); }
+                if (Helper.ScrolledUp()) { Log.TopIndex = Math.Clamp(Log.TopIndex - qty, 0, Log.Log.Count - 1); }
             }
         }
 
@@ -677,28 +705,6 @@ namespace ZeroPlayersOnline {
                 }
             }
 
-            if (SidebarManager.SidebarRect.Contains(mousePos) && !ExtraWindows.AnyVisible()) {
-                int qty = 1;
-                if (Helper.EitherShift()) {
-                    qty *= 5;
-                }
-                if (Helper.EitherControl()) {
-                    qty *= 10;
-                }
-                if (SidebarManager.SidebarMenu == "Prayer") {
-                    if (Helper.ScrolledUp()) { SidebarManager.SidebarScrollTop = Math.Clamp(SidebarManager.SidebarScrollTop - qty, 0, player.Prayers.Count - 18); }
-                    if (Helper.ScrolledDown()) { SidebarManager.SidebarScrollTop = Math.Clamp(SidebarManager.SidebarScrollTop + qty, 0, player.Prayers.Count - 18); }
-                } else if (SidebarManager.SidebarMenu == "Skills") {
-                    if (Helper.ScrolledUp()) { SidebarManager.SidebarScrollTop = Math.Clamp(SidebarManager.SidebarScrollTop - qty, 0, player.Skills.Count - 18); }
-                    if (Helper.ScrolledDown()) { SidebarManager.SidebarScrollTop = Math.Clamp(SidebarManager.SidebarScrollTop + qty, 0, player.Skills.Count - 18); }
-                } else if (SidebarManager.SidebarMenu == "Quest") {
-                    if (player.QuestLog.Count > 18) {
-                        if (Helper.ScrolledUp()) { SidebarManager.SidebarScrollTop = Math.Clamp(SidebarManager.SidebarScrollTop - qty, 0, player.QuestLog.Count - 18); }
-                        if (Helper.ScrolledDown()) { SidebarManager.SidebarScrollTop = Math.Clamp(SidebarManager.SidebarScrollTop + qty, 0, player.QuestLog.Count - 18); }
-                    }
-                }
-            }
-
             if (Helper.HotkeyDown(Key.Tab)) {
                 for (int i = 0; i < activityTabs.Count; i++) {
                     if (activityTabs[i] == SelectedMenu) {
@@ -723,7 +729,7 @@ namespace ZeroPlayersOnline {
                 }
             }
 
-            if (Helper.HotkeyDown(Key.C) && !ExtraWindows.AnyVisible("Collection")) {
+            if (Helper.HotkeyDown(Key.C) && !ExtraWindows.AnyVisible("Collection") && !TypingAnywhere()) {
                 if (ExtraWindows.CollectionLog.IsVisible) { 
                     ExtraWindows.CollectionLog.IsVisible = false; 
                 } else {
@@ -763,7 +769,7 @@ namespace ZeroPlayersOnline {
                 ManualSave();
             }
 
-            if (Helper.HotkeyDown(Key.Q) && !ExtraWindows.AnyVisible("Quests")) {
+            if (Helper.HotkeyDown(Key.Q) && !ExtraWindows.AnyVisible("Quests") && !TypingAnywhere()) {
                 if (ExtraWindows.Quests.IsVisible) { 
                     ExtraWindows.Quests.IsVisible = false; 
                 } else {
@@ -773,7 +779,7 @@ namespace ZeroPlayersOnline {
             } 
 
 
-            if (!ExtraWindows.AnyVisible()) {
+            if (!ExtraWindows.AnyVisible() && !TypingAnywhere()) {
                 if (Atlas.TryGetValue(player.NavLoc, out Location? curr) && curr != null) { 
                     List<Connection> conns = curr.ConnectedLocations.Where(o => (o.CanTraverse(player) && o.HideIfReqsNotMet) || !o.HideIfReqsNotMet).ToList();
 
@@ -811,14 +817,14 @@ namespace ZeroPlayersOnline {
                 
 
               //  player.CurrentClueBeginner = "B_CharlieMining";
-                //player.TryPickup(new Item(ItemLibrary["fishRawCod"]), 1);  
-
+                //player.TryPickup(new Item(ItemLibrary["vialWater"]), 1);  
+                //player.TryPickup(new Item(ItemLibrary["cadava"]), 1);  
+                
 
                 //player.NavLoc = "MIST_VarrockPalaceBailey";
                 //player.TryPickup(new Item(ItemLibrary["tabteleHome"]), 1);
-                //player.TryPickup(new Item(ItemLibrary["nailsBronze"]), 10);
-                //player.TryPickup(new Item(ItemLibrary["runeAir"]) { Quantity = 300 }, 300);
                 //player.TryGrantExp("Magic", 50000, Log, SidebarManager.RecentlyTrainedSkills);
+
 
 
                // player.TryPickup(new Item(ItemLibrary["tiaraWater"]), 1);   
@@ -1252,6 +1258,10 @@ namespace ZeroPlayersOnline {
 
             HardcodedLocations.InitLocs(Atlas, GatherSpots, MonsterLibrary);
             HardcodedLocationsTutorial.InitLocs(Atlas, GatherSpots, MonsterLibrary);
+            LocationsDesert.InitLocs(Atlas, GatherSpots, MonsterLibrary);
+            LocationsVarrock.InitLocs(Atlas, GatherSpots, MonsterLibrary);
+            LocationsLumbridge.InitLocs(Atlas, GatherSpots, MonsterLibrary);
+            LocationsDraynor.InitLocs(Atlas, GatherSpots, MonsterLibrary);
 
             HardcodedNPCs.InitNPCs(NPCLibrary);
             HardcodedNPCsLumbridgeDraynor.InitNPCs(NPCLibrary);
@@ -1413,5 +1423,13 @@ namespace ZeroPlayersOnline {
         public void TrySetupLogs() { 
             player.CollectionLogClues.TryAdd("casketTutorial", new("casketTutorial"));
         }
+
+        public bool TypingAnywhere() {
+            if (MinigameManager.POH_Typing != "") {
+                return true;
+            }
+
+            return false;
+        } 
     }
 }

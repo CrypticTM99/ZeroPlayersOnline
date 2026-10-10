@@ -137,37 +137,6 @@ namespace ZeroPlayersOnline.DataTypes {
 
             if (SetsQuest != "") { p.TryProgressQuest(SetsQuest, QuestStage); }
 
-            foreach (var kv in CutscenesOnTraverse) {
-                if (GameLoop.ZPO.CutsceneLibrary.TryGetValue(kv, out Cutscene? cut)) {
-                    foreach (var req in cut.RequirementsToStart) {
-                        if (!req.CheckRequirement(p, false, true)) {
-                            continue;
-                        }
-                        
-                        ExtraWindows.Cutscene.IsVisible = true;
-                        ExtraWindows.CutsceneID = kv; 
-                        ExtraWindows.CutsceneScene = 0;
-                        ExtraWindows.CutsceneDialogue = 0;
-
-                        foreach (var act in cut.Actions) {
-                            act.Execute();
-                        }
-
-                        foreach (var item in cut.ItemsGiven) {
-                            string[] split = item.Split(",");
-                            if (GameLoop.ZPO.ResolveItem(split[0]) is Item give) {
-                                int qty = 1;
-                                if (split.Length > 1) {
-                                    int.TryParse(split[1], out qty);
-                                }
-                                p.TryPickup(give, qty);
-                            }
-                        }
-                    }
-                }
-                break;
-            }
-
             if (ExpTo != "")
                 p.TryGrantExp(ExpTo, ExpGranted, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills, false); 
             p.NavLoc = Destination;
@@ -194,6 +163,26 @@ namespace ZeroPlayersOnline.DataTypes {
 
             UI_LocCombat.AttackingBoss = false;
             UI_LocCombat.AttackingMonster = null;
+
+            foreach (var kv in CutscenesOnTraverse) {
+                if (GameLoop.ZPO.CutsceneLibrary.TryGetValue(kv, out Cutscene? cut)) {
+                    bool allReqsMet = true;
+                    foreach (var req in cut.RequirementsToStart) {
+                        if (!req.CheckRequirement(p, false, true)) {
+                            allReqsMet = false;
+                        }
+                    }
+
+                    if (allReqsMet) {
+                        ExtraWindows.Cutscene.IsVisible = true;
+                        ExtraWindows.CutsceneID = kv; 
+                        ExtraWindows.CutsceneScene = 0;
+                        ExtraWindows.CutsceneDialogue = 0;
+                        
+                        break;
+                    }
+                }
+            }
         }
     }
 }

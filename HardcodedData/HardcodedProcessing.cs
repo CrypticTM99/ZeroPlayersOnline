@@ -7,6 +7,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             ProcessingStation Furnace = new("Furnace") {
                 Recipes = new() {
+                    new ProcessingRecipe("swordTybalt", "swordBrittle"),
                     new ProcessingRecipe("bucketSand", "glassMolten", "Crafting", 1, 20, secondaryIn: "ashSoda", secondaryOut: "bucketEmpty"),
                     new ProcessingRecipe("oreMixBronze", "barBronze", "Smithing", 1, 7),
                     new ProcessingRecipe("oreCopper", "barBronze", "Smithing", 1, 7, tertiaryIn: "ringForging"),

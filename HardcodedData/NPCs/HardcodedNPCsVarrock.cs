@@ -64,13 +64,45 @@ namespace ZeroPlayersOnline.Hardcodes {
             }));
 
                 
-            toAdd.Add(new("Shopkeeper", "mistVarShopkeeperSword", new() { { 0, new("Hello, bold adventurer. Can I interest you in some swords?", new() { byeThen }) } })); 
+            toAdd.Add(new("Shopkeeper", "mistVarShopkeeperSword", new() { 
+                { 0, new("Hello, bold adventurer. Can I interest you in some swords?", new() { 
+                    new("I'm here to retrieve master Leptoc's sword.", 3, [ new("QuestAt", 80, "MI_RomeoJuliet") ]),
+                    new("Oh dear, I seem to have lost Tybalt's sword.", 8, [ new("QuestAt", 90, "MI_RomeoJuliet"), new("NotItem", 1, "swordTybalt"), new("NotItem", 1, "swordBrittle") ]),
+                    new("I've brought back Tybalt's sword.", 9, [ new("QuestAt", 90, "MI_RomeoJuliet"), new("Item", 1, "swordBrittle") ]),
+                    new("I'm here to look at your sharp pointy things.", 1),
+                    byeThen 
+                }) },
+                { 1, new("Sharp pointy things...", new() { new("(NEXT)", 2), byeThen }) },
+                { 2, new("We're... actually getting ready to close.", new() { new("Aw, man.", -1), byeThen }) },
+                { 3, new("And who are you?", new() { new("I'm here on behalf of Tybalt Leptoc.", 4), byeThen }) },
+                { 4, new("Ah, Tybalt. His sword is ready.", new() { new("He sent me to collect it.", 5), byeThen }) },
+                { 5, new("Did he now?", new() { new("Indeed.", 6), byeThen }) },
+                { 6, new("Why couldn't he come himself?", new() { new("He's getting ready for the duel.", 7), byeThen }) },
+                { 7, new("I suppose that explains it. Here you are.", new() { new("Thanks.", -1), byeThen }, "MI_RomeoJuliet", 90, [ "swordTybalt" ]) },
+                { 8, new("Useless courier! Luckily one of the shop assistants happened to find it and brought it back here.", new() { new("Thanks.", -1), byeThen }, items: [ "swordTybalt" ]) },
+                { 9, new("Is there something wrong with it?", new() { new("What?", 10), byeThen }) },
+                { 10, new("", new() { new("No.", 11), byeThen }) },
+                { 11, new("", new() { new("Why would there be?", 12), byeThen }) },
+                { 12, new("Then why return it so soon?", new() { new("He changed his mind and said he needs more time to prepare.", 13), byeThen }) },
+                { 13, new("Hm.", new() { new("(NEXT)", 14), byeThen }) },
+                { 14, new("(The shopkeeper examines the blade.)", new() { new("(NEXT)", 15), byeThen }, altSpeaker: "-") },
+                { 15, new("Something seems off.", new() { new("Off?", 16), byeThen }) },
+                { 16, new("I could swear my temper looked different when I finished it.", new() { new("Perhaps you're imagining things.", 17), byeThen }) },
+                { 17, new("Perhaps.", new() { new("So you'll keep it here until Tybalt comes for it?", 18), byeThen }) },
+                { 18, new("It's already paid for, so of course.", new() { new("Whew.", 19), byeThen }) },
+                { 19, new("Why do you look so relieved?", new() { new("I just love excellent customer service!", 20, [ new("Item", 1, "swordBrittle", true)], true), byeThen }) },
+                { 20, new("Right...", new() { byeThen }, "MI_RomeoJuliet", 110) }
+            })); 
+
+
+
             toAdd.Add(new("Stray dog", "dogStray", new() { 
-                { 0, new("(The dog approaches you with a hopeful look in its eyes)", new() { new DialogueChoice("(PET)", 1), new DialogueChoice("(SHOO)", 2), new DialogueChoice("(GIVE BONE)", 3, new() { new("Item", 1, "bonesRegular", true) }), new DialogueChoice("(GIVE MEAT)", 4, new() { new("Item", 1, "meatRawBeef", true) }), byeThen }) }, 
-                { 1, new("(The dog woofs happily and follows you around for a bit)", new() { byeThen }) },
-                { 2, new("(The dog whines and backs away from you)", new() { byeThen }) },
-                { 3, new("(The dog woofs and gnaws happily on the bones)", new() { byeThen }) },
-                { 4, new("(The dog gobbles up the piece of meat eagerly)", new() { byeThen }) }
+                { 0, new("(The dog approaches you with a hopeful look in its eyes)", new() { new DialogueChoice("(PET)", 1), new DialogueChoice("(SHOO)", 2), new DialogueChoice("(GIVE BONE)", 3, new() { new("Item", 1, "bonesRegular", true) }), new DialogueChoice("(GIVE MEAT)", 4, new() { new("Item", 1, "meatRawBeef", true) }), byeThen }, altSpeaker: "-") }, 
+                { 1, new("(The dog woofs happily and follows you around for a bit)", new() { byeThen }, altSpeaker: "-") },
+                { 2, new("(The dog whines and backs away from you)", new() { byeThen }, altSpeaker: "-") },
+                { 3, new("(The dog woofs and gnaws happily on the bones)", new() { new("Could I have a horn, boy?", 5, [ new("QuestAt", 140, "MI_RomeoJuliet") ]), byeThen }, altSpeaker: "-") },
+                { 4, new("(The dog gobbles up the piece of meat eagerly)", new() { byeThen }, altSpeaker: "-") },
+                { 5, new("(The dog tilts its head, then barks and starts digging in the ground. After a brief wait, a horn is revealed.)", new() { byeThen }, items: [ "potionCadavaHorn" ], altSpeaker: "-") }
             }));
 
             toAdd.Add(new("Reldo", "mistVarReldo", new() { 
@@ -97,7 +129,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 30, new("Hmmm, I don't... believe there are any here...", new() { new DialogueChoice("(NEXT)", 31), byeThen }) },
                 { 31, new("Let me think.", new() { new DialogueChoice("(NEXT)", 32), byeThen }) },
                 { 32, new("Actually...", new() { new DialogueChoice("(NEXT)", 33), byeThen }) },
-                { 33, new("Ah, yes. I think I have something, if you're definitely interested?", new() { new DialogueChoice("[Q+] Of course.", 34), new DialogueChoice("Actually, I don't think I am. Goodbye.", -1), byeThen }) },
+                { 33, new("Ah, yes. I think I have something, if you're definitely interested?", new() { new DialogueChoice("Of course. (Start Shield of Arrav)", 34), new DialogueChoice("Actually, I don't think I am. Goodbye.", -1), byeThen }) },
                 { 34, new("Well, if you look around for a book called 'The Shield of Arrav', you'll find a quest in there.", new() { new DialogueChoice("(NEXT)", 35), byeThen }, "MI_ShieldOfArrav", 0) },
                 { 35, new("I'm not sure where the book is mind you... but I'm sure it's around here somewhere.", new() { new DialogueChoice("Great! Thank you.", -1), byeThen }) },
                 { 36, new("I'm not sure exactly... but I'm sure it's around here somewhere.", new() { byeThen }) },
@@ -222,14 +254,13 @@ namespace ZeroPlayersOnline.Hardcodes {
             }));
 
             toAdd.Add(new("Weaponmaster", "mistVarWeaponmaster", new() { 
-                { 0, new(
-                        new List<TextReq> { 
-                        new("Hello, fellow Phoenix! What do you seek?", [new("Data", 2, "ArravGangStatus", false, "equals")]),
-                        new("Only members of the Phoenix Gang are allowed up here. Find your own weapon stash.") 
-                        }, new() { 
-                        new DialogueChoice("I'm after a weapon or two.", 1, [ new("Data", 2, "ArravGangStatus", false, "equals")]),  
-                        new DialogueChoice("I'm looking for treasure.", 2, [ new("Data", 2, "ArravGangStatus", false, "equals")]),
-                        byeThen 
+                { 0, new( new List<TextReq> { 
+                    new("Hello, fellow Phoenix! What do you seek?", [new("Data", 2, "ArravGangStatus", false, "equals")]),
+                    new("Only members of the Phoenix Gang are allowed up here. Find your own weapon stash.") 
+                }, new() { 
+                    new DialogueChoice("I'm after a weapon or two.", 1, [ new("Data", 2, "ArravGangStatus", false, "equals")]),  
+                    new DialogueChoice("I'm looking for treasure.", 2, [ new("Data", 2, "ArravGangStatus", false, "equals")]),
+                    byeThen 
                 }) }, 
                 { 1, new("No problem. Feel free to look around.", new() { byeThen }) },
                 { 2, new("Aren't we all? We've not got any in here. Go mug someone somewhere if you want some treasure.", new() { byeThen }) }
@@ -371,7 +402,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 1, new("Do I look okay? Those kids drive me crazy.", new() { new("(NEXT)", 2), byeThen }) },
                 { 2, new("I'm sorry. It's just that I've lost her.", new() { new("Lost who?", 3), byeThen }) },
                 { 3, new("Fluffs, poor Fluffs. She never hurt anyone.", new() { new("Who's Fluffs?", 4), byeThen }) },
-                { 4, new("My beloved feline friend Fluffs. She's been purring by my side for almost a decade. Please, could you go search for her while I look over the kids?", new() { new("[Q+] Well, I suppose I could.", 6), new("Sorry, I'm too busy to play pet rescue.", 5), byeThen }) },
+                { 4, new("My beloved feline friend Fluffs. She's been purring by my side for almost a decade. Please, could you go search for her while I look over the kids?", new() { new("Well, I suppose I could. (Start Gertrude's Cat)", 6), new("Sorry, I'm too busy to play pet rescue.", 5), byeThen }) },
                 { 5, new("Well, okay then. I'll have to find someone else.", new() { byeThen }) },
                 { 6, new("Really? Thank you so much! I really have no idea where she could be!", new() { new("(NEXT)", 7), byeThen }) },
                 { 7, new("I think my sons, Shilop and Wilough, saw the cat last. They'll be out in the square.", new() { new("Alright then, I'll see what I can do.", -1), byeThen }, "MI_GertrudesCat", 0) },
@@ -454,7 +485,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             }));
 
             toAdd.Add(new("Fluffs the Cat", "mistVarFluffs", new() { 
-                { 0, new("Mioaww", new() { 
+                { 0, new("Miaoww", new() { 
                     new("(Try to pick up)", 1, [ new("QuestPast", 10, "MI_GertrudesCat"), new("QuestBelow", 30, "MI_GertrudesCat") ]), 
                     new("(Give some milk)", 2, [ new("QuestAt", 20, "MI_GertrudesCat"), new("Item", 1, "bucketMilk", true) ]), 
                     new("(Try to pick up)", 3, [ new("QuestPast", 30, "MI_GertrudesCat"), new("QuestBelow", 50, "MI_GertrudesCat") ]),  
@@ -469,8 +500,154 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 4, new("Mew!", new() { new("(Try to pick up)", 5), byeThen }, "MI_GertrudesCat", 50) },
                 { 5, new("Hisss!", new() { new("(The cat seems afraid to leave. In the distance you can hear kittens mewing...)", -1), byeThen }, "MI_GertrudesCat", 60) },
                 { 6, new("Purr...", new() { new("(Fluffs has run off home with her offspring)", -1), byeThen }, "MI_GertrudesCat", 70) }
-            }, req: new("QuestNot", 70, "MI_GertrudesCat") ));
+            }, reqs: [ new("QuestNot", 70, "MI_GertrudesCat") ] ));
              
+            toAdd.Add(new("Romeo", "mistVarRomeoStart", new() { 
+                { 0, new( new List<TextReq> {
+                    new("", [ new("QuestAt", -1, "MI_RomeoJuliet") ]),
+                    new("Romeo: What news have you of my Juliet?", [ new("QuestPast", 0, "MI_RomeoJuliet"), new("QuestBelow", 30, "MI_RomeoJuliet") ]),
+                    new("(Romeo continues to pace nervously along the outside of the fountain.)", [ new("QuestAt", 30, "MI_RomeoJuliet") ]),
+                    new("(Romeo clutches the letter, waiting for your moral support to read it.)", [ new("QuestAt", 40, "MI_RomeoJuliet") ])
+                }, new() { 
+                    new("Hello!", 1, [ new("QuestAt", -1, "MI_RomeoJuliet")]), 
+                    new("Hey Romeo, I dropped your letter down the sewer.", 10, [ new("QuestAt", 0, "MI_RomeoJuliet"), new("QuestBelow", 20, "MI_RomeoJuliet"), new("NotItem", 1, "letterRomeo")]), 
+                    new("Where can I find Juliet?", 11, [ new("QuestPast", 0, "MI_RomeoJuliet"), new("QuestBelow", 30, "MI_RomeoJuliet")]), 
+                    new("What did you want me to do again?", 16, [ new("QuestPast", 0, "MI_RomeoJuliet"), new("QuestBelow", 30, "MI_RomeoJuliet")]), 
+                    new("I can't get into the Leptoc estate without a cleaner disguise.", 17, [ new("QuestAt", 10, "MI_RomeoJuliet")]), 
+                    new("I have news from Juliet!", 20, [ new("QuestAt", 30, "MI_RomeoJuliet"), new("Item", 1, "letterJuliet", true)]), 
+                    new("Well? What was in the letter?", 21, [ new("QuestAt", 40, "MI_RomeoJuliet")]), 
+                    byeThen 
+                }, altSpeaker: "-") },
+                { 1, new("(Romeo doesn't seem to notice you as he paces back and forth.)", new() { new("Er... sir?", 2), byeThen }, altSpeaker: "-") },
+                { 2, new("(Romeo finally looks up, seeming to stare straight through you. A deep sadness covers his face.)", new() { new("What's wrong?", 3), byeThen }, altSpeaker: "-") },
+                { 3, new("It's my sweet Juliet. Have you seen her?", new() { new("Who?", 4), new("What are you on about, you miserable varlet?", 4), byeThen }) },
+                { 4, new("My heart is broken. Juliet's father has forbidden us from seeing one another.", new() { new("Sigh... How can I help? (Start Romeo & Juliet)", 5), byeThen }) },
+                { 5, new("You'll help me confess my love for my sweet Juliet?!", new() { new("If it'll make you stop blubbering beside the fountain.", 6), new("I would stop at nothing to help save true love!", 6), byeThen }) },
+                { 6, new("Oh, thank you! I knew there was kindness in your heart!", new() { new("Let's not get carried away.", 7), byeThen }) },
+                { 7, new("You must take a letter to Juliet. It is the only way she will know that my love for her has not faded!", new() { new("And why can't you take it yourself?", 8), byeThen }) },
+                { 8, new("Her father has forbidden me from setting foot upon the grounds of their estate.", new() { new("So I'm delivering a love letter to a girl whose family doesn't want you near her.", 9), byeThen }) },
+                { 9, new("Precisely!", new() { new("Right. This should go well.", -1), byeThen }, "MI_RomeoJuliet", 0, [ "letterRomeo" ]) },
+                { 10, new("Oh... Fear not, I have a second copy!", new() { byeThen }, items: [ "letterRomeo" ]) },
+                { 11, new("She may still be locked away at her Father's house just outside the west gates of Varrock. How I once praised her beauty from below her window!", new() { new("You spied on her at night from her window", 12), byeThen }) },
+                { 12, new("Absolutely not! I stood in the garden.", new() { new("That's still spying.", 13), byeThen }) },
+                { 13, new("I was beneath her balcony.", new() { new("That's somehow worse.", 14), byeThen }) },
+                { 14, new("I climbed the tree beside her window.", new() { new("Romeo.", 15), byeThen }) },
+                { 15, new("I only did so once!", new() { new("I'm beginning to understand why her father locked her in the house.", -1), byeThen }) },
+                { 16, new("Please, at once! Take my letter to my sweet Juliet!", new() { new("Right, the letter. I'll be back!", -1), byeThen }) },
+                { 17, new("Perhaps you could ask one of the street cleaners around Varrock? Please, hurry!", new() { byeThen }) },
+                { 20, new("Give it here at once! I plead!", new() { new("(Romeo snatches the letter from your hands and tears it open.)", 21), byeThen }, "MI_RomeoJuliet", 40) },
+                { 21, new("From my beloved!", new() { new("(NEXT)", 22), byeThen }) },
+                { 22, new("(Romeo reads the letter silently, a smile slowly speading across his face.)", new() { new("...?", 23), byeThen }, altSpeaker: "-") },
+                { 23, new("She loves me!", new() { new("I had gathered that much.", 24), byeThen }) },
+                { 24, new("Tonight, I shall go to her window and truly profess my love under the moonlight!", new() { new("You're going to stand outside her house again?", 25), byeThen }) },
+                { 25, new("I shall serenade her beneath the balcony!", new() { new("Do you know how to serenade?", 26), byeThen }) },
+                { 26, new("I will be improvising!", new() { new("That's what I'm afraid of.", 27), byeThen }) },
+                { 27, new("Meet me outside the Leptoc estate tonight, and you will bear witness!", new() { new("You need a lookout, don't you?", 28), byeThen }, "MI_RomeoJuliet", 50) },
+                { 28, new("See, I knew you'd understand me.", new() { byeThen }) }
+            }, reqs: [ new("QuestBelow", 50, "MI_RomeoJuliet") ] ));
+
+            toAdd.Add(new("Juliet", "mistVarJulietStart", new() { 
+                { 0, new( new List<TextReq>() {
+                    new("(A beautiful blonde woman looks up at you, hiding a tear behind her smile.)", [ new("QuestBelow", 20, "MI_RomeoJuliet")]),
+                    new("Juliet: Ah, you're back!", [ new("QuestAt", 20, "MI_RomeoJuliet")]),
+                    new("Juliet: Have you delivered my letter to Romeo yet?", [ new("QuestAt", 30, "MI_RomeoJuliet")])
+                }, new() { 
+                    new("Juliet?", 1, [ new("QuestBelow", 20, "MI_RomeoJuliet") ]), 
+                    new("What did you think of the letter?", 3, [ new("QuestAt", 20, "MI_RomeoJuliet") ]), 
+                    new("I've lost that letter you gave me.", 9, [ new("QuestAt", 30, "MI_RomeoJuliet"), new("NotItem", 1, "letterJuliet") ]), 
+                    byeThen 
+                }, altSpeaker: "-") },
+                { 1, new("I am she.", new() { new("I have a letter for you from Romeo.", 2, [ new("Item", 1, "letterRomeo", true)]), new("I, ah, seem to have lost the letter. Be right back.", -1, [ new("NotItem", 1, "letterRomeo", true)]), byeThen }) },
+                { 2, new("My dearest Romeo!", new() { new("(NEXT)", 3), byeThen }, "MI_RomeoJuliet", 20) },
+                { 3, new("(The tear she had been hiding falls onto the paper as she reads.)", new() { new("(NEXT)", 4), byeThen }, altSpeaker: "-") },
+                { 4, new("(She takes up a quill, hurriedly writes a reply, kisses the finished lettering, and hands it to you.)", new() { new("I suppose you want me to bring this to Romeo?", 5), byeThen }, altSpeaker: "-") },
+                { 5, new("You must!", new() { new("Is this going to involve more standing around outside people's houses at night?", 6), byeThen }) },
+                { 6, new("What?", new() { new("Never mind.", 7), byeThen }) },
+                { 7, new("Tell him that my love for him burns as bright as the stars!", new() { new("I'll... tell him that.", 8), byeThen }) },
+                { 8, new("And inform him I shall await his reply.", new() { new("Right. One romantic letter delivery, coming right up.", -1), byeThen }, "MI_RomeoJuliet", 30, [ "letterJuliet" ]) },
+                { 9, new("I can write another, but don't lose it this time! It's very important Romeo receives it!", new() { new("Right. Sorry about that.", -1), byeThen }, "MI_RomeoJuliet", 30, [ "letterJuliet" ]) }
+            }, reqs: [ new("QuestBelow", 50, "MI_RomeoJuliet") ]));
+
+            toAdd.Add(new("Romeo", "mistVarRomeoBalcony", new() { 
+                { 0, new("I take it you heard our exclamations of love?", new() { new("Unfortunately.", 1), byeThen }) },
+                { 1, new("Oh my dear friend, will you help us wed?", new() { new("I'd rather not but I don't think I have a choice.", 2), byeThen }) },
+                { 2, new("Great, it's settled then.", new() { new("(NEXT)", 3), byeThen }) },
+                { 3, new("You can sneak my sweet Juliet into the chapel while I wait.", new() { new("I didn't-", 4), byeThen }) },
+                { 4, new("(Romeo runs off before you can get a word in.)", new() { new("This is the worst.", -1), byeThen }, "MI_RomeoJuliet", 55, altSpeaker: "-") }
+            }, reqs: [ new("QuestAt", 50, "MI_RomeoJuliet") ]));
+
+            toAdd.Add(new("Juliet", "mistVarJulietBalcony", new() { 
+                { 0, new("(Juliet still stands on her balcony smiling and looking wistfully at the moon.)", new() { new("Let's get this over with.", 1), byeThen }, altSpeaker: "-") },
+                { 1, new("Catch me!", new() { new("What?", 2), byeThen }) },
+                { 2, new("(Juliet jumps down without hesitation and crashes directly on top of you.)", new() { new("You could have warned me-", 3), byeThen }, altSpeaker: "-") },
+                { 3, new("Take me to my dearest at once!", new() { new("Right. Off to the chapel then.", -1), byeThen }, "MI_RomeoJuliet", 60) }
+            }, reqs: [ new("QuestAt", 55, "MI_RomeoJuliet") ]));
+
+            toAdd.Add(new("Draul Leptoc", "mistVarDraul", new() { 
+                { 0, new("You must be the new hire.", new() { new("Yes, I-", 1), byeThen }) },
+                { 1, new("Then get to work!", new() { byeThen }) }
+            }));
+
+            toAdd.Add(new("Street Cleaner", "streetCleaner", new() { 
+                { 0, new("(The street cleaner is sweeping away at the street.)", new() { new("Hey, could I borrow your clothes for a while?", 1), byeThen }, altSpeaker: "-") },
+                { 1, new("What? Absolutely not. What could you possibly need them for?", new() { new("I've always dreamed of cleaning up other peoples messes!", 2), new("Look, how about I buy them from you.", 3), byeThen }) },
+                { 2, new("(The street cleaner eyes you suspiciously.)", new() { new("Look, how about I buy them from you.", 3), byeThen }, altSpeaker: "-") },
+                { 3, new("I'll sell you my spare set for 20 coins. How does that sound?", new() { new("Perfect, here you go.", 4, [ new("Item", 20, "Gold", true)], true), byeThen }) },
+                { 4, new("Right, here you go. Please let me get back to sweeping now.", new() { byeThen }, items: [ "disguiseCleaner" ]) }
+            }));
+
+            toAdd.Add(new("Romeo", "mistVarRomeoShearedRam", new() { 
+                { 0, new("(Romeo appears to be several drinks deep already, in the time it took you to arrive.)", new() { 
+                    new("You don't look so good, Romeo.", 1, [ new("QuestAt", 120, "MI_RomeoJuliet") ]),  
+                    new("(You feel like you should leave him be for now.)", -1, [ new("QuestAt", 130, "MI_RomeoJuliet") ]),  
+                    new("I spoke to the apothecary and he's given me a list of materials for the potion.", 11, [ new("QuestAt", 140, "MI_RomeoJuliet"), new("NotItem", 1, "potionCadava") ]), 
+                    new("I've got the potion!", 13, [ new("QuestAt", 140, "MI_RomeoJuliet"), new("Item", 1, "potionCadava") ]), 
+                    byeThen 
+                }, altSpeaker: "-") },
+                { 1, new("*hic* No, everything ish great!", new() { new("Really?", 2), byeThen }) },
+                { 2, new("Absholutely not *hic*", new() { new("What can I do?", 3), byeThen }) },
+                { 3, new("I have a phlan.", new() { new("A what?", 4), byeThen }) },
+                { 4, new("A plahn.", new() { new("Okay, what's your flan?", 5), byeThen }) },
+                { 5, new("There are poshuns *hic* that can plashe a pershon into a deep shleep.", new() { new("Are you suggesting we fake Juliet's death?", 6), byeThen }) },
+                { 6, new("Yesh!", new() { new("(NEXT)", 7), byeThen }) },
+                { 7, new("It'sh our only *hic* hope.", new() { new("And where exactly do we get this miracle death sleep draught?", 8), byeThen }) },
+                { 8, new("Inglad Bleger.", new() { new("Who?", 9), byeThen }) },
+                { 9, new("The mashter of potionsh in Varrock!", new() { new("I'm on it.", 10), byeThen }) }, // TODO: When Canifis is added, add extra dialogue for this stage of the quest where if you talk to Mazchna he makes a joke about his name sounding like mashner when you need the mashter
+                { 10, new("You are a true friend.", new() { byeThen }, "MI_RomeoJuliet", 130) },
+                { 11, new("The poshun?", new() { new("Never mind, just wait here. I'll go make the potion.", 12), byeThen }) },
+                { 12, new("(Romeo's head slaps back down onto the bar.)", new() { byeThen }, altSpeaker: "-") },
+                { 13, new("The poshun?", new() { new("The Cadava potion, Romeo. The plan?", 14), byeThen }) },
+                { 14, new("The plahn?", new() { new("By all the gods of Gielinor... Just sober up and go wait at Port Sarim, Romeo. I'll send Juliet along after the plan works.", 15), byeThen }) },
+                { 15, new("I love you @, you're sho good to me... My beshtest friend...", new() { new("No, you love Juliet. Sober up, I've got a bride to pretend to kill.", -1), byeThen }) }
+            }, reqs: [ new("QuestPast", 120, "MI_RomeoJuliet", summ: "After his duel with Tybalt."), new("QuestBelow", 150, "MI_RomeoJuliet", summ: "Before giving the Cadava potion to Juliet.") ]));
+
+            toAdd.Add(new("Ingald Belger", "mistVarIngald", new() { 
+                { 0, new("I am the Apothecary. I brew potions. Do you need anything specific?", new() { 
+                    new("I need a sleeping potion.", 1, [ new("QuestAt", 130, "MI_RomeoJuliet") ]), 
+                    new("I need help with those ingredients again. Where can I find...", 14, [ new("QuestAt", 140, "MI_RomeoJuliet") ]), 
+                    byeThen 
+                }) },
+                { 1, new("No.", new() { new("I haven't even told you why yet.", 2), byeThen }) },
+                { 2, new("You don't need to. Nobody comes asking for a Cadava potion because they're having a pleasant afternoon.", new() { new("It's for a noble cause.", 3), byeThen }) },
+                { 3, new("Oh?", new() { new("(NEXT)", 4), byeThen }) },
+                { 4, new("Well if it's for a noble cause then yes of course, here's the key to my house too!", new() { new("It's for true love.", 5), byeThen }) },
+                { 5, new("Did you say 'to blave'?", new() { new("What?", 6), byeThen }) },
+                { 6, new("What?", new() { new("Did you not hear me? It's for true love!", 7), byeThen }) },
+                { 7, new("Hm.", new() { new("Well?", 8), byeThen }) },
+                { 8, new("The Cadava potion is not something you use to fool a funeral procession.", new() { new("What does it do?", 9), byeThen }) },
+                { 9, new("It puts the drinker into a deathlike sleep. No breath anyone can see. No pulse anyone would notice. Cold as a corpse.", new() { new("Sounds useful.", 10), byeThen }) },
+                { 10, new("", new() { new("So you'll make it?", 11), byeThen }) },
+                { 11, new("For true love?", new() { new("For true love.", 12), byeThen }) },
+                { 12, new("Very well. I'll help you. But you'll have to make it yourself.", new() { new("That was surprisingly easy.", 13), byeThen }) },
+                { 13, new("You'll need these ingredients.", new() { new("Where can I find...", 14), byeThen }, "MI_RomeoJuliet", 140, [ "potionCadavaList" ]) },
+                { 14, new("", new() { new("Wing of rat?", 15), new("Tail of frog?", 16), new("Ear of snake?", 17), new("Horn of dog?", 18), new("Cadava berries?", 19), byeThen }) },
+                { 15, new("Well, from a rat, I suppose. A small one though! The wings on the big ones won't fit in the vial. Probably some in the sewers.", new() { new("(BACK)", 14), byeThen }) },
+                { 16, new("From a frog, of course! What a strange question. But you've gotta get a small one, their tails fall off when they get larger. Might be some in Lumbridge Swamp.", new() { new("(BACK)", 14), byeThen }) },
+                { 17, new("Just about any snake should do. There are some in the sewers, by the hissing I hear from my pipes.", new() { new("(BACK)", 14), byeThen }) },
+                { 18, new("Ask a dog politely. Bribe it with bones and it should hand one over. There are strays around Varrock you could ask.", new() { new("(BACK)", 14), byeThen }) },
+                { 19, new("They grow on bushes. Might be you could find such a bush near the east mine, hmm? Round the south side of the city.", new() { new("(BACK)", 14), byeThen }) }
+            }));
+
             for (int i = 0; i < toAdd.Count; i++) { 
                 NPCLib.Add(toAdd[i].ID, toAdd[i]);
             }

@@ -11,8 +11,9 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("Chicken", "chicken", 1, 2, 0, false, "1d2-1", "Stab", 5, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("meatRawChicken", 1, 1, 1, 1), new("feather", 1, 2, 5, 15), new("clueScrollBeginner", 1, 300, 1, 1) }, CountsAsSlayer = ["bird"] });
             toAdd.Add(new("Zombie", "tiZombie", 5, 8, 0, false, "1d3+1", "Slash", 10, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("coins", 1, 4, 10, 10), new("coins", 1, 43, 18, 18), new("coins", 1, 64, 13, 13), new("coins", 1, 64, 28, 28), new("scrollChampionZombie", 1, 5000, 1, 1) } });
 
-            toAdd.Add(new("Rat", "rat", 1, 2, 0, false, "1d3-2", "Slash", 1, "Melee"));
-            toAdd.Add(new("Giant rat", "ratGiant", 3, 5, 0, false, "1d3-1", "Slash", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("meatRawRat", 1, 1, 1, 1), new("clueScrollBeginner", 1, 128, 1, 1) } });
+            toAdd.Add(new("Rat", "rat", 1, 2, 0, false, "1d3-2", "Slash", 1, "Melee", specialCat: "Ratlike") { DropTable = new() { new("potionCadavaWing", 1, 3, 1, 1, req: new("QuestAt", 140, "MI_RomeoJuliet")) }});
+            toAdd.Add(new("Giant rat", "ratGiant", 3, 5, 0, false, "1d3-1", "Slash", 1, "Melee", specialCat: "Ratlike") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("meatRawRat", 1, 1, 1, 1), new("clueScrollBeginner", 1, 128, 1, 1) } });
+            toAdd.Add(new("Giant rat", "ratGiantScurrius", 100, 1, 0, true, "1d5-1", "Slash", 1, "Melee", specialCat: "Ratlike"));
             toAdd.Add(new("Imp", "imp", 1, 8, 0, false, "1d3-1", "Slash", 1, "Melee") { DropTable = new() { 
                 new("ashesFiendish", 1, 1, 1, 1), new("burntFood", 1, 32, 1, 1),
                 new("beadWhite", 1, 25, 1, 1), new("beadRed", 1, 25, 1, 1), new("beadBlack", 1, 25, 1, 1), new("beadYellow", 1, 25, 1, 1),
@@ -35,10 +36,13 @@ namespace ZeroPlayersOnline.Hardcodes {
                 new("talismanEarth", 1, 64, 1, 1), new("clueScrollBeginner", 1, 90, 1, 1), new("clueScrollEasy", 1, 128, 1, 1), new("potionEnergy", 1, 25, 1, 1)
             } });
 
-            toAdd.Add(new("Frog", "frog", 5, 8, 0, false, "1d3-2", "Earth", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("clueScrollBeginner", 1, 90, 1, 1) } });
+            toAdd.Add(new("Frog", "frog", 5, 8, 0, false, "1d3-2", "Earth", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("clueScrollBeginner", 1, 90, 1, 1), new("potionCadavaTail", 1, 3, 1, 1, req: new("QuestAt", 140, "MI_RomeoJuliet")) } });
             toAdd.Add(new("Big frog", "frogBig", 10, 18, 0, false, "1d3-1", "Earth", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("clueScrollBeginner", 1, 70, 1, 1) }, CountsAsSlayer = ["frog"] });
             toAdd.Add(new("Giant frog", "frogGiant", 13, 23, 0, false, "1d3-1", "Earth", 1, "Melee") { DropTable = new() { new("bonesBig", 1, 1, 1, 1), new("clueScrollBeginner", 1, 64, 1, 1) }, CountsAsSlayer = ["frog"] });
             
+            toAdd.Add(new("Snake", "snake", 5, 6, 0, false, "1d2-1", "Earth", 1, "Melee") { DropTable = new() { new("bonesRegular", 1, 1, 1, 1), new("potionCadavaEar", 1, 3, 1, 1, req: new("QuestAt", 140, "MI_RomeoJuliet")) } });
+            
+
             toAdd.Add(new("Goblin", "goblin", 2, 5, 0, false, "1d3-2", "Stab", 1, "Melee") { DropTable = new() { 
                 new("bonesRegular", 1, 1, 1, 1),  
                 new("spearBronze", 1, 32, 1, 1), new("sqShieldBronze", 1, 43, 1, 1), 
@@ -363,7 +367,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     }, CountsAsSlayer = ["zombie", "undead"]   
                 });
 
-                toAdd.Add(new("Warped rat", "warpedRat", 12, 19, 0, false, "1d4-1", "Fire", 1, "Melee") {
+                toAdd.Add(new("Warped rat", "warpedRat", 12, 19, 0, false, "1d4-1", "Fire", 1, "Melee", specialCat: "Ratlike") {
                     DropTable = new() { 
                         new("bonesRegular", 1, 1, 1, 1), new("maskDragith3", 1, 3, 1, 1, req: new("ItemNotOwned", 1, "maskDragith3")),
                         new("shortbowPine", 1, 46, 1, 1), new("staff", 1, 46, 1, 1), new("staffMagic", 1, 46, 1, 1), new("coifLeather", 1, 46, 1, 1), new("vambracesLeather", 1, 46, 1, 1), new("bodyLeather", 1, 46, 1, 1), new("bootsLeather", 1, 46, 1, 1), 
@@ -452,6 +456,64 @@ namespace ZeroPlayersOnline.Hardcodes {
                     }, CountsAsSlayer = ["zombie", "undead"]   
                 });
             }
+
+            toAdd.Add(new("Zombie", "zombie24", 24, 30, 0, false, "1d4-1", "Fire", 10, "Melee", 3.0) { 
+                CountsAsSlayer = ["zombie", "undead"], SpecialCategory = "Undead",
+                DropTable = new() { 
+                    new("bonesRegular", 1, 1, 1, 1), 
+                    new("maceIron", 1, 43, 1, 1), new("daggerIron", 1, 64, 1, 1), new("kiteshieldBronze", 1, 128, 1, 1),
+                    new("arrowsMithril", 1, 43, 1, 1), new("runeAir", 1, 43, 3, 3), new("runeBody", 1, 64, 3, 3), new("runeChaos", 1, 128, 4, 4), new("runeCosmic", 1, 128, 2, 2), new("runeFire", 1, 128, 7, 7),
+                    DropTables.GemDrop.But(128.0/1.0),
+                    DropTables.HerbSeeds.But(128.0/30.0),
+                    new("coins", 1, 10, 1, 50),
+                    new("baitFish", 1, 5, 7, 7), new("tinderbox", 1, 64, 1, 1), new("eyeNewt", 1, 128, 1, 1), new("spiritOreTin", 1, 128, 1, 1),
+                    new("scrollChampionZombie", 1, 5000, 1, 1) 
+                } 
+            });
+
+            toAdd.Add(new("Skeleton", "skeleton25", 25, 17, 0, false, "1d5-1", "Earth", 1, "Melee") {
+                SpecialCategory = "Undead",
+                DropTable = new() { 
+                    new("bonesRegular", 1, 1, 1, 1),
+                    new("helmIron", 1, 21, 1, 1), new("swordIron", 1, 32, 1, 1), new("hatchetIron", 1, 64, 1, 1), new("scimitarIron", 1, 128, 1, 1),
+                    new("runeAir", 1, 43, 12, 15), new("runeWater", 1, 43, 9, 9), new("runeChaos", 1, 43, 5, 5), new("runeLaw", 1, 64, 2, 2), new("runeCosmic", 1, 128, 2, 2), new("arrowsIron", 1, 64, 12, 12),
+                    DropTables.HerbSeeds.But(128.0/20.0),
+                    DropTables.GemDrop.But(128.0/2.0),
+                    new("coins", 1, 30, 20, 80), 
+                    new("barBronze", 1, 26, 1, 1), 
+                    new("clueScrollBeginner", 1, 100, 1, 1),
+                    new("scrollChampionSkeleton", 1, 5000, 1, 1)
+                }, CountsAsSlayer = ["skeleton", "undead"]   
+            });
+
+            toAdd.Add(new("Ghost", "ghost19", 19, 25, 0, false, "1d3-1", "Air", 1, "Melee") {
+                SpecialCategory = "Undead",
+                DropTable = new() { 
+                    new("clueScrollBeginner", 1, 90, 1, 1)
+                }, CountsAsSlayer = ["ghost", "undead"]   
+            });
+            toAdd.Add(new("Giant spider", "spiderGiant27", 27, 32, 0, false, "1d4-1", "Fire", 1, "Melee") { CountsAsSlayer = ["spider"], DropTable = new() { new("clueScrollBeginner", 1, 128, 1, 1) } });
+            toAdd.Add(new("Deadly red spider", "spiderDeadlyRed", 34, 35, 0, true, "1d4-1", "Fire", 1, "Melee") { CountsAsSlayer = ["spider"], DropTable = new() { new("clueScrollBeginner", 1, 128, 1, 1) } });
+            
+            toAdd.Add(new("Moss giant", "giantMoss", 42, 60, 0, true, "1d7-1", "Fire", 1, "Melee", 3.6) { 
+                DropTable = new() { 
+                    new("bonesBig", 1, 1, 1, 1), 
+                    new("sqShieldBlack", 1, 26, 1, 1), new("staffMagic", 1, 64, 1, 1), new("helmSteel", 1, 64, 1, 1), new("swordMithril", 1, 64, 1, 1), new("spearMithril", 1, 64, 1, 1), new("kiteshieldSteel", 1, 128, 1, 1),
+                    new("runeLaw", 1, 32, 3, 3), new("runeAir", 1, 43, 18, 18), new("runeEarth", 1, 43, 27, 27), new("runeChaos", 1, 43, 7, 7), new("runeNature", 1, 43, 6, 6), new("runeCosmic", 1, 43, 3, 3), new("arrowsIron", 1, 64, 15, 15), new("arrowsSteel", 1, 128, 30, 30), new("runeDeath", 1, 128, 3, 3), new("runeBlood", 1, 128, 1, 1),
+                    DropTables.HerbSeeds.But(128.0/5.0),
+                    DropTables.UncommonSeeds.But(128.0/35.0),
+                    new("coins", 1, 32, 100, 200), 
+                    new("barSteel", 1, 21.33, 1, 1), new("spiritOreCoal", 1, 128, 1, 1), new("rollSpinach", 1, 128, 1, 1),
+                    DropTables.GemDrop.But(128.0/4.0),
+                    new("clueScrollBeginner", 1, 45, 1, 1),
+                    new("keyMossy", 1, 150, 1, 1),
+                    new("boneLong", 1, 400, 1, 1),
+                    new("scrollChampionGiant", 1, 5000, 1, 1),
+                    new("boneCurved", 1, 5013, 1, 1)
+                } 
+            });
+            
+
 
             for (int i = 0; i < toAdd.Count; i++) { 
                 MonsterLib.Add(toAdd[i].ID, toAdd[i]);

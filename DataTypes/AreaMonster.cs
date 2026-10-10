@@ -41,6 +41,8 @@ namespace ZeroPlayersOnline.DataTypes {
         public int SlayerReq = 0;
         public string KillItem = "";
         public int KillItemCount = 0;
+
+        public bool Temporary = false; // If temporary, when this is killed remove it from the list
         
 
         [JsonIgnore]
@@ -50,7 +52,7 @@ namespace ZeroPlayersOnline.DataTypes {
         [JsonIgnore]
         public double TimeLastAttacked = 0;
 
-        public AreaMonster(string n, string id, int lv, int hp, int dr, bool aggro, string ddice, string weakness, int respawn, string dtype, double atkSpeed = 2.4, List<Requirement>? reqs = null, bool seeAnyways = true, bool inaccessible = false, string specialCat = "", bool proper = false) {
+        public AreaMonster(string n, string id, int lv, int hp, int dr, bool aggro, string ddice, string weakness, int respawn, string dtype, double atkSpeed = 2.4, List<Requirement>? reqs = null, bool seeAnyways = true, bool inaccessible = false, string specialCat = "", bool proper = false, bool temp = false) {
             Name = n;
             ID = id;
             Level = lv;
@@ -58,9 +60,7 @@ namespace ZeroPlayersOnline.DataTypes {
             CurrentHP = hp;
             DamageReduction = dr;
 
-            if (aggro)
-                AggroLevel = (lv * 2) + 1;
-            
+            AggroLevel = (lv * 2) + 1;
             AlwaysAggro = aggro;
 
             DamageDice = ddice; 
@@ -77,6 +77,7 @@ namespace ZeroPlayersOnline.DataTypes {
             SeeWithoutRequirements = seeAnyways;
 
             ProperName = proper;
+            Temporary = temp;
         } 
 
         public bool AllReqsMet(Player p) {

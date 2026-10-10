@@ -408,9 +408,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
                 { 41, new("How are you doing finding my skull?", new() { new DialogueChoice("I have found it!", 42), byeThen }) },
                 { 42, new("Hurrah! Now I can stop being a ghost! You just need to put it in my coffin there, then I'll be free!", new() { byeThen }) }
-            }) {
-                ReqToSee = new("QuestBelow", 30, "MI_RestlessGhost")
-            });
+            }, reqs: [ new("QuestBelow", 30, "MI_RestlessGhost") ]));
 
             toAdd.Add(new("Doomsayer", "mistLumDoomsayer", new() { 
                 { 0, new("Dooooooom!", new() { new DialogueChoice("Where?", 1), byeThen }) },
@@ -436,15 +434,15 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 11, new("I'm one of the old guard, I suppose. I helped found the Champions' Guild, and I've done a fair few quests in my time.", new() { new DialogueChoice("(NEXT)", 12), byeThen }) },
                 { 12, new("Now I'm starting to get a bit old for action, which is why I need your help.", new() { new DialogueChoice("(BACK)", 0), byeThen }) },
                 { 13, new("Oh, I have my ways. I get the feeling that you're one to watch; you could be quite the hero some day.", new() { new DialogueChoice("(BACK)", 0), byeThen }) }
-            }, req: new("QuestAt", -1, "MI_BloodPact")));
+            }, reqs: [new("QuestAt", -1, "MI_BloodPact")]));
 
-            toAdd.Add(new("Xenia", "mistLumXenia1", new() { { 0, new("When you're ready, head down into the catacombs and I'll follow.", new() { byeThen }) } }, req: new("QuestAt", 0, "MI_BloodPact")));
+            toAdd.Add(new("Xenia", "mistLumXenia1", new() { { 0, new("When you're ready, head down into the catacombs and I'll follow.", new() { byeThen }) } }, reqs: [new("QuestAt", 0, "MI_BloodPact")]));
             toAdd.Add(new("Xenia", "mistLumXenia2", new() { 
                 { 0, new("There's a guard in the room ahead. Together we should be able to take him out.", new() { new DialogueChoice("What's the plan of attack?", 1), new DialogueChoice("What's a blood pact?", 2), new DialogueChoice("Let's get on with this.", -1), byeThen }) },
                 { 1, new("It looks like the cultist has a bow. The best way to deal with someone with a ranged weapon is to get close to them and attack with melee.", new() { new DialogueChoice("(BACK)", 0), byeThen }) },
                 { 2, new("It's something Zamorakian cults do sometimes; a way of swearing loyalty to their leader.", new() { new DialogueChoice("(NEXT)", 3), byeThen }) },
                 { 3, new("A blood pact doesn't have any real magical power, but that kind of thing can have great power over a person if they believe strongly enough.", new() { new DialogueChoice("(BACK)", 0), byeThen }) }    
-            }, req: new("QuestAt", 10, "MI_BloodPact")));
+            }, reqs: [new("QuestAt", 10, "MI_BloodPact")]));
 
             toAdd.Add(new("Xenia", "mistLumXenia3", new() { 
                 { 0, new("I'll follow you, but I'll stay out of combat. Return to me if you're wounded. I have some food to share.", new() { new DialogueChoice("Could I have some food?", 9, new() { new("NotItem", 1, "meatCookedBeef" )}, true), new DialogueChoice("What's a blood pact?", 10), new DialogueChoice("Are you going to be alright?", 12), byeThen }) },
@@ -452,7 +450,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 10, new("It's something Zamorakian cults do sometimes; a way of swearing loyalty to their leader.", new() { new DialogueChoice("(NEXT)", 11), byeThen }) },
                 { 11, new("A blood pact doesn't have any real magical power, but that kind of thing can have great power over a person if they believe strongly enough.", new() { new DialogueChoice("(BACK)", 0), byeThen }) },
                 { 12, new("Don't worry about me. I've survived worse wounds than this. I'm going to hang back from combat, but I'll be here to give you advice if you need it. I'm sure you can beat these cultists on your own.", new() { new DialogueChoice("(BACK)", 0), byeThen }) }    
-            }, req: new("QuestAt", 20, "MI_BloodPact")));
+            }, reqs: [new("QuestAt", 20, "MI_BloodPact")]));
 
             toAdd.Add(new("Xenia", "mistLumXenia4", new() {
                 { 0, new("The first cultist is defeated, but not dead. I'll leave it up to you how to deal with him.", new() { new DialogueChoice("Could I have some food?", 9, new() { new("NotItem", 1, "meatCookedBeef" )}, true), new DialogueChoice("What's a blood pact?", 10), new DialogueChoice("Are you going to be alright?", 12), byeThen }) },
@@ -460,7 +458,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 10, new("It's something Zamorakian cults do sometimes; a way of swearing loyalty to their leader.", new() { new DialogueChoice("(NEXT)", 11), byeThen }) },
                 { 11, new("A blood pact doesn't have any real magical power, but that kind of thing can have great power over a person if they believe strongly enough.", new() { new DialogueChoice("(BACK)", 0), byeThen }) },
                 { 12, new("Don't worry about me. I've survived worse wounds than this. I'm going to hang back from combat, but I'll be here to give you advice if you need it. I'm sure you can beat these cultists on your own.", new() { new DialogueChoice("(BACK)", 0), byeThen }) }    
-            }, req: new("QuestAt", 30, "MI_BloodPact")));
+            }, reqs: [new("QuestAt", 30, "MI_BloodPact")]));
 
             toAdd.Add(new("Xenia", "mistLumXenia5", new() { 
                 { 0, new("You'll need a ranged weapon before you can attack the second cultist.", new() { new DialogueChoice("Tell me more about ranged combat.", 1), new DialogueChoice("What's a blood pact?", 10), new DialogueChoice("Are you going to be alright?", 12), new DialogueChoice("I can handle this.", -1), byeThen }) },
@@ -471,7 +469,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 10, new("It's something Zamorakian cults do sometimes; a way of swearing loyalty to their leader.", new() { new DialogueChoice("(NEXT)", 11), byeThen }) },
                 { 11, new("A blood pact doesn't have any real magical power, but that kind of thing can have great power over a person if they believe strongly enough.", new() { new DialogueChoice("(BACK)", 0), byeThen }) },
                 { 12, new("Don't worry about me. I've survived worse wounds than this. I'm going to hang back from combat, but I'll be here to give you advice if you need it. I'm sure you can beat these cultists on your own.", new() { new DialogueChoice("(BACK)", 0), byeThen }) }    
-            }, req: new("QuestAt", 40, "MI_BloodPact")));
+            }, reqs: [new("QuestAt", 40, "MI_BloodPact")]));
 
             toAdd.Add(new("Xenia", "mistLumXenia6", new() { 
                 { 0, new("You'll need to deal with the second cultist. You should be able to get to the other side of the gallery by operating that winch.", new() { new DialogueChoice("Could I have some food?", 9, new() { new("NotItem", 1, "meatCookedBeef" )}, true), new DialogueChoice("What's a blood pact?", 10), new DialogueChoice("Are you going to be alright?", 12), byeThen }) },
@@ -479,7 +477,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 10, new("It's something Zamorakian cults do sometimes; a way of swearing loyalty to their leader.", new() { new DialogueChoice("(NEXT)", 11), byeThen }) },
                 { 11, new("A blood pact doesn't have any real magical power, but that kind of thing can have great power over a person if they believe strongly enough.", new() { new DialogueChoice("(BACK)", 0), byeThen }) },
                 { 12, new("Don't worry about me. I've survived worse wounds than this. I'm going to hang back from combat, but I'll be here to give you advice if you need it. I'm sure you can beat these cultists on your own.", new() { new DialogueChoice("(BACK)", 0), byeThen }) }    
-            }, req: new("QuestAt", 50, "MI_BloodPact")));
+            }, reqs: [new("QuestAt", 50, "MI_BloodPact")]));
 
             toAdd.Add(new("Xenia", "mistLumXenia7", new() { 
                 { 0, new("To cast combat spells, you need runes, and optionally a magic weapon to improve your power.", new() { new DialogueChoice("Tell me more about magic.", 1), new DialogueChoice("Could I have some mind runes?", 8, new() { new("NotItem", 10, "runeMind" )}, true), new DialogueChoice("Could I have some food?", 9, new() { new("NotItem", 1, "meatCookedBeef" )}, true), new DialogueChoice("What's a blood pact?", 10), new DialogueChoice("Are you going to be alright?", 12), new DialogueChoice("Who was Dragith Nurn?", 13), byeThen }) },
@@ -496,7 +494,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 12, new("Don't worry about me. I've survived worse wounds than this. I'm going to hang back from combat, but I'll be here to give you advice if you need it. I'm sure you can beat these cultists on your own.", new() { new DialogueChoice("(BACK)", 0), byeThen }) },
                 { 13, new("Dragith Nurn? I was hoping he wouldn't come into this.", new() { new DialogueChoice("(NEXT)", 14), byeThen }) },
                 { 14, new("Listen... I met Dragith Nurn once. I was just starting out as an adventurer, and he was an old man. I discovered his secret...", new() { new DialogueChoice("(BACK)", 0), byeThen }) }
-            }, req: new("QuestAt", 60, "MI_BloodPact")));
+            }, reqs: [new("QuestAt", 60, "MI_BloodPact")]));
 
             toAdd.Add(new("Xenia", "mistLumXenia8", new() { 
                 { 0, new("Thank the gods. We're out. I thought I was going to die down there.", new() { new DialogueChoice("(NEXT)", 1), byeThen }, altSpeaker: "Ilona") },
@@ -513,7 +511,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 11, new("Reese managed to complete the ritual with his own death. He's opened the staircase to the nest of undead creatures in the lower level of the catacombs.", new() { new DialogueChoice("(NEXT)", 12), byeThen }) },
                 { 12, new("Without a necromancer to control them, the creatures won't leave the tomb. I'll warn Father Aereck not to let people go down there.", new() { new DialogueChoice("(NEXT)", 13), byeThen }) },
                 { 13, new("You're an adventurer, though. If you want to, you can venture into the tomb and fight the creatures.", new() { new DialogueChoice("(BACK)", 3), byeThen }) }
-            }, req: new("QuestAt", 90, "MI_BloodPact")));
+            }, reqs: [new("QuestAt", 90, "MI_BloodPact")]));
                 
             toAdd.Add(new("Xenia", "mistLumXenia9", new() { 
                 { 0, new("Hello again, adventurer.", new() { 
@@ -554,7 +552,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 26, new("Excellent find! Here's four hundred gold for your trouble.", new() { byeThen }, items: [ "coins,400" ], acts: [ new("Data", "SoldEmeraldStatuette", "set", 1 )] )},
                 { 27, new("Excellent find! Here's five hundred gold for your trouble.", new() { byeThen }, items: [ "coins,500" ], acts: [ new("Data", "SoldRubyStatuette", "set", 1 )] )},
                 { 28, new("Excellent find! Here's a thousand gold for your trouble.", new() { byeThen }, items: [ "coins,1000" ], acts: [ new("Data", "SoldDiamondStatuette", "set", 1 )] )}
-            }, req: new("QuestAt", 100, "MI_BloodPact")));
+            }, reqs: [new("QuestAt", 100, "MI_BloodPact")]));
 
             toAdd.Add(new("Kayle (defeated)", "mistLumKayle", new() { 
                 { 0, new("Are - are you going to kill me?", new() { new DialogueChoice("I have some questions.", 1), new DialogueChoice("Yes. Now die!", -1) { Cutscenes = [ "MI_BloodPact3" ]}, new DialogueChoice("No. Just give me your stuff and get out of here.", -1) { Cutscenes = [ "MI_BloodPact3a" ]},  byeThen }) },
@@ -570,7 +568,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 10, new("Then we kidnapped Ilona. She was another apprentice from the Wizards' Tower, someone Caitlin had known there.", new() { new DialogueChoice("(NEXT)", 11), byeThen }) },
                 { 11, new("Reese and Caitlin are going down there to perform the ritual. I don't - I don't know what it involves.", new() { new DialogueChoice("And you just went along with this?", 12), byeThen }) },
                 { 12, new("The blood pact! We'd made a blood pact, and Reese said that bound me to him. It meant I had to do anything he said. He... he said he could curse me.", new() { new DialogueChoice("(BACK)", 1), byeThen }) }
-            }, req: new("QuestAt", 30, "MI_BloodPact")));
+            }, reqs: [new("QuestAt", 30, "MI_BloodPact")]));
 
             toAdd.Add(new("Caitlin (defeated)", "mistLumCaitlin", new() { 
                 { 0, new("What are you waiting for? Finish me!", new() { new DialogueChoice("I have some questions.", 1), new DialogueChoice("Time for you to die!", -1) { Cutscenes = [ "MI_BloodPact4" ]}, new DialogueChoice("I'm not killing you. Just give me your stuff and get out of here.", -1) { Cutscenes = [ "MI_BloodPact4a" ]},  byeThen }) },
@@ -587,7 +585,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 11, new("I was a student at the Wizards' Tower. In the library, I discovered a note left by Dragith Nurn.", new() { new DialogueChoice("(NEXT)", 12), byeThen }) },
                 { 12, new("The body of a necromancer contains powerful magic. We learned we could perform a ritual on his tomb to unlock the secrets of his work.", new() { new DialogueChoice("(NEXT)", 13), byeThen }) },
                 { 13, new("We would have gained mastery over life and death!", new() { new DialogueChoice("(BACK)", 1), byeThen }) }
-            }, req: new("QuestAt", 50, "MI_BloodPact")));
+            }, reqs: [new("QuestAt", 50, "MI_BloodPact")]));
 
                 toAdd.Add(new("Reese (defeated)", "mistLumReese", new() { 
                 { 0, new("You've beaten me, adventurer. Now strike the final blow! End the blood pact in this tomb.", new() { new DialogueChoice("I have some questions.", 1), new DialogueChoice("Time for you to die!", -1) { Cutscenes = [ "MI_BloodPact6" ]}, new DialogueChoice("I'm not killing you. Give me your stuff and get out of here.", -1) { Cutscenes = [ "MI_BloodPact6a" ]},  byeThen }) },
@@ -596,7 +594,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 { 3, new("Faithful servants of Zamorak! He is the god of chaos and destruction. We bound ourselves to his service!", new() { new DialogueChoice("(BACK)", 1), byeThen }) },
                 { 4, new("End Saradomin's dominance over Lumbridge! The tyrant god shall fall.", new() { new DialogueChoice("(NEXT)", 5), byeThen }) },
                 { 5, new("With the blood pact, and the power of the tomb of Dragith Nurn, we would send an army of the dead to claim this town for Zamorak!!", new() { new DialogueChoice("(BACK)", 1), byeThen }) },
-            }, req: new("QuestAt", 70, "MI_BloodPact")));
+            }, reqs: [new("QuestAt", 70, "MI_BloodPact")]));
 
 
             toAdd.Add(new("Olivia", "mistDrayOlivia", new() { 

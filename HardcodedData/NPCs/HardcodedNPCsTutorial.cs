@@ -529,9 +529,9 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             toAdd.Add(new("Drunken pirate", "tiDrunkPirate", new() { { 0, new("Buried me scroll around here some- *hic* somewhere...", new() { byeThen }) } }));
 
-            toAdd.Add(new("Forlorn ghost", "tiForlornGhost1", new() { { 0, new("(The ghost says nothing, just stares longingly at the rusted sword on the ground)", new() { byeThen }) } }, req: new("QuestAt", 0, "TI_HauntedIsland")));
-            toAdd.Add(new("Forlorn ghost", "tiForlornGhost2", new() { { 0, new("(The ghost says nothing, just stares sadly at the crumpled note on the ground)", new() { byeThen }) } }, req: new("QuestAt", 10, "TI_HauntedIsland")));
-            toAdd.Add(new("Forlorn ghost", "tiForlornGhost3", new() { { 0, new("(The ghost says nothing, just stares hopefully at Wizard Terrova)", new() { byeThen }) } }, req: new("QuestAt", 70, "TI_HauntedIsland")));
+            toAdd.Add(new("Forlorn ghost", "tiForlornGhost1", new() { { 0, new("(The ghost says nothing, just stares longingly at the rusted sword on the ground)", new() { byeThen }) } }, reqs: [new("QuestAt", 0, "TI_HauntedIsland")]));
+            toAdd.Add(new("Forlorn ghost", "tiForlornGhost2", new() { { 0, new("(The ghost says nothing, just stares sadly at the crumpled note on the ground)", new() { byeThen }) } }, reqs: [new("QuestAt", 10, "TI_HauntedIsland")]));
+            toAdd.Add(new("Forlorn ghost", "tiForlornGhost3", new() { { 0, new("(The ghost says nothing, just stares hopefully at Wizard Terrova)", new() { byeThen }) } }, reqs: [new("QuestAt", 70, "TI_HauntedIsland")]));
         
 
 

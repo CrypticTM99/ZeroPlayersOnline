@@ -196,6 +196,9 @@
             if (RequirementType == "AnyPOH") { return "Must own a home anywhere."; }
             if (RequirementType == "POHActive") { return "Must own this home, and have it currently active (set at any Estate Agent)."; }
 
+            if (RequirementType == "CanSlash") { return "Must have any item that deals slashing damage, or a knife."; }
+
+
             return "";
         }
 
@@ -460,6 +463,8 @@
             if (RequirementType == "POHOwned") { if (p.Homes.ContainsKey(MiscString)) { return true; }}
             if (RequirementType == "AnyPOH") { if (p.Homes.Count > 0) { return true; }}
             if (RequirementType == "POHActive") { if (p.Homes.TryGetValue(MiscString, out PlayerOwnedHome? home) && home != null && home.Active) { return true; }}
+
+            if (RequirementType == "CanSlash") { if (p.HasSlashing()) { return true; }}
 
             return false;
         }

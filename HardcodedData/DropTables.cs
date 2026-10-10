@@ -73,6 +73,34 @@ namespace ZeroPlayersOnline.HardcodedData {
             new("seedPotatoCactus", 1, 11, 1, 1)
         };
 
+        public static List<ItemDrop> UncommonSeeds = new() {
+            new("seedLimpwurt", 1, 7.65, 1, 1),
+            new("seedStrawberry", 1, 8, 1, 1),
+            new("seedMarrentill", 1, 8.384, 1, 1),
+            new("seedJangerberry", 1, 11.39, 1, 1),
+            new("seedTarromin", 1, 12.33, 1, 1),
+            new("seedWildblood", 1, 12.33, 1, 1),
+            new("seedWatermelon", 1, 16.63, 1, 1),
+            new("seedHarralander", 1, 18.71, 1, 1),
+            new("seedSnapegrass", 1, 26.2, 1, 1),
+            new("seedRanarr", 1, 26.87, 1, 1),
+            new("seedWhiteberry", 1, 30.82, 1, 1),
+            new("seedBittercap", 1, 36.14, 1, 1),
+            new("seedToadflax", 1, 38.81, 1, 1),
+            new("seedBelladonna", 1, 58.22, 1, 1),
+            new("seedIrit", 1, 58.22, 1, 1),
+            new("seedPoisonIvy", 1, 80.62, 1, 1),
+            new("seedAvantoe", 1, 87.33, 1, 1),
+            new("seedCactus", 1, 87.33, 1, 1),
+            new("seedKwuarm", 1, 116.4, 1, 1),
+            new("seedPotatoCactus", 1, 131.0, 1, 1),
+            new("seedSnapdragon", 1, 209.6, 1, 1),
+            new("seedCadantine", 1, 262.0, 1, 1),
+            new("seedLantadyme", 1, 349.3, 1, 1),
+            new("seedDwarfweed", 1, 524.0, 1, 1),
+            new("seedTorstol", 1, 1048.0, 1, 1)
+        };
+
         public static List<ItemDrop> GenericHumanTable = new() { 
             HerbSeeds.But(128.0/23.0),
             new("bonesRegular", 1, 1, 1, 1),

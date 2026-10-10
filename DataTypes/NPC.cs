@@ -11,12 +11,12 @@ namespace ZeroPlayersOnline.DataTypes {
         public List<ItemDrop> PickpocketLoot = new();
 
         public Dictionary<int, DialogueStage> Dialogue = new();
-        public Requirement? ReqToSee = null;
+        public List<Requirement>? ReqsToSee = null;
 
         public int SlayerLevel, MinSlayerLevel, MinCombatLevel = 0;
         public List<SlayerTask> SlayerTasks = new();
 
-        public NPC(string n, string id, Dictionary<int, DialogueStage> dia, int ppL = 0, int ppExp = 0, int ppDmg = 1, Requirement req = null) {
+        public NPC(string n, string id, Dictionary<int, DialogueStage> dia, int ppL = 0, int ppExp = 0, int ppDmg = 1, List<Requirement>? reqs = null) {
             Name = n;
             ID = id;
             Dialogue = dia;
@@ -25,7 +25,8 @@ namespace ZeroPlayersOnline.DataTypes {
             PickpocketEXP = ppExp;
             PickpocketDamage = ppDmg;
 
-            ReqToSee = req;
+            if (reqs != null)
+                ReqsToSee = reqs;
         }
 
 

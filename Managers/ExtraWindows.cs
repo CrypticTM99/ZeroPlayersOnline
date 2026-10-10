@@ -427,7 +427,7 @@ namespace ZeroPlayersOnline.Managers {
 
                 if (kv.Value.PossibleItems != null) {
                     foreach (var loot in kv.Value.PossibleItems) {
-                        if (loot.Item != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.Item)) {
+                        if (loot.Item != "" && loot.Item[0] != '*' && loot.Item[0] != '_' && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.Item)) {
                             findings.Add(new("Gather: " + kv.Value.ID + ": Loot (" + loot.Item + ")", "", "", "", "", 0));
                         }
                     }
@@ -457,15 +457,24 @@ namespace ZeroPlayersOnline.Managers {
                             findings.Add(new("Process: " + kv.Value.Name + ": Recipe In (" + loot.InputID + ")", "", "", "", "", 0));
                         }
 
-                        if (loot.SecondaryIn != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.SecondaryIn)) {
-                            findings.Add(new("Process: " + kv.Value.Name + ": Second In (" + loot.SecondaryIn + ")", "", "", "", "", 0));
+                        if (loot.SecondaryIn.Contains(",")) {
+                            string[] split = loot.SecondaryIn.Split(",");
+                            if (split[0] == "Gold") { continue; }
+
+                            if (loot.SecondaryIn != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(split[0])) {
+                                findings.Add(new("Process: " + kv.Value.Name + ": Second In (" + split[0] + ")", "", "", "", "", 0));
+                            }
+                        } else {
+                            if (loot.SecondaryIn != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.SecondaryIn)) {
+                                findings.Add(new("Process: " + kv.Value.Name + ": Second In (" + loot.SecondaryIn + ")", "", "", "", "", 0));
+                            }
                         }
 
-                        if (loot.OutputID != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.OutputID)) {
+                        if (loot.OutputID != "" && loot.OutputID[0] != '*' && loot.OutputID[0] != '_' && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.OutputID)) {
                             findings.Add(new("Process: " + kv.Value.Name + ": Recipe Out (" + loot.OutputID + ")", "", "", "", "", 0));
                         }
 
-                        if (loot.SecondaryOut != "" && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.SecondaryOut)) {
+                        if (loot.SecondaryOut != "" && loot.SecondaryOut[0] != '*' && loot.SecondaryOut[0] != '_' && !GameLoop.ZPO.ItemLibrary.ContainsKey(loot.SecondaryOut)) {
                             findings.Add(new("Process: " + kv.Value.Name + ": Second Out (" + loot.SecondaryOut + ")", "", "", "", "", 0));
                         }
                     }
@@ -1040,9 +1049,11 @@ namespace ZeroPlayersOnline.Managers {
                             Compendium.PrintClickable(32, npcY++, "| " + Sources[i].Display, () => { ResetAllCompendiumValues(); SetAllCompendiumValues(Sources[i]); });
                         }
                     } else { 
-                        if (npc.ReqToSee != null) {
-                            npcY++;
-                            Compendium.Print(32, npcY++, "Requirement to See: " + npc.ReqToSee.GetSummary(), Color.White);
+                        if (npc.ReqsToSee != null && npc.ReqsToSee.Count > 0) {
+                            foreach (var req in npc.ReqsToSee) {
+                                npcY++;
+                                Compendium.Print(32, npcY++, "Requirement to See: " + req.GetSummary(), Color.White);
+                            }
                         }
 
                         if (npc.PickpocketLevel > 0) {
@@ -1199,7 +1210,7 @@ namespace ZeroPlayersOnline.Managers {
                         Compendium.Print(32, monY++, "Damage Reduction: " + mon.DamageReduction + "% (Weakness: " + mon.WeakType + ")", Color.White); 
                         Compendium.Print(32, monY++, "Aggro: Lv" + mon.AggroLevel); 
                         Compendium.Print(32, monY++, "Damage: " + mon.DamageDice + " " + mon.DamageType, Color.White);
-                        Compendium.Print(32, monY++, "Category: " + mon.SpecialCategory + ", Counts As Slayer ID:" + mon.CountsAsSlayer, Color.White);
+                        Compendium.Print(32, monY++, "Category: " + mon.SpecialCategory + ", Counts As Slayer ID: " + string.Join(", ", mon.CountsAsSlayer), Color.White);
                         Compendium.Print(32, monY++, "Respawn: " + mon.RespawnTime + " seconds", Color.White);
 
                         monY++;
@@ -1474,7 +1485,7 @@ namespace ZeroPlayersOnline.Managers {
 
                             for (int i = CompendiumDropTop; i < loc.NPCsHere.Count && i < CompendiumDropTop + 17; i++) { 
                                 if (GameLoop.ZPO.NPCLibrary.TryGetValue(loc.NPCsHere[i], out NPC? npc)) {
-                                    Compendium.PrintClickable(42, locY++, "| " + npc.Name + (npc.ReqToSee != null ? " (" + npc.ReqToSee.GetSummary() + ")" : ""), () => { ResetAllCompendiumValues(); CompendiumCat = "NPCs"; CompendiumViewingID = npc.ID; });
+                                    Compendium.PrintClickable(42, locY++, "| " + npc.Name, () => { ResetAllCompendiumValues(); CompendiumCat = "NPCs"; CompendiumViewingID = npc.ID; });
                                 } else {
                                     Compendium.PrintClickable(42, locY++, "| " + loc.NPCsHere[i], () => { ResetAllCompendiumValues(); CompendiumCat = "NPCs"; CompendiumViewingID = loc.NPCsHere[i]; });
                                 }
@@ -2529,11 +2540,7 @@ namespace ZeroPlayersOnline.Managers {
                 } 
             }
 
-            foreach (var kv in GameLoop.ZPO.NPCLibrary) { 
-                if (kv.Value.ReqToSee != null && kv.Value.ReqToSee.RequirementType == "Skill" && kv.Value.ReqToSee.MiscString == id) {
-                    sources.Add(new("[" + kv.Value.ReqToSee.MiscInt.ToString().Align(HorizontalAlignment.Right, 3) + "] See NPC: " + kv.Value.Name, "NPCs", "", kv.Value.ID, "", 0));
-                }
-
+            foreach (var kv in GameLoop.ZPO.NPCLibrary) {
                 if (kv.Value.PickpocketLevel > 0 && id == "Thieving") { 
                     sources.Add(new("[" + kv.Value.PickpocketLevel.ToString().Align(HorizontalAlignment.Right, 3) + "] Pickpocket " + kv.Value.Name, "NPCs", "", kv.Value.ID, "", 0)); 
                 }
@@ -2745,6 +2752,10 @@ namespace ZeroPlayersOnline.Managers {
             if (id == "casketEasy") { sources.Add(new("Complete an Easy treasure trail and receive the casket at the end.", "Items", "", id, "", 0)); }
             if (id == "casketMedium") { sources.Add(new("Complete a Medium treasure trail and receive the casket at the end.", "Items", "", id, "", 0)); }
 
+            if (id.Contains("petSkill")) {
+                string skill = id.Replace("petSkill", "");
+                sources.Add(new("Train " + skill + " (exp / 50,000,000 chance when exp gained).", "Skills", "", skill, "", 0));
+            }
 
             sources = sources.OrderBy(o => o.Display).ToList();
             return sources;
@@ -3279,34 +3290,36 @@ namespace ZeroPlayersOnline.Managers {
                             }
                         }
 
-                        if (Helper.ScrolledUp()) { QuestBlockScrollTop = Math.Clamp(QuestBlockScrollTop - 1, 0, visibleStages - 1); }
-                        if (Helper.ScrolledDown()) { QuestBlockScrollTop = Math.Clamp(QuestBlockScrollTop + 1, 0, visibleStages - 1); }
+                        if (Helper.ScrolledDown()) { QuestBlockScrollTop = Math.Clamp(QuestBlockScrollTop - 1, 0, visibleStages - 1); }
+                        if (Helper.ScrolledUp()) { QuestBlockScrollTop = Math.Clamp(QuestBlockScrollTop + 1, 0, visibleStages - 1); }
 
 
                         Quests.PrintClickable(19, 1, "[View Quest Overview]", () => { QuestOverview = true; });
 
-                        int printY = 3;
+                        int printY = 28;
                         int count = -1; 
-                        foreach (var kv in currQuest.Stages) {
-                            count++;
-                            if (count < QuestBlockScrollTop) { 
-                                continue;
-                            }
 
+                        foreach (var kv in currQuest.Stages.Reverse()) {
                             if (kv.Key <= currQuest.CurrentStage()) {
-                                Color col = Color.DarkSlateGray;
+                                count++;
+                                if (count < QuestBlockScrollTop) { continue; }
 
-                                if (kv.Key == currQuest.CurrentStage())
-                                    col = Color.White;
+                                Color col = kv.Key == currQuest.CurrentStage() ? Color.White : Color.DarkSlateGray;
 
-                                printY = Quests.PrintMultiLine(19, printY, kv.Value.Description, 80, col.R, col.G, col.B);
+                                //if (kv.Value.Description.Length >= 80) { printY -= (kv.Value.Description.Length / 75); } 
 
-                                printY += 1;
+                                int simPrint = Quests.PrintMultiLine(19, printY, kv.Value.Description, 80, col.R, col.G, col.B, justSim: true);
+
+                                printY -= (simPrint - printY) + 1;
+
+                                if (printY < 2) { break; }
+
+                                Quests.PrintMultiLine(19, printY, kv.Value.Description, 80, col.R, col.G, col.B);
                             }
-                        }
+                        } 
 
                         if (currQuest.CurrentStage() == currQuest.CompleteStage)
-                            Quests.Print(19, printY, "Quest Complete!", Color.Lime);
+                            Quests.Print(19, 28, "Quest Complete!", Color.Lime);
 
                         Quests.DrawLine(new Point(1, 29), (98, 29), 196, Color.White);
                     }
@@ -3505,7 +3518,13 @@ namespace ZeroPlayersOnline.Managers {
                     } else if (cut.Scenes.Count > CutsceneScene + 1) { 
                         Cutscene.PrintClickable(92, 28, "[NEXT]", () => { CutsceneDialogue = 0; CutsceneScene++; });
                     } else {
-                        Cutscene.PrintClickable(91, 28, "[CLOSE]", () => { CutsceneDialogue = 0; CutsceneScene = 0; Cutscene.IsVisible = false; });
+                        Cutscene.PrintClickable(91, 28, "[CLOSE]", () => { 
+                            CutsceneDialogue = 0; 
+                            CutsceneScene = 0; 
+                            Cutscene.IsVisible = false;
+                            
+                            cut.ExecuteChanges();
+                        });
                     }
 
                     if (CutsceneDialogue > 0) { 
@@ -3908,8 +3927,9 @@ namespace ZeroPlayersOnline.Managers {
 
 
                     GrandExchange.Print(42, 28, "    Quantity: ", Color.White);
-                    GrandExchange.PrintClickable(56, 28, "-", () => { GEListPotential.Wrap.Quantity = Math.Clamp(GEListPotential.Wrap.Quantity - qty, 1, GEListPotential.Wrap.Quantity); });
-                    GrandExchange.PrintClickable(58, 28, "+", () => { GEListPotential.Wrap.Quantity = Math.Clamp(GEListPotential.Wrap.Quantity + qty, GEListPotential.Wrap.Quantity, int.MaxValue); });
+                    int altHeld = GEListPotential.Buying ? (p.HeldGold / GEListPotential.ListPrice) : p.ItemHeldCount(GEListPotential.Wrap.ID, true, false, false);
+                    GrandExchange.PrintClickable(56, 28, "-", () => { GEListPotential.Wrap.Quantity = Math.Clamp(Helper.EitherAlt() ? 1 : GEListPotential.Wrap.Quantity - qty, 1, GEListPotential.Wrap.Quantity); });
+                    GrandExchange.PrintClickable(58, 28, "+", () => { GEListPotential.Wrap.Quantity = Math.Clamp(Helper.EitherAlt() ? altHeld : GEListPotential.Wrap.Quantity + qty, GEListPotential.Wrap.Quantity, (GEListPotential.Buying ? int.MaxValue : p.ItemHeldCount(GEListPotential.Wrap.ID, true, false, false))); });
 
                     
                     GrandExchange.Print(88, 24, "Total Price", Color.White); 

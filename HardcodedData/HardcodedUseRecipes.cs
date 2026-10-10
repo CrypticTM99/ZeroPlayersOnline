@@ -38,7 +38,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("oreSilver", "oreSilver", "oreMixSilver", 1, 1, 1, "Smithing", 20, 8));
             toAdd.Add(new("oreGold", "oreGold", "oreMixGold", 1, 1, 1, "Smithing", 40, 32));
             
-            toAdd.Add(new("shieldLeftHalf", "shieldRightHalf", "sqShieldDragon", s: "Smithing", lv: 60, exp: 75));
+            toAdd.Add(new("shieldLeftHalf", "shieldRightHalf", "sqShieldDragon", s: "Smithing", lv: 60, exp: 75)); 
+            toAdd.Add(new("spineScurrius", "maceRune", "maceBone", s: "Smithing", lv: 35, exp: 300));
 
             // Fletching
             toAdd.Add(new("bowstring", "shortbowPineU", "shortbowPine", 1, 1, 1, "Fletching", 1, 5));
@@ -110,6 +111,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("boltsUnfBroad", "feather", "boltsBroad", 10, 10, 10, "Fletching", 55, 30) { ExtraReqs = [ new("Data", 1, "SlayerBroadFletching", false, "equals", "Must purchase the ability to fletch broad bolts from a Slayer Master.")]}); 
             
             toAdd.Add(new("grappleUnf", "rope", "grapple", 1, 1, 1, "Fletching", 20, 0));  
+            toAdd.Add(new("spineScurrius", "shortbowAcadia", "shortbowBone", s: "Fletching", lv: 35, exp: 300));
 
             // Herblore
             // // Unfinished Potions
@@ -312,6 +314,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("candleLit", "candleLanternEmpty", "candleLanternLit")); 
             toAdd.Add(new("oilLamp", "oilLanternFrame", "oilLantern", s: "Crafting", lv: 26, exp: 50));
             toAdd.Add(new("oilLampLit", "oilLanternFrame", "oilLanternLit", s: "Crafting", lv: 26, exp: 50));
+             
+            toAdd.Add(new("spineScurrius", "battlestaff", "staffBone", s: "Crafting", lv: 35, exp: 300));
             
             toAdd.Add(new("kharidianHeadpiece", "beardFake", "desertDisguise"));
             toAdd.Add(new("knife", "fruitBanana", "fruitBananaSlices", 0));  
@@ -324,6 +328,7 @@ namespace ZeroPlayersOnline.Hardcodes {
              
             toAdd.Add(new("doogle", "fishRawSardine", "sardineSeasoned")); 
             toAdd.Add(new("arravShieldLeft", "arravShieldRight", "arravShield")); 
+            toAdd.Add(new("vialWater", "cadava", "potionCadavaUnf"));
 
             // Rag and Bone Man 
             toAdd.Add(new("jugVinegar", "potEmpty", "potVinegar", returns: [ "jugEmpty" ])); 

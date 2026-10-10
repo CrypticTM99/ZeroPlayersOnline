@@ -170,7 +170,11 @@ namespace ZeroPlayersOnline.DataTypes {
         }
 
         public string GetDamageDice() {
-            double weaponTier = 1;
+            return SimpleDamageDice();
+        }
+
+        public string SimpleDamageDice() {
+            double weaponTier = 0.5;
             bool maging = IsMaging();
 
             string style = "Melee";
@@ -197,15 +201,15 @@ namespace ZeroPlayersOnline.DataTypes {
                     weaponTier = 1;
                 }
             }
-            double strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Strength") / 10f) + 1, 1, 10); 
+            double strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Strength") / 5f) + 1, 1, 10); 
 
             if (maging) { 
                 style = "Magic";
-                strength = GameLoop.ZPO.SpellLibrary[CastingSpell].Tier * 2;
+                strength = GameLoop.ZPO.SpellLibrary[CastingSpell].Tier + 1;
             }
 
             if (style == "Ranged") {
-                strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Ranged") / 10f) + 1, 1, 10); 
+                strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Ranged") / 5f) + 1, 1, 10); 
             }
 
             double partialBoost = 0;
@@ -243,11 +247,15 @@ namespace ZeroPlayersOnline.DataTypes {
 
             strength += (int) Math.Floor(partialBoost);
 
-            return ((int) Math.Floor(weaponTier)) + "d" + ((int) Math.Floor(strength));
+            // TODO: think of something better than this 
+            return "1d" + ((int) Math.Clamp(Math.Floor(weaponTier * 2), 1, 15)) + "+" + strength;
+            //return ((int) Math.Floor(weaponTier)) + "d" + ((int) Math.Floor(strength));
         }
 
         public string GetDamageType() {
             if (IsMaging()) {
+                if (Equipment.TryGetValue("Weapon", out ItemWrapper? staffWrap) && staffWrap.GetRef() is Item staff && staff.EquipSkill == "Magic" && staff.EquipDamageType == "Rat")
+                    return "Rat";
                 return GameLoop.ZPO.SpellLibrary[CastingSpell].MiscString;
             }
 
@@ -584,8 +592,12 @@ namespace ZeroPlayersOnline.DataTypes {
                     if (GameLoop.ZPO.Atlas.TryGetValue(NavLoc, out Location? curr) && curr != null) {
                         if (curr.DungeoneeringLevel >= 1) {
                             if (GetEffectiveSkillLevel("Dungeoneering") >= curr.DungeoneeringLevel) {
-                                grantingExp = true;
-                                Skills["Dungeoneering"].GrantExp(((int) Math.Ceiling(amount / 5.0)) * ExpMultiplier, log, RecentSkills);
+                                if (GetEffectiveSkillLevel("Dungeoneering") >= curr.DungeoneeringLevel + 10) {
+                                    grantingExp = true;
+                                    Skills["Dungeoneering"].GrantExp(((int) Math.Ceiling(amount / 10.0)) * ExpMultiplier, log, RecentSkills);
+                                } else {
+                                    log.AddMessage("This dungeon only requires " + curr.DungeoneeringLevel + " Dungeoneering, you have grown beyond any benefit of training here.", Color.Crimson);
+                                }
                             } else {
                                 log.AddMessage("You need " + curr.DungeoneeringLevel + " Dungeoneering to gain experience here.", Color.Crimson);
                             }
@@ -1766,6 +1778,52 @@ namespace ZeroPlayersOnline.DataTypes {
             }
 
             return 1;
+        }
+
+        public int ItemHeldCount(string id, bool noted, bool equipped, bool onlyEquipped) {
+            int held = 0;
+
+            if (!onlyEquipped) {
+                foreach (var kv in Inventory) {
+                    if (kv.ID == id && (!kv.Noted || noted)) {
+                        held += kv.Quantity;
+                    }
+                }
+            }
+
+            if (equipped) {
+                foreach (var kv in Equipment) {
+                    if (kv.Value.ID == id) {
+                        held += kv.Value.Quantity;
+                    }
+                }
+            }
+
+            return held;
+        }
+
+        public bool HasSlashing() {
+            foreach (var kv in Equipment) {
+                if (kv.Value.GetRef() is Item wep) {
+                    if (wep.EquipDamageType == "Slash") {
+                        return true;
+                    }
+                }
+            }
+
+            foreach (var kv in Inventory) {
+                if (kv.GetRef() is Item inv) {
+                    if (inv.EquipDamageType == "Slash") {
+                        return true;
+                    }
+                }
+            }
+
+            if (HasAllItems(["knife,1"], false, true, true)) {
+                return true;
+            }
+
+            return false;
         }
     }
 }

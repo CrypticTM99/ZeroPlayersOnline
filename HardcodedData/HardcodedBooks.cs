@@ -62,6 +62,18 @@ namespace ZeroPlayersOnline.HardcodedData {
                 new("Portal Chamber", "A chamber with portals in it. Helpful, I know. /n /n You can build up to three portals in each Chamber, allowing you to teleport to any place a spell could teleport you without the need for runes. /n /n Each portal costs some materials for the frame, plus runes equivalent to 100 casts of the spell.")
             }));
 
+            toAdd.Add(new("Cadava Potion Ingredients", "potionCadavaList", 0, new() {
+                new("!! ONLY FOR TRUE LOVE !!", "Ingredients for death sleeping draught: /n /n Cadava Berries /n Vial of Water /n Wing of Rat /n Tail of Frog /n Ear of Snake /n Horn of Dog /n /n Use the berries on the vial, then activate the vial to mix everything else in at once."),
+            }));
+
+            toAdd.Add(new("Letter for Juliet", "letterRomeo", 0, new() {
+                new("From Romeo", "My sweet dearest Juliet, /n /n     I am breathless without you. /n     Our families may feud, but my heart burns only of the passion for thee. /n     Every moment you are near me my soul is set alight. /n     Please, you must tell me how you feel by the morrow. /n     I cannot bear to live another day without knowing how you feel. /n /n Forever for you, Romeo."),
+            }));
+
+            toAdd.Add(new("Letter for Romeo", "letterJuliet", 0, new() {
+                new("From Juliet", "My gentle Romeo, /n /n My heart burns there too. /n /n Meet me under my veranda in the moonlight, tonight. /n /n I will wait for thee. /n /n /n /n /n /n /n /n Your, Juliet."),
+            }));
+
             for (int i = 0; i < toAdd.Count; i++) {
                 BookLib.Add(toAdd[i].ID, toAdd[i]);
             }

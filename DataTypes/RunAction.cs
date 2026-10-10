@@ -346,11 +346,14 @@ namespace ZeroPlayersOnline.DataTypes {
                         player.NavLoc = "TI_Main";
                         GameLoop.ZPO.Log.AddMessage("The pull of the island distorts your magic and you appear in the center of Tutorial Island.", Color.MediumPurple);
                     } else {
-                        if (GameLoop.ZPO.Atlas.TryGetValue(MiscString, out Location? dest)) {
+                        if (GameLoop.ZPO.Atlas.TryGetValue(MiscString, out Location? dest)) { 
                             player.NavLoc = MiscString;
-                            GameLoop.ZPO.Log.AddMessage("You teleport to " + dest.DisplayName + ".", Color.MediumPurple);
+                            if (MiscInt != 1)
+                                GameLoop.ZPO.Log.AddMessage("You teleport to " + dest.DisplayName + ".", Color.MediumPurple);
+                            else
+                                GameLoop.ZPO.Log.AddMessage("You travel to " + dest.DisplayName + ".", Color.MediumPurple);
                         } else {
-                            GameLoop.ZPO.Log.AddMessage("Teleport destination does not exist.", Color.Crimson);
+                            GameLoop.ZPO.Log.AddMessage("Destination does not exist.", Color.Crimson);
                         } 
                     } 
                 }
@@ -417,6 +420,16 @@ namespace ZeroPlayersOnline.DataTypes {
                             GameLoop.ZPO.Log.AddMessage("You have no unenchanted " + types[MiscInt - 1] + " jewellery to enchant.", Color.Crimson);
                         }
                     } 
+                }
+
+                if (ActionID == "LeptocClean") { 
+                    Helper.AlterWorldState("LeptocTimesCleaned", "add", 1); 
+
+                    GameLoop.ZPO.Log.AddMessage("You tidy up the room.", Color.Yellow);
+
+                    if (Helper.ReadWorldState("LeptocTimesCleaned") == 3) { 
+                        GameLoop.ZPO.Log.AddMessage("Wait, why am I actually cleaning? This was just an excuse to get into the mansion.", Color.Yellow);
+                    }
                 }
             }
         }

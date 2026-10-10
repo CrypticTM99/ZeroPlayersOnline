@@ -75,14 +75,21 @@ namespace ZeroPlayersOnline.DataTypes {
         public void ProcessRewards(Player p) {
             foreach (var kv in Rewards) {
                 if (kv.RewardType == "Experience") {
+                    GameLoop.ZPO.Log.AddMessage("You gain " + kv.MiscInt + " " + kv.MiscString + " experience.", Color.Yellow);
                     p.TryGrantExp(kv.MiscString, kv.MiscInt, GameLoop.ZPO.Log, SidebarManager.RecentlyTrainedSkills);
                 }
 
                 if (kv.RewardType == "Item") {
                     if (kv.MiscString == "Gold") {
+                        GameLoop.ZPO.Log.AddMessage("You receive " + kv.MiscInt + " gold.", Color.Yellow);
                         p.GiveGold(kv.MiscInt); 
                     } else { 
                         if (GameLoop.ZPO.ItemLibrary.TryGetValue(kv.MiscString, out Item? reward) && reward != null) {
+                            if (kv.MiscInt == 1)
+                                GameLoop.ZPO.Log.AddMessage("You receive a" + (Helper.VowelStart(reward.Name.ToLower()) ? "n " : " ") +  reward.Name.ToLower() + ".", Color.Yellow);
+                            else
+                                GameLoop.ZPO.Log.AddMessage("You receive " + kv.MiscInt + "x " + reward.Name.ToLower() + ".", Color.Yellow);
+
                             Item pickup = new(reward);
                             pickup.Quantity = kv.MiscInt;
                             p.TryPickup(pickup, pickup.Quantity);
@@ -94,7 +101,8 @@ namespace ZeroPlayersOnline.DataTypes {
                     if (kv.MiscString == "kitten") {
                         List<string> kittenColors = [ "kittenBlack", "kittenGray", "kittenWhite", "kittenOrange", "kittenBrown", "kittenCalico" ];
 
-                        if (GameLoop.ZPO.ResolveItem(kittenColors[GameLoop.rand.Next(kittenColors.Count)]) is Item kitten) {
+                        if (GameLoop.ZPO.ResolveItem(kittenColors[GameLoop.rand.Next(kittenColors.Count)]) is Item kitten) { 
+                            GameLoop.ZPO.Log.AddMessage("You receive a " + kitten.Name.ToLower(), Color.Yellow);
                             p.TryPickup(kitten, 1);
                         }
                     }

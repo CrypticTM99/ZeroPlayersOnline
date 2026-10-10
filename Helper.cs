@@ -716,7 +716,7 @@ namespace ZeroPlayersOnline {
             return output;
         } 
 
-        public static int PrintMultiLine(this Console instance, int x, int y, string str, int width, int colR = 255, int colG = 255, int colB = 255, bool center = false) {
+        public static int PrintMultiLine(this Console instance, int x, int y, string str, int width, int colR = 255, int colG = 255, int colB = 255, bool center = false, bool justSim = false) {
             List<string> words = str.Split(" ").ToList();
             Color col = new Color(colR, colG, colB);
 
@@ -730,11 +730,15 @@ namespace ZeroPlayersOnline {
                     line += word + " ";  
                 }
                 else { 
-                    if (center) { 
-                        instance.Print(cX, cY++, line.Align(HorizontalAlignment.Center, width), col, Color.Black);
+                    if (justSim) {
+                        cY++;
                     } else {
-                        instance.Print(cX, cY++, line, col, Color.Black);
-                    }  
+                        if (center) { 
+                            instance.Print(cX, cY++, line.Align(HorizontalAlignment.Center, width), col, Color.Black);
+                        } else {
+                            instance.Print(cX, cY++, line, col, Color.Black);
+                        }  
+                    }
                     
                     if (word == "/n") {
                         line = "";
@@ -745,11 +749,15 @@ namespace ZeroPlayersOnline {
             }
 
             if (line != "") {
-                if (center) { 
-                    instance.Print(cX, cY++, line.Align(HorizontalAlignment.Center, width), col, Color.Black);
+                if (justSim) {
+                    cY++;
                 } else {
-                    instance.Print(cX, cY++, line, col, Color.Black);
-                } 
+                    if (center) { 
+                        instance.Print(cX, cY++, line.Align(HorizontalAlignment.Center, width), col, Color.Black);
+                    } else {
+                        instance.Print(cX, cY++, line, col, Color.Black);
+                    } 
+                }
             }
 
             return cY;

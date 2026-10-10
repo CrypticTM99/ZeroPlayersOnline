@@ -17,10 +17,12 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public string AltLog = "";
 
+        public int SetDoses = 0;
+
         [JsonConstructor]
         public ItemDrop() {}
 
-        public ItemDrop(string id, int x, double y, int min, int max, bool noted = false, bool evenIf0 = false, Requirement? req = null, string altlog = "") {
+        public ItemDrop(string id, int x, double y, int min, int max, bool noted = false, bool evenIf0 = false, Requirement? req = null, string altlog = "", int doses = 0) {
             ItemID = id;
             DropX = x;
             InY = y;
@@ -34,6 +36,8 @@ namespace ZeroPlayersOnline.DataTypes {
 
             Requirement = req;
             AltLog = altlog; // Basically just used for the general clue log drops to redirect them
+
+            SetDoses = doses;
         }
 
         public ItemDrop(ItemDrop other) {
@@ -46,6 +50,7 @@ namespace ZeroPlayersOnline.DataTypes {
             Noted = other.Noted;
             Requirement = other.Requirement;
             AltLog = other.AltLog;
+            SetDoses = other.SetDoses;
         }
 
         // Rolls 0 to InY, if less than DropX, success
@@ -107,6 +112,10 @@ namespace ZeroPlayersOnline.DataTypes {
                                     spawn.Quantity = amt;
                                 }
 
+                                if (SetDoses != 0) {
+                                    spawn.UseInt4 = SetDoses;
+                                }
+
                                 if (justReturn) {
                                     return new(spawn);
                                 }
@@ -135,6 +144,10 @@ namespace ZeroPlayersOnline.DataTypes {
                                 else {
                                     int amt = GameLoop.rand.Next(QuantityMax - QuantityMin) + QuantityMin;
                                     spawn.Quantity = amt;
+                                }
+
+                                if (SetDoses != 0) {
+                                    spawn.UseInt4 = SetDoses;
                                 }
 
                                 if (justReturn)
