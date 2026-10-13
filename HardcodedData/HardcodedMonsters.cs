@@ -512,6 +512,9 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new("boneCurved", 1, 5013, 1, 1)
                 } 
             });
+
+            toAdd.Add(new("Growthling", "bryophytaGrowthling", 37, 10, 0, true, "1d6-1", "Fire", 1, "Melee") { KillItem = "axe", KillItemCount = 0 });
+            
             
 
 

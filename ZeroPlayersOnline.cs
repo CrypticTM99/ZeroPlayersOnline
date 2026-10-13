@@ -1340,8 +1340,8 @@ namespace ZeroPlayersOnline {
         }
 
         public string ResolveBossName(string ID) {
-            if (BossLibrary.TryGetValue(ID, out BossFight? mon) && mon != null) {
-                return mon.Name;
+            if (BossLibrary.TryGetValue(ID, out BossFight? mon) && mon != null && mon.Phases.Count > 0) {
+                return mon.Phases[0].Name;
             }
 
             return ID;

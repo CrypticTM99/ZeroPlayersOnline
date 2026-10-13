@@ -37,9 +37,10 @@ namespace ZeroPlayersOnline.Managers {
         public static string CompendiumViewingID2 = "";
         public static int CompendiumViewingIndex = 0;
         public static int CompendiumViewingIndex2 = 0;
+        public static int CompendiumViewingIndex3 = 0; // Basically just for boss phases
         public static int CompendiumSidebarTop = 0;
         public static int CompendiumSourceTop = 0;
-        public static int CompendiumDropTop = 0;
+        public static int CompendiumDropTop = 0; 
         public static bool CompendiumShowSources = false;
         public static string Filter = "";
         public static string SelectedField = "";
@@ -1601,8 +1602,8 @@ namespace ZeroPlayersOnline.Managers {
                         }
                     } else if (tabs[CompendiumViewingIndex2] == "Boss") {
                         if (loc.BossHere != "") {
-                            if (GameLoop.ZPO.BossLibrary.TryGetValue(loc.BossHere, out BossFight? boss) && boss != null) {
-                                Compendium.PrintClickable(42, locY++, "| " + boss.Name, () => { ResetAllCompendiumValues(); CompendiumCat = "Bosses"; CompendiumViewingID = boss.ID; });
+                            if (GameLoop.ZPO.BossLibrary.TryGetValue(loc.BossHere, out BossFight? boss) && boss != null && boss.Phases.Count > 0) {
+                                Compendium.PrintClickable(42, locY++, "| " + boss.Phases[0].Name, () => { ResetAllCompendiumValues(); CompendiumCat = "Bosses"; CompendiumViewingID = boss.ID; });
                             } else { 
                                 Compendium.PrintClickable(42, locY++, "| " + loc.BossHere, () => { ResetAllCompendiumValues(); CompendiumCat = "Bosses"; CompendiumViewingID = loc.BossHere; });
                             } 
@@ -1889,7 +1890,7 @@ namespace ZeroPlayersOnline.Managers {
                     }
                 }
             }
-            else if (CompendiumCat == "Bosses") {
+            else if (CompendiumCat == "Bosses") { // TODO: Do another pass over this at some point to make sure it's covering all data
                 Compendium.DrawLine(new Point(30, 3), new Point(30, 28), 179);
                 int qty = 1;
                 if (Helper.EitherShift())
@@ -1911,17 +1912,17 @@ namespace ZeroPlayersOnline.Managers {
                 Compendium.PrintStringField(2, sidebarY++, "Filter: ", ref Filter, ref SelectedField, "bossFilter");
                 Compendium.DrawLine(new Point(1, sidebarY), new Point(29, sidebarY++), 196);
 
-                List<BossFight> bosses = GameLoop.ZPO.BossLibrary.Values.Where(u => u.Name != null && u.Name.ToLower().Contains(Filter.ToLower())).OrderBy(o => o.Name).ToList();
+                List<BossFight> bosses = GameLoop.ZPO.BossLibrary.Values.Where(u => u.Phases.Count > 0 && u.Phases[0].Name != null && u.Phases[0].Name.ToLower().Contains(Filter.ToLower())).OrderBy(o => o.Phases[0].Name).ToList();
 
                 for(int i = CompendiumSidebarTop; i < bosses.Count && i < CompendiumSidebarTop + 24; i++) {
-                    Compendium.PrintClickable(2, sidebarY++, new ColoredString(bosses[i].Name, (CompendiumViewingID == bosses[i].ID ? Color.Yellow : Color.White), Color.Black), () => { ResetAllCompendiumValues(); CompendiumCat = "Bosses"; CompendiumViewingID = bosses[i].ID; });
+                    Compendium.PrintClickable(2, sidebarY++, new ColoredString(bosses[i].Phases[0].Name, (CompendiumViewingID == bosses[i].ID ? Color.Yellow : Color.White), Color.Black), () => { ResetAllCompendiumValues(); CompendiumCat = "Bosses"; CompendiumViewingID = bosses[i].ID; });
                 }
 
-                if (GameLoop.ZPO.BossLibrary.TryGetValue(CompendiumViewingID, out BossFight? boss) && boss != null) {
+                if (GameLoop.ZPO.BossLibrary.TryGetValue(CompendiumViewingID, out BossFight? boss) && boss != null && boss.Phases.Count > 0) {
                     int bossY = 3;
 
                     Compendium.Print(32, bossY++, "  ID: " + boss.ID, Color.White);
-                    Compendium.Print(32, bossY++, "Name: " + boss.Name, Color.White); 
+                    Compendium.Print(32, bossY++, "Name: " + boss.Phases[0].Name, Color.White); 
                     Compendium.PrintClickable(82, 3, "[Show Locations]", () => { CompendiumShowSources = !CompendiumShowSources; if (CompendiumShowSources) { Sources = BossLocations(boss.ID); } });
                     
                     if (CompendiumShowSources) {
@@ -1953,17 +1954,25 @@ namespace ZeroPlayersOnline.Managers {
                         bossY++; 
 
                         Compendium.Print(32, bossY++, "Level: " + boss.Level, Color.White);
-                        Compendium.Print(32, bossY++, "MaxHP: " + boss.MaxHP, Color.White);
-                        Compendium.Print(32, bossY++, "Special Category: " + boss.SpecialCategory + ", Counts as Slayer ID: " + boss.CountsAsSlayer, Color.White); 
-                        bossY++;
-                        Compendium.Print(32, bossY++, "Damage Reduction: " + boss.DamageReduction + "% (Weakness: " + boss.WeakType + ")", Color.White); 
                         Compendium.Print(32, bossY++, "Aggro: Lv" + boss.AggroLevel + " (Always Aggro: " + Helper.Checkmark(boss.AlwaysAggro) + new ColoredString(")")); 
-                        Compendium.Print(32, bossY++, "Default Damage: " + boss.DefaultDmgDice + " " + boss.DefaultDmgType, Color.White);
-                        Compendium.Print(32, bossY++, "Attack Speed: " + boss.AttackSpeedInMS + "ms", Color.White);
-                        Compendium.Print(32, bossY++, "Attacks Between Specials: " + boss.AttacksBetweenSpecials, Color.White);
+                        Compendium.Print(32, bossY++, "Special Category: " + boss.SpecialCategory + ", Counts as Slayer ID: " + boss.CountsAsSlayer, Color.White); 
                         bossY++; 
                         Compendium.Print(32, bossY++, "Respawn: " + boss.RespawnTime + " seconds", Color.White);
                         Compendium.Print(32, bossY++, "Lanes Here: " + boss.LanesHere, Color.White); 
+                        bossY++; 
+                        Compendium.Print(32, bossY, "Phase Data: " + CompendiumViewingIndex3, Color.White);
+                        if (boss.Phases.Count > 1) {
+                            Compendium.PrintClickable(45, bossY, new ColoredString("-->", Color.White, Color.Black), () => { CompendiumViewingIndex3++; if (CompendiumViewingIndex >= boss.Phases.Count) { CompendiumViewingIndex3 = 0; } });
+                        }
+                        bossY++;
+
+                        CompendiumViewingIndex3 = Math.Clamp(CompendiumViewingIndex3, 0, boss.Phases.Count - 1);
+
+                        Compendium.Print(32, bossY++, "MaxHP: " + boss.Phases[CompendiumViewingIndex3].MaxHP, Color.White);
+                        Compendium.Print(32, bossY++, "Damage Reduction: " + boss.Phases[CompendiumViewingIndex3].DamageReduction + "% (Weakness: " + boss.Phases[CompendiumViewingIndex3].WeakType + ")", Color.White);  
+                        Compendium.Print(32, bossY++, "Default Damage: " + boss.Phases[CompendiumViewingIndex3].DefaultDmgDice + " " + boss.Phases[CompendiumViewingIndex3].DefaultDmgType, Color.White);
+                        Compendium.Print(32, bossY++, "Attack Speed: " + boss.Phases[CompendiumViewingIndex3].AttackSpeedInMS + "ms", Color.White);
+                        Compendium.Print(32, bossY++, "Attacks Between Specials: " + boss.Phases[CompendiumViewingIndex3].AttacksBetweenSpecials, Color.White); 
 
                         bossY++;
                         Compendium.Print(32, bossY, "Tables: ", Color.White);
@@ -1999,7 +2008,7 @@ namespace ZeroPlayersOnline.Managers {
                             bossY++;
                             Compendium.Print(32, bossY++, "Possible Attacks: ", Color.White);
 
-                            if (boss.Specials != null && boss.Specials.Count > 0) {
+                            if (boss.Phases[CompendiumViewingIndex3].Specials != null && boss.Phases[CompendiumViewingIndex3].Specials.Count > 0) {
                                 int dropQty = 1;
                                 if (Helper.EitherShift())
                                     dropQty *= 5;
@@ -2007,21 +2016,21 @@ namespace ZeroPlayersOnline.Managers {
                                     dropQty *= 10;
 
 
-                                if (boss.Specials.Count > 4) {
-                                    if (Helper.ScrolledUp()) { CompendiumDropTop = Math.Clamp(CompendiumDropTop - dropQty, 0, boss.Specials.Count - 4); }
-                                    if (Helper.ScrolledDown()) { CompendiumDropTop = Math.Clamp(CompendiumDropTop + dropQty, 0, boss.Specials.Count - 4); }
+                                if (boss.Phases[CompendiumViewingIndex3].Specials.Count > 4) {
+                                    if (Helper.ScrolledUp()) { CompendiumDropTop = Math.Clamp(CompendiumDropTop - dropQty, 0, boss.Phases[CompendiumViewingIndex3].Specials.Count - 4); }
+                                    if (Helper.ScrolledDown()) { CompendiumDropTop = Math.Clamp(CompendiumDropTop + dropQty, 0, boss.Phases[CompendiumViewingIndex3].Specials.Count - 4); }
                                 } else {
                                     CompendiumDropTop = 0;
                                 }  
 
-                                for (int i = CompendiumDropTop; i < boss.Specials.Count && i < CompendiumDropTop + 4; i++) {
+                                for (int i = CompendiumDropTop; i < boss.Phases[CompendiumViewingIndex3].Specials.Count && i < CompendiumDropTop + 4; i++) {
                                     string lanes = "";
 
-                                    for (int j = 0; j < boss.Specials[i].HitsLanes.Count; j++) {
-                                        lanes += (j != 0 ? ", " : "") + boss.Specials[i].HitsLanes[j];
+                                    for (int j = 0; j < boss.Phases[CompendiumViewingIndex3].Specials[i].HitsLanes.Count; j++) {
+                                        lanes += (j != 0 ? ", " : "") + boss.Phases[CompendiumViewingIndex3].Specials[i].HitsLanes[j];
                                     }
-                                    Compendium.Print(32, bossY++, Helper.Truncate(boss.Specials[i].WarningText, 67), Color.White);
-                                    Compendium.Print(32, bossY++, "> " + boss.Specials[i].DamageDice + " " + boss.Specials[i].DamageType + ", Lanes: " + lanes, Color.White);
+                                    Compendium.Print(32, bossY++, Helper.Truncate(boss.Phases[CompendiumViewingIndex3].Specials[i].WarningText, 67), Color.White);
+                                    Compendium.Print(32, bossY++, "> " + boss.Phases[CompendiumViewingIndex3].Specials[i].DamageDice + " " + boss.Phases[CompendiumViewingIndex3].Specials[i].DamageType + ", Lanes: " + lanes, Color.White);
                                 }
                             } else { 
                                 Compendium.Print(32, bossY++, "| (no specials)", Color.DarkSlateGray);
@@ -2617,8 +2626,8 @@ namespace ZeroPlayersOnline.Managers {
 
             foreach (var kv in GameLoop.ZPO.BossLibrary) {
                 for (int i = 0; i < kv.Value.DropTable.Count; i++) {
-                    if (kv.Value.DropTable[i].ItemID == id) {
-                        sources.Add(new("Boss: " + kv.Value.DropTable[i].DropX + "/" + kv.Value.DropTable[i].InY + " from " + kv.Value.Name, "Bosses", "", kv.Value.ID, "", 0));
+                    if (kv.Value.DropTable[i].ItemID == id && kv.Value.Phases.Count > 0) {
+                        sources.Add(new("Boss: " + kv.Value.DropTable[i].DropX + "/" + kv.Value.DropTable[i].InY + " from " + kv.Value.Phases[0].Name, "Bosses", "", kv.Value.ID, "", 0));
                     }
                 }
             }
@@ -2896,19 +2905,19 @@ namespace ZeroPlayersOnline.Managers {
                 }
             } else if (CollectionCat == "Boss") {
                 bossList.Clear();
-                bossList = GameLoop.ZPO.BossLibrary.Values.ToList().OrderBy(f => f.Name).ToList();
+                bossList = GameLoop.ZPO.BossLibrary.Values.Where(o=>o.Phases.Count > 0).ToList().OrderBy(f => f.Phases[0].Name).ToList();
 
                 for (int i = 0; i < bossList.Count; i++) {
-                    CollectionLog.PrintClickable(1, 1 + i, new ColoredString(" " + bossList[i].Name, CollectionID == bossList[i].ID ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = bossList[i].ID; });
+                    CollectionLog.PrintClickable(1, 1 + i, new ColoredString(" " + bossList[i].Phases[0].Name, CollectionID == bossList[i].ID ? Color.Yellow : Color.White, Color.Black), () => { CollectionID = bossList[i].ID; });
                 }
 
-                if (GameLoop.ZPO.BossLibrary.ContainsKey(CollectionID)) {
-                    BossFight view = GameLoop.ZPO.BossLibrary[CollectionID];
-
+                if (GameLoop.ZPO.BossLibrary.TryGetValue(CollectionID, out BossFight? view) && view != null && view.Phases.Count > 0) { 
                     if (view.DropTable.Count > 24) {
                         if (Helper.ScrolledUp()) { CollectionDropTop = Math.Clamp(CollectionDropTop - 1, 0, view.DropTable.Count - 24); }
                         if (Helper.ScrolledDown()) { CollectionDropTop = Math.Clamp(CollectionDropTop + 1, 0, view.DropTable.Count - 24); }
-                    } 
+                    } else {
+                        CollectionDropTop = 0;
+                    }
 
                     int KC = 0;
 
@@ -2916,7 +2925,7 @@ namespace ZeroPlayersOnline.Managers {
                         KC = GameLoop.ZPO.player.CollectionLogBoss[view.ID].KillCount;
                     }
 
-                    CollectionLog.Print(26, 1, (view.Name + " (" + KC + " KC)").Align(HorizontalAlignment.Center, 72), Color.White);
+                    CollectionLog.Print(26, 1, (view.Phases[0].Name + " (" + KC + " KC)").Align(HorizontalAlignment.Center, 72), Color.White);
                     CollectionLog.DrawLine(new Point(26, 2), new Point(98, 2), 196, Color.White);
                     CollectionLog.Print(27, 3, "Item Name", Color.White);
                     CollectionLog.Print(79, 3, "Chance", Color.White);

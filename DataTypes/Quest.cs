@@ -25,7 +25,7 @@ namespace ZeroPlayersOnline.DataTypes {
 
         public Dictionary<int, QuestStage> Stages = new();
         public List<QuestReward> Rewards = new();
-
+        public List<RunAction> ActionsOnComplete = new();
 
         public Quest(string id, string name, string length, string diff, string desc, int complete, List<string> regions) {
             ID = id;

@@ -30,7 +30,7 @@ namespace ZeroPlayersOnline.DataTypes {
         public string EquipSecondaryDamage = "";
         public int EquipLevel = 0;
         public string EquipSkill = "";
-        public double AttackSpeed = 1; // Speed in seconds between attacks
+        public double AttackSpeed = 1.0; // Speed in seconds between attacks
         public string EquipAmmo = "";
         public bool TwoHanded = false;
 

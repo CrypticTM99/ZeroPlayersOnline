@@ -53,18 +53,21 @@ namespace ZeroPlayersOnline.Managers {
             mini.Con.Print(0, 0, "    HP: " + player.CurrentHP.ToString().Align(HorizontalAlignment.Right, 4, ' ') + " / " + player.Skills["Constitution"].Level.ToString().Align(HorizontalAlignment.Right, 4, ' '), Color.Crimson);
             mini.Con.Print(0, 1, "Prayer: " + player.TotalActivePrayers().ToString().Align(HorizontalAlignment.Right, 4, ' ') + " / " + player.GetEffectiveSkillLevel("Prayer").ToString().Align(HorizontalAlignment.Right, 4, ' '), Color.DodgerBlue);
 
-            mini.Con.Print(0, 3, " Level: " + player.GetCombatLevel(), Color.Yellow); 
+            mini.Con.Print(0, 3, "Combat Level: " + player.GetCombatLevel(), Color.Yellow); 
 
             bool magic = player.IsMaging();
 
             string dmgType = player.GetDamageType();
+
+            string dmgDisp = (dmgType.Contains("Ranged") ? dmgType.Replace("Ranged", "Ra") : dmgType.Substring(0, 2));
+
             if (dmgType.Length > 7)
                 dmgType = dmgType.Substring(0, 7);
 
-            mini.Con.Print(0, 4, "Damage: " + player.GetDamageDice() + " " + dmgType, Color.Yellow); 
-            mini.Con.Print(0, 5, "vMelee: " + player.TotalArmorValue("Melee"), Color.Yellow);
-            mini.Con.Print(0, 6, "vMagic: " + player.TotalArmorValue("Magic"), Color.Yellow);
-            mini.Con.Print(0, 7, "vRange: " + player.TotalArmorValue("Ranged"), Color.Yellow);
+            mini.Con.Print(0, 4, "  Max Hit: " + player.MaxDamage() + " " + dmgDisp, Color.Yellow); 
+            mini.Con.Print(0, 5, "Melee Def: " + player.TotalArmorValue("Melee"), Color.Yellow);
+            mini.Con.Print(0, 6, "Magic Def: " + player.TotalArmorValue("Magic"), Color.Yellow);
+            mini.Con.Print(0, 7, "Range Def: " + player.TotalArmorValue("Ranged"), Color.Yellow);
 
             if (player.CastingSpell != "") {
                 if (GameLoop.ZPO.SpellLibrary.ContainsKey(player.CastingSpell)) {

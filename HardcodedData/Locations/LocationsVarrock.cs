@@ -756,7 +756,6 @@ namespace ZeroPlayersOnline.Hardcodes {
                     new Connection("MIST_VarrockZamorakTemple"),
                     new Connection("MIST_VarrockPhoenixGang", alt: "Suspiciously Maintained House"),
                     new Connection("MIST_VarrockPhoenixGangSide", alt: "Suspiciously Maintained Shack"), // that little room to the east of the main phoenix building between it and the temple
-                    new Connection("MIST_VarrockBlueMoonKitchen"),
                     new Connection("MIST_VarrockSouth")
                 }, 
                 NPCsHere = new() { "dogStray", "man" },
@@ -891,7 +890,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             locsToAdd.Add(new Location("MIST_VarrockBlueMoonUpstairs", "The Blue Moon Inn - Upstairs", "Misthalin") {
-                Description = "a door back to the kitchen.",
+                Description = "A set of well furnished rooms for rent take up most of the space of this floor. There are some customers lingering in their rooms up here. On the landing there are a couple bookshelves, plus a door out to the balcony overlooking the pillory area below.",
                 ConnectedLocations = new List<Connection>() {
                     new Connection("MIST_VarrockSouth"),
                     new Connection("MIST_VarrockBlueMoonKitchen")
@@ -904,10 +903,9 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             locsToAdd.Add(new Location("MIST_VarrockBlueMoonKitchen", "The Blue Moon Inn - Kitchen", "Misthalin") {
-                Description = "A spacious and clean kitchen. There are a few shelves to hold tankards, pots, and pans. A table holds an empty pot you could snatch, ",
+                Description = "A spacious and clean kitchen. There are a few shelves to hold tankards, pots, and pans. A table holds an empty pot you could snatch. There are some racks of wine bottles without labels, plus a range that the cook cooks at.",
                 ConnectedLocations = new List<Connection>() {
-                    new Connection("MIST_VarrockBlueMoon"),
-                    new Connection("MIST_VarrockSouthEast")
+                    new Connection("MIST_VarrockBlueMoon")
                 }, 
                 NPCsHere = new() { "mistVarBlueCook" },
                 ItemSpawns = new() { new("potEmpty", 1) },

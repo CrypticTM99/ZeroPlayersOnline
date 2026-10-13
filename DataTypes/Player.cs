@@ -173,6 +173,12 @@ namespace ZeroPlayersOnline.DataTypes {
             return SimpleDamageDice();
         }
 
+        public int MaxDamage() {
+            string dmgDice = GetDamageDice();
+
+            return GoRogue.DiceNotation.Dice.Roll(dmgDice.Substring(2));
+        }
+
         public string SimpleDamageDice() {
             double weaponTier = 0.5;
             bool maging = IsMaging();
@@ -201,7 +207,7 @@ namespace ZeroPlayersOnline.DataTypes {
                     weaponTier = 1;
                 }
             }
-            double strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Strength") / 5f) + 1, 1, 10); 
+            double strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Strength") / 5f) + 1, 1, 20); 
 
             if (maging) { 
                 style = "Magic";
@@ -209,7 +215,7 @@ namespace ZeroPlayersOnline.DataTypes {
             }
 
             if (style == "Ranged") {
-                strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Ranged") / 5f) + 1, 1, 10); 
+                strength = (int)Math.Clamp(Math.Floor(GetEffectiveSkillLevel("Ranged") / 5f) + 1, 1, 20); 
             }
 
             double partialBoost = 0;

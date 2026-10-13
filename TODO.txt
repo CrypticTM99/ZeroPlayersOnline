@@ -34,6 +34,7 @@ Misthalin Mania
 - Quest: Doric's Quest (falador)
 - Quest: Black Knights' Fortress (falador)
 - Quest: Witch's Potion (Rimmington)
+- Quest: X Marks the Spot (port sarim)
 - Quest: The Knight's Sword (falador, south of port sarim)
 - Quest: Goblin Diplomacy (falador)
 - Quest: Below Ice Mountain (falador)
@@ -55,25 +56,21 @@ Other to finish Misthalin demo (which will end with Dragon Slayer being possible
 
 
 Misthalin Demo v6 Goals
-- Quests: Romeo and Juliet, Demon Slayer, A Porcine of Interest, Vampire Slayer, Ernest the Chicken, Prince Ali Rescue, Sleeping Giants
+- Quests: Demon Slayer, A Porcine of Interest, Vampire Slayer, Ernest the Chicken, Prince Ali Rescue, Sleeping Giants
 - Minigames: Sorceress' Garden (but make it suck less), Giant's Foundry, Emir's Arena finally?
 - Task Diaries: Lumbridge/Draynor Easy is all possible now, Varrock easy should all be possible
 - Old Areas: Finish Varrock, Draynor, Al Kharid, and Lumbridge of simple areas (eg not the Dorgeshuun mines yet probably but at least the normal houses and such)
 - New Areas: Everything south of Falador at least (Rimmington and Port Sarim)
-- New Skill(s): Construction, Artisan?
+- New Skill(s): Artisan?
 - Random Events
 
-Combat Rework
-- Move gear to a custom GearBlock data type to hold everything because it's getting messy
-- Everything has attack/accuracy bonuses for five categories (stab, slash, crush, magic, ranged)
-- Same but for defense bonuses, also melee/ranged/magic strength and prayer bonus
-- Scaling thoughts (Generally speaking, +50% to scalable stats if NOT craftable)
-- - Daggers: 2.4s attack, 4 stab and 2 slash per tier, 4 melee strength per tier, 
 
 
 Bugs to fix / immediate tasks and such
+- Bryophyta chest loot
+- Combat auto-retaliate, and make aggressive enemies not aggressive after the AFK timer lapses
+- Compass option to ignore traversability and just show shortest route
 - Forgot to make the Mahogany Homes reward shop lmao, needs the plank box and the outfit, the equipable saw, and i guess the pointless waste of points supply crate
-- Skill, prayer, magic, etc windows check to make sure they're capping the scroll number actively not only checking when you scroll (otherwise it likes to be a black screen after music change)
 - Find a way to fix damage because players do way too much right now
 - Maybe just scrap the prayer thing entirely in favor of more traditional system
 

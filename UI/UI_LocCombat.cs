@@ -24,7 +24,7 @@ namespace ZeroPlayersOnline.UI {
 
 
 
-            if (curr.BossHere != "" && GameLoop.ZPO.BossLibrary.TryGetValue(curr.BossHere, out BossFight? boss) && boss != null) {  
+            if (curr.BossHere != "" && GameLoop.ZPO.BossLibrary.TryGetValue(curr.BossHere, out BossFight? boss) && boss != null && boss.Phases.Count > boss.CurrentPhase) {  
                 mini.Con.DrawLine(new Point(56, printY), new Point(109, printY++), 196);
                 mini.Con.Print(57, printY, "Boss Here: ");
 
@@ -47,15 +47,15 @@ namespace ZeroPlayersOnline.UI {
                     }
                 });
                     
-                double timeToAttack = boss.TimeLastAttacked + boss.AttackSpeedInMS - Helper.Time(); 
-                string bossDice = boss.DefaultDmgDice;
-                string bossType = boss.DefaultDmgType;
-                int bossPoisonSeverity = boss.DefaultPoisonSeverity;
+                double timeToAttack = boss.TimeLastAttacked + boss.Phases[boss.CurrentPhase].AttackSpeedInMS - Helper.Time(); 
+                string bossDice = boss.Phases[boss.CurrentPhase].DefaultDmgDice;
+                string bossType = boss.Phases[boss.CurrentPhase].DefaultDmgType;
+                int bossPoisonSeverity = boss.Phases[boss.CurrentPhase].DefaultPoisonSeverity;
 
-                if (boss.UsingMove != -1 && boss.Specials.Count > boss.UsingMove) {
-                    bossDice = boss.Specials[boss.UsingMove].DamageDice;
-                    bossType = boss.Specials[boss.UsingMove].DamageType;
-                    bossPoisonSeverity = boss.Specials[boss.UsingMove].PoisonSeverity;
+                if (boss.UsingMove != -1 && boss.Phases[boss.CurrentPhase].Specials.Count > boss.UsingMove) {
+                    bossDice = boss.Phases[boss.CurrentPhase].Specials[boss.UsingMove].DamageDice;
+                    bossType = boss.Phases[boss.CurrentPhase].Specials[boss.UsingMove].DamageType;
+                    bossPoisonSeverity = boss.Phases[boss.CurrentPhase].Specials[boss.UsingMove].PoisonSeverity;
                 }
 
                 bool reachedKillLimit = player.KillLimit == 0 ? true : false;
@@ -66,13 +66,13 @@ namespace ZeroPlayersOnline.UI {
                 if (GraceTimeStart + 5000 > Helper.Time()) {
                     mini.Con.Print(98, printY, "Grace: " + Math.Floor(GraceTimeStart + 5000 - Helper.Time()), Color.DarkSlateGray);
                 } else { 
-                    if (timeToAttack > 0 && boss.CurrentHP > 0)
+                    if (timeToAttack > 0 && boss.Phases[boss.CurrentPhase].CurrentHP > 0)
                         mini.Con.Print(95, printY, "Attack:  " + (Math.Floor(timeToAttack)).ToString().Align(HorizontalAlignment.Right, 5));
                 } 
 
                 printY++; 
 
-                mini.Con.Print(57, printY, "| " + boss.Name + " (" + boss.CurrentHP + "/" + boss.MaxHP + " hp)", (boss.AggroLevel > player.GetCombatLevel() || boss.AlwaysAggro || boss.AttackingPlayer) ? Color.Crimson : Color.White);
+                mini.Con.Print(57, printY, "| " + boss.Phases[boss.CurrentPhase].Name + " (" + boss.Phases[boss.CurrentPhase].CurrentHP + "/" + boss.Phases[boss.CurrentPhase].MaxHP + " hp)", (boss.AggroLevel > player.GetCombatLevel() || boss.AlwaysAggro || boss.AttackingPlayer) ? Color.Crimson : Color.White);
                 mini.Con.Print(97, printY, "Next: " + bossType.Align(HorizontalAlignment.Right, 6));
                     
 
@@ -88,9 +88,9 @@ namespace ZeroPlayersOnline.UI {
                         Color col = Color.White;
 
                         if (boss.UsingMove != -1) {
-                            if (boss.Specials.Count > boss.UsingMove) {
-                                if (boss.Specials[boss.UsingMove].AdjustedLanes(boss.LaneWhenMoveSelected, boss.LanesHere).Contains(i)) {
-                                    if (timeToAttack > boss.AttackSpeedInMS / 2.0) {
+                            if (boss.Phases[boss.CurrentPhase].Specials.Count > boss.UsingMove) {
+                                if (boss.Phases[boss.CurrentPhase].Specials[boss.UsingMove].AdjustedLanes(boss.LaneWhenMoveSelected, boss.LanesHere).Contains(i)) {
+                                    if (timeToAttack > boss.Phases[boss.CurrentPhase].AttackSpeedInMS / 2.0) {
                                         col = Color.Yellow;
                                     } else {
                                         col = Color.Crimson;
@@ -104,9 +104,9 @@ namespace ZeroPlayersOnline.UI {
                         Color col = Color.DarkSlateGray;
 
                         if (boss.UsingMove != -1) {
-                            if (boss.Specials.Count > boss.UsingMove) {
-                                if (boss.Specials[boss.UsingMove].AdjustedLanes(boss.LaneWhenMoveSelected, boss.LanesHere).Contains(i)) {
-                                    if (timeToAttack > boss.AttackSpeedInMS / 2.0) {
+                            if (boss.Phases[boss.CurrentPhase].Specials.Count > boss.UsingMove) {
+                                if (boss.Phases[boss.CurrentPhase].Specials[boss.UsingMove].AdjustedLanes(boss.LaneWhenMoveSelected, boss.LanesHere).Contains(i)) {
+                                    if (timeToAttack > boss.Phases[boss.CurrentPhase].AttackSpeedInMS / 2.0) {
                                         col = Color.Yellow;
                                     } else {
                                         col = Color.Crimson;
@@ -119,7 +119,7 @@ namespace ZeroPlayersOnline.UI {
                     }
                 }
 
-                if (GraceTimeStart + 5000 < Helper.Time() && boss.TimeLastAttacked + boss.AttackSpeedInMS < Helper.Time() && boss.CurrentHP > 0) {
+                if (GraceTimeStart + 5000 < Helper.Time() && boss.TimeLastAttacked + boss.Phases[boss.CurrentPhase].AttackSpeedInMS < Helper.Time() && boss.Phases[boss.CurrentPhase].CurrentHP > 0) {
                     if (boss.AggroLevel > player.GetCombatLevel() || boss.AlwaysAggro || boss.AttackingPlayer) {
                         boss.TimeLastAttacked = Helper.Time();
 
@@ -146,12 +146,12 @@ namespace ZeroPlayersOnline.UI {
                             safespotting = true;
                         }
 
-                        if (boss.UsingMove != -1 && boss.Specials.Count > boss.UsingMove && boss.Specials[boss.UsingMove].SummonID != "") {
-                            if (GameLoop.ZPO.MonsterLibrary.TryGetValue(boss.Specials[boss.UsingMove].SummonID, out AreaMonster? summon) && summon != null) {
-                                int amount = GoRogue.DiceNotation.Dice.Roll(boss.Specials[boss.UsingMove].SummonDice);
+                        if (boss.UsingMove != -1 && boss.Phases[boss.CurrentPhase].Specials.Count > boss.UsingMove && boss.Phases[boss.CurrentPhase].Specials[boss.UsingMove].SummonID != "") {
+                            if (GameLoop.ZPO.MonsterLibrary.TryGetValue(boss.Phases[boss.CurrentPhase].Specials[boss.UsingMove].SummonID, out AreaMonster? summon) && summon != null) {
+                                int amount = GoRogue.DiceNotation.Dice.Roll(boss.Phases[boss.CurrentPhase].Specials[boss.UsingMove].SummonDice);
 
                                 for (int i = 0; i < amount; i++) {
-                                    Log.AddMessage(boss.Name + " summons a" + (Helper.VowelStart(summon.Name.ToLower()) ? "n ": " ") + summon.Name.ToLower() + "!", Color.Crimson);
+                                    Log.AddMessage(boss.Phases[boss.CurrentPhase].Name + " summons a" + (Helper.VowelStart(summon.Name.ToLower()) ? "n ": " ") + summon.Name.ToLower() + "!", Color.Crimson);
                                     AreaMonster summonCopy = Helper.Clone(summon);
                                     summonCopy.Temporary = true;
                                     curr.MonstersHere.Add(summonCopy);
@@ -159,14 +159,14 @@ namespace ZeroPlayersOnline.UI {
                             }
                         }
 
-                        if (!safespotting && boss.UsingMove != -1 && boss.Specials.Count > boss.UsingMove && !boss.Specials[boss.UsingMove].AdjustedLanes(boss.LaneWhenMoveSelected, boss.LanesHere).Contains(boss.CurrentLane)) {
+                        if (!safespotting && boss.UsingMove != -1 && boss.Phases[boss.CurrentPhase].Specials.Count > boss.UsingMove && !boss.Phases[boss.CurrentPhase].Specials[boss.UsingMove].AdjustedLanes(boss.LaneWhenMoveSelected, boss.LanesHere).Contains(boss.CurrentLane)) {
                             safespotting = true;
                             Log.AddMessage(new ColoredString("You deftly dodge out of the way of the boss' special attack.", Color.Green, Color.Black));
                         } 
 
                         if (!safespotting) {
                             if (hitChance < 25 + (player.GetEffectiveSkillLevel("Defense") / 4.0)) {
-                                Log.AddMessage(new ColoredString(boss.Name + " tried to hit you but missed!", Color.Yellow, Color.Black));
+                                Log.AddMessage(new ColoredString(boss.Phases[boss.CurrentPhase].Name + " tried to hit you but missed!", Color.Yellow, Color.Black));
                             } else {
                                 modified -= player.TotalArmorValue(bossType);
 
@@ -176,12 +176,12 @@ namespace ZeroPlayersOnline.UI {
                                          
                                 if (dmg != modified) {
                                     if (modified <= 0) {
-                                        Log.AddMessage(new ColoredString(boss.Name + " hit you for " + dmg + ", but you took no damage!", Color.Crimson, Color.Black));
+                                        Log.AddMessage(new ColoredString(boss.Phases[boss.CurrentPhase].Name + " hit you for " + dmg + ", but you took no damage!", Color.Crimson, Color.Black));
                                     } else {
-                                        Log.AddMessage(new ColoredString(boss.Name + " hit you for " + dmg + ", reduced to " + modified + "!", Color.Crimson, Color.Black));
+                                        Log.AddMessage(new ColoredString(boss.Phases[boss.CurrentPhase].Name + " hit you for " + dmg + ", reduced to " + modified + "!", Color.Crimson, Color.Black));
                                     }
                                 } else {
-                                    Log.AddMessage(new ColoredString(boss.Name + " hit you for " + dmg + "!", Color.Crimson, Color.Black));
+                                    Log.AddMessage(new ColoredString(boss.Phases[boss.CurrentPhase].Name + " hit you for " + dmg + "!", Color.Crimson, Color.Black));
                                 }
 
                                 if (modified > 0) {
@@ -233,10 +233,10 @@ namespace ZeroPlayersOnline.UI {
                         } else {
                             boss.MovesSinceSpecial++;
 
-                            if (boss.MovesSinceSpecial == boss.AttacksBetweenSpecials && boss.Specials.Count > 0) {
-                                boss.UsingMove = GameLoop.rand.Next(boss.Specials.Count);
+                            if (boss.MovesSinceSpecial == boss.Phases[boss.CurrentPhase].AttacksBetweenSpecials && boss.Phases[boss.CurrentPhase].Specials.Count > 0) {
+                                boss.UsingMove = GameLoop.rand.Next(boss.Phases[boss.CurrentPhase].Specials.Count);
                                 boss.LaneWhenMoveSelected = boss.CurrentLane;
-                                Log.AddMessage(boss.Specials[boss.UsingMove].WarningText, Color.Yellow);
+                                Log.AddMessage(boss.Phases[boss.CurrentPhase].Specials[boss.UsingMove].WarningText, Color.Yellow);
                             }
                         }
 
@@ -252,7 +252,7 @@ namespace ZeroPlayersOnline.UI {
                 bool hasAmmo = true;
                 bool usedAmmo = false;
 
-                if (LastHitTime + (1000 * attackSpeed) < Helper.Time() && boss.CurrentHP > 0 && AttackingBoss) {
+                if (LastHitTime + (1000 * attackSpeed) < Helper.Time() && boss.Phases[boss.CurrentPhase].CurrentHP > 0 && AttackingBoss) {
                     LastHitTime = Helper.Time();
                     boss.AttackingPlayer = true;
 
@@ -335,13 +335,17 @@ namespace ZeroPlayersOnline.UI {
                         }
 
                         if (hitChance > 25 + (player.GetEffectiveSkillLevel(whichSkill) / 2.0) + eqpAccuracy) {
-                            Log.AddMessage(new ColoredString("You tried to hit the " + boss.Name + " but missed!", Color.Crimson, Color.Black));
+                            Log.AddMessage(new ColoredString("You tried to hit the " + boss.Phases[boss.CurrentPhase].Name + " but missed!", Color.Crimson, Color.Black));
                         } else {
                             int pdmg = GoRogue.DiceNotation.Dice.Roll(player.GetDamageDice());
                             bool crit = false;
 
-                            if (player.GetDamageType() == boss.WeakType) {
+                            if (player.GetDamageType() == boss.Phases[boss.CurrentPhase].WeakType) {
                                 pdmg = (int)Math.Ceiling(pdmg * 1.5f);
+                            }
+
+                            if (boss.Phases[boss.CurrentPhase].ImmuneTypes.Contains(player.GetDamageType())) {
+                                pdmg = 0;
                             }
                                          
                             bool eitherDamageSpecial = boss.SpecialCategory != "" && (player.GetDamageType() == boss.SpecialCategory || player.GetSecondaryDamageType() == boss.SpecialCategory);
@@ -381,16 +385,47 @@ namespace ZeroPlayersOnline.UI {
                                 if (critRoll >= critTarget) {
                                     crit = true;
                                     pdmg *= 2;
+                                } 
+
+
+                                if (pdmg > boss.Phases[boss.CurrentPhase].CurrentHP)
+                                    pdmg = boss.Phases[boss.CurrentPhase].CurrentHP;
+
+                                bool bossImmune = false;
+                                if (boss.Phases[boss.CurrentPhase].InvincibleIfAll.Count > 0) {
+                                    bossImmune = true;
+                                    foreach (var req in boss.Phases[boss.CurrentPhase].InvincibleIfAll) {
+                                        if (!req.CheckRequirement(player, false, false)) {
+                                            bossImmune = false;
+                                            Log.AddMessage(req.GetSummary(), Color.Crimson);
+                                        }
+                                    }
                                 }
 
-
-
-                                if (pdmg > boss.CurrentHP)
-                                    pdmg = boss.CurrentHP;
-
-                                boss.CurrentHP -= pdmg;
+                                if (!bossImmune) {
+                                    boss.Phases[boss.CurrentPhase].CurrentHP -= pdmg;
                                      
-                                Log.AddMessage(new ColoredString("You hit " + (boss.ProperName ? "" : "the ") + boss.Name + " for " + pdmg + "." + (crit ? " Critical Hit!" : ""), crit ? Color.Lime : Color.Green, Color.Black));
+                                    Log.AddMessage(new ColoredString("You hit " + (boss.Phases[boss.CurrentPhase].ProperName ? "" : "the ") + boss.Phases[boss.CurrentPhase].Name + " for " + pdmg + "." + (crit ? " Critical Hit!" : ""), crit ? Color.Lime : Color.Green, Color.Black));
+                                
+                                    if (boss.Phases[boss.CurrentPhase].HitActionOdds > 0 && GameLoop.rand.Next(boss.Phases[boss.CurrentPhase].HitActionOdds) == 0) {
+                                        foreach (var act in boss.Phases[boss.CurrentPhase].HitActions) {
+                                            act.Execute();
+                                        }
+                                    }
+
+                                    foreach (var con in boss.Phases[boss.CurrentPhase].PhaseConditions) {
+                                        if (boss.Phases.Count > con.NewPhase) {
+                                            if (con.When == "Hit") {
+                                                if (GameLoop.rand.Next(con.TriggerNum) == 0) {
+                                                    int currHP = boss.Phases[boss.CurrentPhase].CurrentHP;
+                                                    boss.CurrentPhase = con.NewPhase;
+                                                    boss.Phases[boss.CurrentPhase].CurrentHP = Math.Clamp(currHP + con.HealOnTransition, currHP, boss.Phases[boss.CurrentPhase].MaxHP);
+                                                    GameLoop.ZPO.Log.AddMessage(con.GetMessage());
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
 
                             if (player.IsMaging()) {  
@@ -421,14 +456,14 @@ namespace ZeroPlayersOnline.UI {
                                 player.TryGrantExp("Slayer", (int) (pdmg * 4 * boss.ExpMultiplier), Log, SidebarManager.RecentlyTrainedSkills);
                             } 
 
-                            if (boss.CurrentHP <= 0) {
+                            if (boss.Phases[boss.CurrentPhase].CurrentHP <= 0) {
                                 bool canKill = true;
                                 if (boss.KillItem != "") {
                                     if (player.HasAllItems([boss.KillItem +",1"], false, true)) {
                                         player.ConsumeItems([boss.KillItem + ",1"], false, true);
                                     } else {
                                         canKill = false;
-                                        boss.CurrentHP = 0;
+                                        boss.Phases[boss.CurrentPhase].CurrentHP = 0;
                                         Log.AddMessage(new ColoredString("You need " + GameLoop.ZPO.ResolveItemName(boss.KillItem) + " to finish this enemy off.", Color.Crimson, Color.Black)); 
                                     }
                                 }
@@ -465,7 +500,7 @@ namespace ZeroPlayersOnline.UI {
                                     player.ProgressSlayerTask(boss);
 
                                     if (player.KillLimit != -1 && player.CollectionLogBoss[boss.ID].KillCount == player.KillLimit) {
-                                        Log.AddMessage(new ColoredString("You've killed " + player.KillLimit + " " + boss.Name + "s and will no longer receive drops or exp from them."));
+                                        Log.AddMessage(new ColoredString("You've killed " + player.KillLimit + " " + boss.Phases[boss.CurrentPhase].Name + "s and will no longer receive drops or exp from them."));
                                     }
 
                                     if (boss.DropTable != null && boss.DropTable.Count > 0) {
@@ -483,8 +518,9 @@ namespace ZeroPlayersOnline.UI {
                     }
                 }
 
-                if (boss.CurrentHP <= 0 && boss.TimeLastKilled + (boss.RespawnTime * 1000) < Helper.Time()) {
-                    boss.CurrentHP = boss.MaxHP; 
+                if (boss.Phases[boss.CurrentPhase].CurrentHP <= 0 && boss.TimeLastKilled + (boss.RespawnTime * 1000) < Helper.Time()) {
+                    boss.CurrentPhase = 0;
+                    boss.Phases[boss.CurrentPhase].CurrentHP = boss.Phases[boss.CurrentPhase].MaxHP;  
                     boss.TimeLastAttacked = Helper.Time();
                     boss.AttackingPlayer = false;
                 }  
@@ -808,8 +844,7 @@ namespace ZeroPlayersOnline.UI {
                                         if (critRoll >= critTarget) {
                                             crit = true;
                                             pdmg *= 2;
-                                        }
-
+                                        } 
 
 
                                         if (pdmg > AttackingMonster.CurrentHP)

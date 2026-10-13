@@ -197,7 +197,8 @@
             if (RequirementType == "POHActive") { return "Must own this home, and have it currently active (set at any Estate Agent)."; }
 
             if (RequirementType == "CanSlash") { return "Must have any item that deals slashing damage, or a knife."; }
-
+            
+            if (RequirementType == "TempMonsterCount") { return "Must be fewer than " + MiscInt + " summoned monsters here."; }
 
             return "";
         }
@@ -465,6 +466,19 @@
             if (RequirementType == "POHActive") { if (p.Homes.TryGetValue(MiscString, out PlayerOwnedHome? home) && home != null && home.Active) { return true; }}
 
             if (RequirementType == "CanSlash") { if (p.HasSlashing()) { return true; }}
+
+            if (RequirementType == "TempMonsterCountAbove") {
+                int count = 0;
+                if (GameLoop.ZPO.Atlas.TryGetValue(p.NavLoc, out Location? curr) && curr != null) {
+                    foreach (var mon in curr.MonstersHere) {
+                        if (mon.Temporary) { count++; }
+                    }
+                }
+
+                if (count > MiscInt) {
+                    return true;
+                }
+            }
 
             return false;
         }

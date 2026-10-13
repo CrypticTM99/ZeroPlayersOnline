@@ -72,6 +72,15 @@ namespace ZeroPlayersOnline.DataTypes {
                     }
                 }
 
+                if (ActionID == "CustomLog") {
+                    Color col = Color.White;
+                    if (MiscInt == 1) { col = Color.Lime; }
+                    else if (MiscInt == 2) { col = Color.Crimson; }
+                    else if (MiscInt == 3) { col = Color.Turquoise; }
+                    else if (MiscInt == 4) { col = Color.Yellow; }
+                    Log.AddMessage(MiscString, col);
+                }
+
                 if (ActionID == "SlayerTask") {
                     if (MiscString == "Cancel") {
                         player.SlayerTask = "";
@@ -429,6 +438,19 @@ namespace ZeroPlayersOnline.DataTypes {
 
                     if (Helper.ReadWorldState("LeptocTimesCleaned") == 3) { 
                         GameLoop.ZPO.Log.AddMessage("Wait, why am I actually cleaning? This was just an excuse to get into the mansion.", Color.Yellow);
+                    }
+                }
+
+                if (ActionID == "SummonTempMonster") {
+                    if (GameLoop.ZPO.Atlas.TryGetValue(player.NavLoc, out Location? curr) && curr != null) {
+                        if (GameLoop.ZPO.MonsterLibrary.TryGetValue(MiscString, out AreaMonster? mon)) { 
+                            for (int i = 0; i < MiscInt; i++) { 
+                                Log.AddMessage(MiscString2 + " summons a" + (Helper.VowelStart(mon.Name.ToLower()) ? "n ": " ") + mon.Name.ToLower() + "!", Color.Crimson);
+                                AreaMonster summonCopy = Helper.Clone(mon);
+                                summonCopy.Temporary = true;
+                                curr.MonstersHere.Add(summonCopy);
+                            }
+                        }
                     }
                 }
             }

@@ -67,8 +67,8 @@ namespace ZeroPlayersOnline.Hardcodes {
             toAdd.Add(new("Shopkeeper", "mistVarShopkeeperSword", new() { 
                 { 0, new("Hello, bold adventurer. Can I interest you in some swords?", new() { 
                     new("I'm here to retrieve master Leptoc's sword.", 3, [ new("QuestAt", 80, "MI_RomeoJuliet") ]),
-                    new("Oh dear, I seem to have lost Tybalt's sword.", 8, [ new("QuestAt", 90, "MI_RomeoJuliet"), new("NotItem", 1, "swordTybalt"), new("NotItem", 1, "swordBrittle") ]),
-                    new("I've brought back Tybalt's sword.", 9, [ new("QuestAt", 90, "MI_RomeoJuliet"), new("Item", 1, "swordBrittle") ]),
+                    new("Oh dear, I seem to have lost Tybalt's sword.", 8, [ new("QuestPast", 90, "MI_RomeoJuliet"), new("QuestBelow", 110, "MI_RomeoJuliet"), new("NotItem", 1, "swordTybalt"), new("NotItem", 1, "swordBrittle") ]),
+                    new("I've brought back Tybalt's sword.", 9, [ new("QuestAt", 100, "MI_RomeoJuliet"),  new("Item", 1, "swordBrittle") ]),
                     new("I'm here to look at your sharp pointy things.", 1),
                     byeThen 
                 }) },

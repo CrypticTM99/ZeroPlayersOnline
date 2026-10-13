@@ -148,8 +148,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     EquipLevel = mat.Level, 
                     EquipDamageType = "RangedStandard",
                     EquipSkill = "Ranged",
-                    EquipAmmo = "RangedStandard",
-                    AttackSpeed = 1, 
+                    EquipAmmo = "RangedStandard", 
                     TwoHanded = true
                 });
 
@@ -162,7 +161,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                     EquipDamageType = "RangedHeavy",
                     EquipSkill = "Ranged",
                     EquipAmmo = "RangedHeavy",
-                    AttackSpeed = 1
+                    AttackSpeed = 1.5
                 });
 
                 itemsToAdd.Add(new Item(mat.Name + " plank", "A plank carved from a" + (Helper.VowelStart(mat.Name.ToLower()) ? "n " : " ") + mat.Name.ToLower() + " log.", "plank" + mat.Name, mat.R, mat.G, mat.B, mat.CostMultiplier * 2));
@@ -536,7 +535,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             itemsToAdd.Add(new Item("Huge club", "Upon closer inspection this is actually a huge femur.", "clubHuge", 255, 255, 255, 1000) {
                 EquipSlot = "Weapon",  EquipTier = 3, EquipSkill = "Attack", EquipLevel = 10, EquipDamageType = "Crush", AttackSpeed = 1.5
             });itemsToAdd.Add(new Item("Huger club", "Where did that zombie even get such a large bone? You can barely move this thing.", "clubHuger", 255, 255, 255, 5000) {
-                EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Attack", EquipLevel = 10, EquipDamageType = "Crush", AttackSpeed = 3
+                EquipSlot = "Weapon",  EquipTier = 4, EquipSkill = "Attack", EquipLevel = 10, EquipDamageType = "Crush", AttackSpeed = 2
             });
             itemsToAdd.Add(new Item("Rotten flesh", "This doesn't really seem edible...", "fleshRotten", 150, 100, 50, 4) { UseString = "Heal", UseInt = 2, Potion = new() { new("Attack", -3) } });
             

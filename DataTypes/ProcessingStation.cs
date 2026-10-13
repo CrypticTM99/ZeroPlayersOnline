@@ -366,6 +366,12 @@ namespace ZeroPlayersOnline.DataTypes {
                                         MinigameManager.MTA_CoinCount -= 100; 
                                         p.PizazzAlchemist++; 
                                     }
+                                } 
+                            }
+
+                            if (Recipes[j].Actions.Count > 0) {
+                                foreach (var act in Recipes[j].Actions) {
+                                    act.Execute();
                                 }
                             }
 

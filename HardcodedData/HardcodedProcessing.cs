@@ -7,7 +7,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             ProcessingStation Furnace = new("Furnace") {
                 Recipes = new() {
-                    new ProcessingRecipe("swordTybalt", "swordBrittle"),
+                    new ProcessingRecipe("swordTybalt", "swordBrittle") { Actions = [ new("Quest", "MI_RomeoJuliet", "", 100), new("CustomLog", "I've ruined Tybalt's sword, and should return it to the sword shop for him to pick up.", "", 3) ] },
                     new ProcessingRecipe("bucketSand", "glassMolten", "Crafting", 1, 20, secondaryIn: "ashSoda", secondaryOut: "bucketEmpty"),
                     new ProcessingRecipe("oreMixBronze", "barBronze", "Smithing", 1, 7),
                     new ProcessingRecipe("oreCopper", "barBronze", "Smithing", 1, 7, tertiaryIn: "ringForging"),

@@ -145,7 +145,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 itemsToAdd.Add(arrowheads);
 
                 Item hatchet = new Item(Metals[i].Name + " hatchet", "Good for chopping trees.", "hatchet" + tempName, Metals[i].R, Metals[i].G, Metals[i].B, fullMult, misc: "Hatchet") {
-                    EquipSlot = "Weapon",  EquipTier = Metals[i].Tier, EquipSkill = "Attack", EquipLevel = Metals[i].Level, EquipDamageType = "Slash"
+                    EquipSlot = "Weapon",  EquipTier = Metals[i].Tier, EquipSkill = "Attack", EquipLevel = Metals[i].Level, EquipDamageType = "Slash", CountsAsIDs = [ "axe" ]
                 };
                 itemsToAdd.Add(hatchet);
 

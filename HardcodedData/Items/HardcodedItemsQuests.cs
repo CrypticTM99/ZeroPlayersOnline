@@ -8,7 +8,7 @@ namespace ZeroPlayersOnline.Hardcodes {
 
             itemsToAdd.Add(new Item("Combat lamp (tiny)", "Grants 100 experience to each of Attack, Strength, Defense, Ranged, and Magic.", "combatLampTiny", Color.White, 1, trade: false) { UseString = "LampAll", UseString2 = "Attack,Strength,Defense,Ranged,Magic", UseInt = 100 });
             itemsToAdd.Add(new Item("Kayle's chargebow", "A brightly colored chargebow that fires magical arrows.", "chargebowKayle", ColorLib.Oak, 1, trade: false) {
-                EquipSlot = "Weapon", EquipTier = 2, EquipLevel = 1, EquipDamageType = "RangedStandard", EquipSkill = "Ranged", EquipAmmo = "Chargebow", AttackSpeed = 1, TwoHanded = true
+                EquipSlot = "Weapon", EquipTier = 2, EquipLevel = 1, EquipDamageType = "RangedStandard", EquipSkill = "Ranged", EquipAmmo = "Chargebow", TwoHanded = true
             });
             itemsToAdd.Add(new Item("Caitlin's staff", "A spell-casting aid. Provides unlimited air runes.", "staffCaitlin", Color.DarkGray, 1, trade: false) {
                 EquipSlot = "Weapon",  EquipTier = 1, EquipSkill = "Magic", EquipLevel = 1, EquipDamageType = "Crush", CountsAsIDs = [ "runeAir" ], UseInt4 = -1, MustBeEquipped = true
@@ -18,7 +18,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             itemsToAdd.Add(new Item("Chargebow", "A brightly colored chargebow that fires magical arrows.", "chargebow", ColorLib.Oak, 20) {
-                EquipSlot = "Weapon", EquipTier = 1, EquipLevel = 1, EquipDamageType = "RangedStandard", EquipSkill = "Ranged", EquipAmmo = "Chargebow", AttackSpeed = 1, TwoHanded = true
+                EquipSlot = "Weapon", EquipTier = 1, EquipLevel = 1, EquipDamageType = "RangedStandard", EquipSkill = "Ranged", EquipAmmo = "Chargebow", TwoHanded = true
             });
 
             itemsToAdd.Add(new Item("Mask part 1", "One of five parts of the Mask of Dragith Nurn.", "maskDragith1", Color.Gray, 1, trade: false) { ConsumedOnUse = false, UseString = "DragithNurn" });
@@ -75,7 +75,7 @@ namespace ZeroPlayersOnline.Hardcodes {
             
             itemsToAdd.Add(new Item("The Shield of Arrav (book) [Q]", "'The Shield of Arrav' by A R Wright. (Shield of Arrav)", "bookArrav", Color.DodgerBlue, 5) { ConsumedOnUse = false, UseString = "Book", UseString2 = "bookArrav"});
             itemsToAdd.Add(new Item("Phoenix crossbow", "A crossbow made from pine, stamped with the Phoenix Gang insignia. Fires bolts.", "crossbowPhoenix", ColorLib.Pine, 10) {
-                EquipSlot = "Weapon", EquipTier = 1, EquipLevel = 1, EquipDamageType = "RangedHeavy", EquipSkill = "Ranged", EquipAmmo = "RangedHeavy", AttackSpeed = 1
+                EquipSlot = "Weapon", EquipTier = 1, EquipLevel = 1, EquipDamageType = "RangedHeavy", EquipSkill = "Ranged", EquipAmmo = "RangedHeavy", AttackSpeed = 1.5
             });
             itemsToAdd.Add(new Item("Intel report [Q]", "An intelligence report. (Shield of Arrav)", "arravIntel", Color.White, 10, trade: false) { ConsumedOnUse = false, UseString = "Book", UseString2 = "arravIntel" });
             itemsToAdd.Add(new Item("Broken shield, left [Q]", "The left half of a broken shield. (Shield of Arrav)", "arravShieldLeft", Color.CadetBlue, 10, trade: false));

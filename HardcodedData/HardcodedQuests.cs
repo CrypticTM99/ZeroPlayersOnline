@@ -269,6 +269,7 @@ namespace ZeroPlayersOnline.Hardcodes {
                 StartLoc = "MIST_DraynorFarm",
                 DateFullyImplemented = 20260930,
                 QuestPoints = 1,
+                ActionsOnComplete = [ new("CustomLog", "That went... about as well as you could've expected. Better go see Gillie about those extra rewards.", "", 4) ],
                 Stages = new() {
                     {
                         0,
@@ -372,7 +373,85 @@ namespace ZeroPlayersOnline.Hardcodes {
             });
 
             toAdd.Add(new("MI_RomeoJuliet", "Romeo & Juliet", "Medium", "Novice", "Love is in the air in Varrock! Though their families forbid it, Romeo and Juliet wish to be together. Can you help them find their happily ever after?", 150, new() { "Misthalin" }) {
-                StartNPC = "mistVarRomeo",
+                StartNPC = "mistVarRomeoStart",
+                StartLoc = "MIST_VarrockPlaza",
+                DateFullyImplemented = 20261009,
+                Rewards = { new("Experience", "Herblore", 300), new("Experience", "Smithing", 300) },
+                QuestPoints = 1,
+                Stages = new() {
+                    {
+                        0,
+                        new("Romeo has asked me to deliver a letter to Juliet. She can be found in her families manor, the Leptoc Estate, just outside the west gate of Varrock.", 10)
+                    },
+                    {
+                        10,
+                        new("I was turned away at the door of the Estate by their butler - I may need some kind of disguise to get in. The butler seemed to be expecting a cleaner though. Could be a lead.", 20)
+                    },
+                    {
+                        20,
+                        new("I delivered Romeo's letter to Juliet, and should see what she thinks about it.", 30)
+                    },
+                    {
+                        30,
+                        new("Juliet gave me a letter to deliver to Romeo.", 40)
+                    },
+                    {
+                        40,
+                        new("I delivered Juliet's letter to Romeo, and should see what he thinks about it. Hopefully not another letter or I'm going to have to start charging a courier fee.", 50)
+                    },
+                    {
+                        50,
+                        new("Romeo is going to go to Juliet's balcony tonight to... 'serenade' her. I've been enlisted to keep lookout.", 55)
+                    },
+                    {
+                        55,
+                        new("The serenade worked, and Romeo has sworn they will be wed by morning. He's run off ahead to the Chapel, leaving me to collect Juliet and follow.", 60)
+                    },
+                    {
+                        60,
+                        new("I 'caught' Juliet as she jumped from her balcony, and now we should make our way to the Varrock Chapel.", 70)
+                    },
+                    {
+                        70,
+                        new("While they wouldn't allow me into the chapel to watch the ceremony, Romeo has invited me to the celebration at the Blue Moon Inn.", 80)
+                    },
+                    {
+                        80,
+                        new("The celebration at the Blue Moon was going great until Juliet's cousin Tybalt came in and challenged Romeo to a duel. Romeo doesn't stand a chance, but maybe I can tilt the scales by sabotaging Tybalt's sword. I think he said he was getting it sharpened - perhaps I can find the sword shop where he's left it.", 90)
+                    },
+                    {
+                        90,
+                        new("I convinced the shopkeep of the sword shop to hand over Tybalt's sword. I can probably ruin the temper at a furnace.", 100)
+                    },
+                    {
+                        100,
+                        new("After running it through a furnace, Tybalt's sword is nice and brittle. Time to give it back to the shopkeep.", 110)
+                    },
+                    {
+                        110,
+                        new("Sword returned and shopkeep fooled. Nothing left but to go to the Varrock Square and watch the duel unfold.", 120)
+                    },
+                    {
+                        120,
+                        new("The duel went very poorly, and Romeo has been chased out of Varrock. He said he'd be getting a drink in Lumbridge, probably at the Sheared Ram.", 130)
+                    },
+                    {
+                        130,
+                        new("Romeo is in a drunken stupor, but has suggested that perhaps we fake Juliet's death with a cadava potion. I should speak to the Apothecary in Varrock about making or buying one.", 140)
+                    },
+                    {
+                        140,
+                        new("I've convinced the Apothecary to give me a list of ingredients to finish the potion. I should add cadava berries to a vial of water, then sprinkle in wing of rat, tail of frog, ear of snake, and horn of dog. When the potion is ready, I can take it to Juliet at her balcony.", 150)
+                    },
+                    {
+                        150,
+                        new("Juliet was quickly discovered by her family and taken off to the Varrock crypt. After things settled down, I grabbed Juliet's corpse and snuck her all the way to Port Sarim, where Romeo was waiting. Juliet woke up shortly after and the two departed on a ship to a new life somewhere far away.", 150)
+                    }
+                }
+            });
+
+            toAdd.Add(new("DES_PrinceAliRescue", "Prince Ali Rescue", "Medium", "Novice", "Love is in the air in Varrock! Though their families forbid it, Romeo and Juliet wish to be together. Can you help them find their happily ever after?", 150, new() { "Misthalin" }) {
+                StartNPC = "mistVarRomeoStart",
                 StartLoc = "MIST_VarrockPlaza",
                 DateFullyImplemented = 20261009,
                 Rewards = { new("Experience", "Herblore", 300), new("Experience", "Smithing", 300) },
